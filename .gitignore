@@ -1,0 +1,28 @@
+# Arquivos de ambiente
+.env
+
+# Arquivos de saída
+*.mp4
+*.mp3
+
+# Arquivos de cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos de log
+*.log
+
+# Arquivos de configuração do editor
+.vscode/
+.idea/
+
+# Arquivos de sistema e de soluções
+.DS_Store
+Thumbs.db
+myenv/
+.venv/
+venv/
+solutions/
+starting points/
