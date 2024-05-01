@@ -79,7 +79,6 @@ class SolutionCreator:
             while True:
                 # Generate a prompt for the AI to create the component implementation
                 prompt = f"Component: {component_description}\n\nPlease provide a Python implementation for the component {file_name}.{extension}.\n"
-                prompt += "Only add a main function, that is if __name__ == '__main__', if the component is a main.py file. Otherwise, do not add."
 
                 # Send the prompt to the AI and get the response
                 response = self.ai_connector.send_prompt(prompt)

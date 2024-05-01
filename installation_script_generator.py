@@ -56,8 +56,13 @@ class InstallationScriptGenerator:
             subprocess.run(["python", "-m", "venv", venv_directory])
 
             # Install the packages using pip within the virtual environment
-            subprocess.run([os.path.join(venv_directory, "bin", "pip"), "install", "-r", requirements_file_path])
-            print(f"\n\nPackages installed using pip in {venv_directory}\n\n")
+            if os.name == 'nt':  # Windows
+                pip_executable = os.path.join(venv_directory, "Scripts", "pip.exe")
+                subprocess.run([pip_executable, "install", "-r", requirements_file_path])
+                print(f"\n\nPackages installed using pip in {venv_directory}\n\n")
+            else:  # Unix-based systems
+                activate_script = os.path.join(venv_path, "bin", "activate")
+                command = f'source "{activate_script}" && python "{main_file_path}"'
         else:
             # Check if conda is installed
             try:

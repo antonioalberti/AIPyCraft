@@ -39,15 +39,14 @@ class SolutionRunner:
                 execution_log += "Virtual environment not found. Please run the installation script first.\n"
                 return
 
-            # Activate the virtual environment and execute the main component
             if os.name == 'nt':  # Windows
                 activate_script = os.path.join(venv_path, "Scripts", "activate.bat")
                 command = f'cmd /c "{activate_script} && python "{main_file_path}""'
+                result = subprocess.run(command, capture_output=True, text=True, shell=True)
             else:  # Unix-based systems
                 activate_script = os.path.join(venv_path, "bin", "activate")
                 command = f'source "{activate_script}" && python "{main_file_path}"'
-
-            result = subprocess.run(command, capture_output=True, text=True, shell=True, executable="/bin/bash")
+                result = subprocess.run(command, capture_output=True, text=True, shell=True, executable="/bin/bash")            
 
             # Print the captured output and error streams
             print(Fore.GREEN + "Output:")

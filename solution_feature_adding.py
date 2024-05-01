@@ -20,7 +20,7 @@ class SolutionFeatureAdding:
             prompt = f"The following solution needs a new feature:\n\n"
             prompt += f"Solution: {solution.name}\n"
             prompt += f"Component: {component.name}\nCode:\n{component.code}\n\n"
-            prompt += f"New Feature: {feature_description}\n\nPlease add the new feature to this component. Provide the updated code for the component, keeping the original file name."
+            prompt += f"Issue: {feature_description}\n\nPlease add the new feature to this component. Provide the updated code for the component, keeping the original file name."
 
             print("\n\nAI's prompt:\n")
             print(prompt)
