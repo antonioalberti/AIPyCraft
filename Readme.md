@@ -2,6 +2,8 @@
 
 This project is an AI-powered solution creator that assists users in generating, managing, and running code solutions. It leverages the power of AI to create code components based on user-provided descriptions and seamlessly integrates them into a complete solution.
 
+The program was cocreated with Cody using Claude 3 Opus.
+
 ## Features
 
 - Create new solutions by providing a name and description
