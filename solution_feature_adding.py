@@ -15,9 +15,28 @@ class SolutionFeatureAdding:
         # Get the new feature description from the user
         feature_description = input("Enter the description of what to you want to do with the solution: ")
 
+        instructions = """Context:
+        
+        You are going to correct Python codes for Components of a Solution. 
+        Each Component will be designed as a piece of code that solves a specific problem. 
+        Therefeore, the main.py program must be able to import all the required classes. 
+        The last Component will always named as main.py program. 
+        Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
+        inializing and running the all the solution.
+
+        Expected answer format:
+
+        Check if the error is caused by a certain Solution's Component. 
+        If the answer is YES, send ONLY the corrected code of this Component and do not rename the file name. 
+        If the answer is NO, do not send any code. You will analyze the other Components of the Solution instead.
+        Keep the code of a Component coherent and compatible with other components of the same solution. 
+        All the Solution must have a if __name__ == "__main__": function in the main.py file.
+        
+        """
+
         for component in solution.components:
             # Generate a prompt for the AI to add the new feature to the component
-            prompt = f"The following solution needs a new feature:\n\n"
+            prompt = f"The following solution needs a new feature or improvement:\n\n"
             prompt += f"Solution: {solution.name}\n"
             prompt += f"Component: {component.name}\nCode:\n{component.code}\n\n"
             prompt += f"Issue: {feature_description}\n\nPlease improve this component. Provide the updated code for the component, keeping the original file name."
@@ -26,7 +45,7 @@ class SolutionFeatureAdding:
             print(prompt)
 
             # Send the prompt to the AI using the AIConnector and get the response
-            response = self.ai_connector.send_prompt(prompt)
+            response = self.ai_connector.send_prompt(instructions, "asst_YiljxNBLxlvdPiGiKINWHOB6", prompt)
 
             print("\n\nAI's response:\n")
             print(response)

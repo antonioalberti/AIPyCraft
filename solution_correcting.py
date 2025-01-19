@@ -16,17 +16,36 @@ class SolutionCorrecting:
             # Get the error message from the solution's result description
             error_message = solution.result_description
 
+            instructions = """Context:
+        
+        You are going to correct Python codes for Components of a Solution. 
+        Each Component will be designed as a piece of code that solves a specific problem. 
+        Therefeore, the main.py program must be able to import all the required classes. 
+        The last Component will always named as main.py program. 
+        Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
+        inializing and running the all the solution.
+
+        Expected answer format:
+
+        Check if the error is caused by a certain Solution's Component. 
+        If the answer is YES, send ONLY the corrected code of this Component and do not rename the file name. 
+        If the answer is NO, do not send any code. You will analyze the other Components of the Solution instead.
+        Keep the code of a Component coherent and compatible with other components of the same solution. 
+        All the Solution must have a if __name__ == "__main__": function in the main.py file.
+        
+        """
+
             for component in solution.components:
                 # Generate a prompt for the AI to analyze the component for possible errors
-                prompt = f"The following solution encountered an error during execution:\n\n"
+                prompt = f"The following Solution encountered an error during execution and you need to correct it:\n\n"
+                prompt += f"Error message: {error_message}\n\nPlease analyze the following Component. "
                 prompt += f"Component: {component.name}\nCode:\n{component.code}\n\n"
-                prompt += f"Error message: {error_message}\n\nPlease analyze this Component. Check if the error is caused by this code. If the answer is YES, resend the code and do not rename the file name. If the answer is NO, do not send any code. We are going to analyze the other components."
 
                 print("\n\nAI's prompt:\n")
                 print(prompt)
 
                 # Send the prompt to the AI using the AIConnector and get the response
-                response = self.ai_connector.send_prompt(prompt)
+                response = self.ai_connector.send_prompt(instructions,"asst_YiljxNBLxlvdPiGiKINWHOB6",prompt)
 
                 print("\n\nAI's response:\n")
                 print(response)

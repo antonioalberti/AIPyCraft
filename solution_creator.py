@@ -2,7 +2,6 @@ import os
 from solution import Solution
 from component import Component
 from ai_connector import AIConnector
-from prompt_to_create_a_solution import get_prompt
 from colorama import init, Fore, Style
 from ai_code_parser import AICodeParser
 
@@ -28,15 +27,69 @@ class SolutionCreator:
         
         self.solution.semantic_description = solution_description
 
+        instructions = f"""You are going to create a componentized Solutions using Python. 
+
+Context:
+
+The Solutions are composed by Components.  
+Each Component will be designed as a piece of code that solves a specific problem. 
+Make the Solution with the minimum number of Components possible. 
+The last Component will always be a main.py program. 
+The previous Components are classes to be initiatized in the main.py program. 
+Therefeore, the main.py program must be able to import all the required classes. 
+After every Component, put the file associatated with the Component using the label File. 
+All the Components should be numbered and separated by a new line.
+This will make the Solution modular and each Component is self-contained.  
+All files need to have different names obrigatory.
+
+Expected answer format:
+
+For the response parser to be possible, each Component description must be on a single line, 
+starting with the word "Component N:", where N is the number of the Component. 
+Do not send the code now.  Add a blank line and describe the Components required to implement this Solution. 
+ After every Component, put the file associatated with the Component using the label File.  
+ All the Components should be numbered and separated by a new line. 
+ This will make the Solution modular and each Component is self-contained.  
+ All files need to have different names obrigatory. 
+ For the response parser to be possible, each Component description must be on a single line, 
+ starting with the word "Component N:", where N is the number of the Component. 
+ The description of a Component using a single paragraph. 
+
+Example of Answer:
+
+Description: Plot Mandelbrot fractal with resolution 1000x1000 and color mapping.
+
+Component 1: Create a class MandelbrotFractal that will handle the calculations and generation of the Mandelbrot fractal. 
+Include methods to determine the escape time for each point in the fractal, based on the Mandelbrot set formula. 
+This class will be in a file named mandelbrot.py.
+
+File 1: mandelbrot.py
+
+Component 2: Create a class FractalPlotter that will handle the plotting of the Mandelbrot fractal. 
+Include methods to generate the plot with customizable resolution and color mapping. 
+This class will be in a file named fractal_plotter.py.
+
+File 2: fractal_plotter.py
+
+Component 3: Implement a main program in a file named main.py that will instantiate the MandelbrotFractal class and the FractalPlotter class. 
+Use these classes to calculate the escape times and plot the Mandelbrot fractal. 
+Allow the user to specify the resolution of the plot and the color mapping. 
+Include a if __name__ == "__main__": at the end of the main.py program, inializing and running the all the Solution.
+
+File 3: main.py
+"""
+
         interaction_count = 1
         while True:
             print(f"\nSolution Creator - Interaction {interaction_count}:")
             
             # Generate a prompt for the AI to create the solution and components
-            prompt = get_prompt(solution_name, solution_description)
-
+            prompt = prompt = f"""{solution_description}\n\n"""
+            
+            print(f"\n[DEBUG] Prompt being sent to the AI:\n{prompt}")
+            
             # Send the prompt to the AI and get the response
-            response = self.ai_connector.send_prompt(prompt)
+            response = self.ai_connector.send_prompt(instructions,"asst_6NQycWIDfMqhXtZBC0JAfpWT",prompt)
 
             print("\nAI-generated solution and components:")
             print(response)
@@ -76,12 +129,37 @@ class SolutionCreator:
             extension = component_info['extension']
             print(f"\nComponent Interaction {interaction_count}:")
 
+            instructions = """Context:
+        
+        You are going to create the Python code for a Component of a solution. 
+        The Solutions are composed by Components.  
+        Each Component will be designed as a piece of code that solves a specific problem. 
+        Make the Solution with the minimum number of Components possible. 
+        The previous Components are classes to be initiatized in the main.py program.
+        Therefeore, the main.py program must be able to import all the required classes. 
+        After every Component, put the file associatated with the Component using the label File. 
+        All the Components should be numbered and separated by a new line. 
+        This will make the Solution modular and each Component is self-contained.  
+        All files need to have different names obrigatory.
+        The last Component will always named as main.py program. 
+        Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
+        inializing and running the all the solution.
+        The previous Components are classes to be initiatized in the main.py program. 
+        Therefeore, the main.py program must be able to import all the required classes.
+
+        Expected answer format:
+
+        A Python code. Keep the code coherent and compatible to other components of the same solution. 
+        Use the same names of the classes and functions of the previous Components.
+        
+        """
+
             while True:
                 # Generate a prompt for the AI to create the component implementation
-                prompt = f"Component: {component_description}\n\nPlease provide a Python implementation for the component {file_name}.{extension}. Do not ask the user for any input. \n"
+                prompt = f"Component: {component_description}\n\nPlease provide a Python implementation for the Component {file_name}.{extension}.\n"
 
                 # Send the prompt to the AI and get the response
-                response = self.ai_connector.send_prompt(prompt)
+                response = self.ai_connector.send_prompt(instructions, "asst_82K016RjEavlHzZN9YeZPeI5", prompt)
 
                 #print("\nAI-generated component implementation\n")
                 #print(response)

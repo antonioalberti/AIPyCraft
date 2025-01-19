@@ -14,16 +14,31 @@ class InstallationScriptGenerator:
 
         requirements_file_path = os.path.join(solution_directory, "requirements.txt")
 
+        instructions = """Context:
+        
+        You are going to determine the required Python packages for a Solution. 
+
+        Expected answer format:
+
+        Provide only the required package names, one per line, without any additional text or explanations.
+        Be careful to provide packages that are mutually compatible. Deal with versions to avoid incompatibilities.
+
+        Example of answer:
+        
+        aiohttp==3.9.4
+        aiosignal==1.3.1
+        async-timeout==4.0.3
+        attrs==23.2.0
+        """
+
         # Generate the prompt for the AI to determine the necessary packages
         prompt = f"Given the following solution components:\n\n"
         for component in solution.components:
             prompt += f"Component: {component.name}\nCode:\n{component.code}\n\n"
-        prompt += "Please provide a list of the necessary Python packages with compatible versions that need to be installed via pip in order to run this solution.\n"
-        prompt += "Provide only the package names, one per line, without any additional text or explanations.\n"
-        prompt += "For instance, colorama==0.4.6, numpy==1.19.5, etc. Be careful to provide packages that are mutually compatible.\n"
-
+        prompt += "Please provide a list of the necessary Python packages that need to be installed via pip in order to run this Solution.\n"
+    
         # Send the prompt to the AI using the AIConnector and get the response
-        response = self.ai_connector.send_prompt(prompt)
+        response = self.ai_connector.send_prompt(instructions,"asst_ML7do1y0Qgh7brtYk8jjRgK7",prompt)
 
         # Parse the AI's response to extract the package names
         packages = response.strip().split("\n")
@@ -57,7 +72,7 @@ class InstallationScriptGenerator:
 
             # Install the packages using pip within the virtual environment
             if os.name == 'nt':  # Windows
-                pip_executable = os.path.join(venv_directory, "Scripts", "pip.exe")
+                pip_executable = os.path.join(venv_directory, "Scripts", "pip3.exe")
                 subprocess.run([pip_executable, "install", "-r", requirements_file_path])
                 print(f"\n\nPackages installed using pip in {venv_directory}\n\n")
             else:  # Unix-based systems
