@@ -25,19 +25,36 @@ class SolutionImporter:
 
         components = []
 
+        instructions = """Context:
+        
+        You are going to determine the Components of a Solution. 
+        Each Component will be designed as a piece of code that solves a specific problem. 
+        Therefeore, the main.py program must be able to import all the required classes. 
+        The last Component will always named as main.py program. 
+        Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
+        inializing and running the all the solution.
+
+        Expected answer format:
+
+        File: The file name with extension.
+
+        Description: A brief description of the functionality and purpose of the script.
+        
+        """
+
         # Generate prompts for each script file
         for file_name in script_files:
             file_path = os.path.join(folder_path, file_name)
             with open(file_path, "r") as file:
                 code = file.read()
 
-                prompt = "Please provide a description of the functionality and purpose of the following script code:\n\n"
+                prompt = "Follow your instructions to describe the following code:\n\n"
                 prompt += f"File: {file_name}\n"
                 prompt += f"Code:\n{code}\n\n"
-                prompt += "Please provide only the description without any additional text or formatting."
+                prompt += ""
 
                 # Send the prompt to the AI using the AIConnector and get the response
-                response = self.ai_connector.send_prompt(prompt)
+                response = self.ai_connector.send_prompt(instructions, "asst_yZuhQdD3SPCXbRvQp3wDZgyN", prompt)
 
                 # Extract the component name and extension from the file name
                 component_name, component_extension = os.path.splitext(file_name)
