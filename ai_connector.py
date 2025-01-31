@@ -11,22 +11,10 @@ class AIConnector:
             raise ValueError("OpenAI API key not found in 'OPENAI_API_KEY' environment variable.")
 
     def send_prompt(self, instructions: str, assistant_pre_identifier: str, prompt: str) -> str:
-        """
-        Sends a chat request to the assistant identified by 'assistant_pre_identifier'
-        using the standard ChatCompletion endpoint.
-
-        Args:
-            assistant_pre_identifier (str): The model name or ID you want to call (e.g. "gpt-3.5-turbo", "gpt-4").
-            prompt (str): The user prompt or question.
-
-        Returns:
-            str: The assistant's response text.
-        """
-
         try:
             # Make a single ChatCompletion call
             response = openai.ChatCompletion.create(
-                model="gpt-4o-mini",  # e.g., "gpt-3.5-turbo" or "gpt-4"
+                model="gpt-4o",  # e.g., "gpt-3.5-turbo" or "gpt-4"
                 messages=[
                     {
                         "role": "system",
@@ -46,7 +34,7 @@ class AIConnector:
             answer = response.choices[0].message["content"]
             
             # (Optional) Print which model was used
-            print(f"[INFO] The API call used the model/assistant: '{assistant_pre_identifier}'")
+            print(f"\n\n[INFO] The API call used the model/assistant: '{assistant_pre_identifier}'")
 
             return answer.strip()
 

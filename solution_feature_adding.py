@@ -73,8 +73,8 @@ class SolutionFeatureAdding:
                 component.code = updated_code
 
                 print(Fore.YELLOW + f"\nComponent '{component.name}' has been updated with the new feature by the AI.\n")
-                print(Fore.YELLOW + "Updated Component Details:")
-                print(Fore.YELLOW + f"Name: {component.name}\n")
-                print(Fore.YELLOW + f"Code:\n{component.code}\n")
+                #print(Fore.YELLOW + "Updated Component Details:")
+                #print(Fore.YELLOW + f"Name: {component.name}\n")
+                #print(Fore.YELLOW + f"Code:\n{component.code}\n")
             else:
                 print(Fore.BLUE + f"\nNo code blocks found in the AI's response for component '{component.name}'.\n")

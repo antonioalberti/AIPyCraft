@@ -10,7 +10,7 @@ class SolutionCorrecting:
         self.ai_connector = AIConnector()
 
     def correct_solution(self, solution):
-        print(f"\nImproving solution: {solution.name}\n")
+        print(f"\nCorrecting solution: {solution.name}\n")
 
         if solution.status == 'ERROR':
             # Get the error message from the solution's result description
@@ -18,34 +18,43 @@ class SolutionCorrecting:
 
             instructions = """Context:
         
-        You are going to correct Python codes for Components of a Solution. 
-        Each Component will be designed as a piece of code that solves a specific problem. 
-        The Solution has several components, each of which is a Python file.
-        You need to correct the code of the Component that caused the error.
-        In addtion, you need to adjust the other components correspondingly to keep consistency in naming and functioning. 
+        You are going to correct Python codes for Components of a Solution developed in Python. 
+        The Solution has a descriptor that is going to be provided to you in the prompts.
+        Each Component is a Python file that solves a specific problem. 
+        
+
+        Instructions:
+
+        You need to correct the code of the Component that is causing a certain error.
+        In addtion, you need to adjust the other components correspondingly to keep consistency. 
         The main.py program must be able to import all the required classes. 
-        The last Component will always named as main.py program. 
-        Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
+        The last Component will always named as main.py program. Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
         initializing and running the all the solution.
+        Whenever you correct components, check the consistency of attributes. This is one of the main problems in the code. 
+        Keep the code of each Component coherent and compatible with the others on the same solution.
+        Check consistency of naming and number of parameters in the components. 
 
         Expected answer format:
 
-        Check if the error is caused by a certain Solution's Component. 
-        Check the names and number of parameters in all functions.
-        If the answer is YES, send ONLY the corrected code of this Component and do not rename the file name. 
-        If the answer is NO, do not send any code. You will analyze the other Components of the Solution instead.
-        Keep the code of a Component coherent and compatible with other components of the same solution. 
-        All the Solution must have a if __name__ == "__main__": function in the main.py file.
+        1. If SOME corrections are required, send ONLY the corrected Python code of this Component.
+        In addtion, do not rename the file name. Do nothing else. 
+
+        2. If NO corrections are required, do not send any code. Send just a word saying "NO".
+        
         
         """
 
             for component in solution.components:
                 # Generate a prompt for the AI to analyze the component for possible errors
-                prompt = f"The following Solution encountered an error during execution and you need to correct it:\n\n"
-                prompt += f"Error message: {error_message}\n\nPlease analyze the following Component. "
-                prompt += f"Component: {component.name}\nCode:\n{component.code}\n\n"
+                prompt = f"The Solution {solution.name} created from the following Solution description encountered an error during execution and you need to correct it.\n\n"
+                prompt += f"The solution aim is to: {solution.semantic_description}\n\n"
+                prompt += f"{error_message}\n\nPlease analyze the following Component:\n\n"
+                prompt += f"{component.name}\n\nCode:\n{component.code}\n\n"
+                prompt += "IMPORTANT 1: If SOME corrections are required, send ONLY the corrected Python code of this Component. In addtion, do not rename the file name. Do nothing else.\n"
+                prompt += "IMPORTANT 2: If NO corrections are required, do not send any code. Send just a word saying \"NO\".\n"
+                prompt += "IMPORTANT 3: Do not remove the function if __name__ == \"__main__\" from the main.py file."
 
-                print("\n\nAI's prompt:\n")
+                print("\nThis is the prompt being sent to the AI:\n")
                 print(prompt)
 
                 # Send the prompt to the AI using the AIConnector and get the response
@@ -76,10 +85,10 @@ class SolutionCorrecting:
                     # Update the component code with the AI-generated code
                     component.code = updated_code
 
-                    print(Fore.YELLOW + f"\nComponent '{component.name}' has been improved by the AI.\n")
-                    print(Fore.YELLOW + "Updated Component Details:")
-                    print(Fore.YELLOW + f"Name: {component.name}\n")
-                    print(Fore.YELLOW + f"Code:\n{component.code}\n")
+                    #print(Fore.YELLOW + f"\nComponent '{component.name}' has been improved by the AI.\n")
+                    #print(Fore.YELLOW + "Updated Component Details:")
+                    #print(Fore.YELLOW + f"Name: {component.name}\n")
+                    #print(Fore.YELLOW + f"Code:\n{component.code}\n")
                 else:
                     print(Fore.BLUE + f"\nNo code blocks found in the AI's response for component '{component.name}'.\n")
         else:

@@ -16,6 +16,7 @@ from installation_script_generator import InstallationScriptGenerator
 from solution_correcting import SolutionCorrecting
 from solution_feature_adding import SolutionFeatureAdding
 from solution_importer import SolutionImporter
+from solution_correcting2 import ThreadedSolutionCorrector
 
 # Load environment variables from .env file
 load_dotenv()
@@ -44,6 +45,7 @@ class Dispatcher:
         self.solution_correcting = SolutionCorrecting()
         self.solution_feature_adding = SolutionFeatureAdding()
         self.solution_importer = SolutionImporter(solutions_folder)
+        self.threaded_solution_corrector = ThreadedSolutionCorrector()
 
     def run(self):
         while True:
@@ -53,12 +55,13 @@ class Dispatcher:
             print(Fore.GREEN + "4. Run a solution")
             print(Fore.GREEN + "5. Show a solution details")
             print(Fore.GREEN + "6. Remove a solution folder (all files will be deleted)")
-            print(Fore.GREEN + "7. Self-correct a solution")
+            print(Fore.GREEN + "7. Self-correct a solution - Approach 1")
             print(Fore.GREEN + "8. Manually improve a solution")
             print(Fore.GREEN + "9. Import a folder as a solution")
             print(Fore.GREEN + "10. Delete a solution (files will be preserved)")
-            print(Fore.GREEN + "11. Exit")
-            choice = input("Enter your choice (1-11): ")
+            print(Fore.GREEN + "11. Self-correct a solution - Approach 2")
+            print(Fore.GREEN + "12. Exit")
+            choice = input("Enter your choice (1-12): ")
 
             if choice == '1':
                 solution_to_be_loaded = input("Enter the name of the solution to be loaded: ")
@@ -151,7 +154,7 @@ class Dispatcher:
                         print(f"{i}. {solution.name}")
 
                     while True:
-                        choice = input(Fore.YELLOW + "\nEnter the number of the solution to improve (or 'q' to quit): ")
+                        choice = input(Fore.YELLOW + "\nEnter the number of the solution to correct (or 'q' to quit): ")
                         if choice.lower() == 'q':
                             break
 
@@ -223,8 +226,32 @@ class Dispatcher:
                         except ValueError:
                             print(Fore.RED + "Invalid input. Please enter a valid number.")
 
-                
             elif choice == '11':
+                if not self.solutions:
+                    print("No solutions available. Please load or create a solution first.")
+                else:
+                    print(Fore.BLUE + "\nAvailable solutions:")
+                    for i, solution in enumerate(self.solutions, start=1):
+                        print(f"{i}. {solution.name}")
+
+                    while True:
+                        choice = input(Fore.YELLOW + "\nEnter the number of the solution to correct (or 'q' to quit): ")
+                        if choice.lower() == 'q':
+                            break
+
+                        try:
+                            index = int(choice) - 1
+                            if 0 <= index < len(self.solutions):
+                                selected_solution = self.solutions[index]
+                                self.threaded_solution_corrector.threaded_correct_solution(selected_solution)
+                                break
+                            else:
+                                print(Fore.RED + "Invalid solution number. Please try again.")
+                        except ValueError:
+                            print(Fore.RED + "Invalid input. Please enter a valid number.")
+
+                
+            elif choice == '12':
                 break
 
             else:

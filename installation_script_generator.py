@@ -23,7 +23,7 @@ class InstallationScriptGenerator:
         Provide only the required package names, one per line, without any additional text or explanations.
         Be careful to provide packages that are mutually compatible. Deal with versions to avoid incompatibilities.
 
-        Example of answer:
+        Example of answer (a list of package names, one per line):
         
         aiohttp==3.9.4
         aiosignal==1.3.1
@@ -34,11 +34,22 @@ class InstallationScriptGenerator:
         # Generate the prompt for the AI to determine the necessary packages
         prompt = f"Given the following solution components:\n\n"
         for component in solution.components:
-            prompt += f"Component: {component.name}\nCode:\n{component.code}\n\n"
+            prompt += f"Component: {component.name}\n\nCode:\n{component.code}\n\n"
         prompt += "Please provide a list of the necessary Python packages that need to be installed via pip in order to run this Solution.\n"
+        prompt += "IMPORTANT 1: Provide only the required package names, one per line, without any additional text or explanations. \n"
+        prompt += "IMPORTANT 2: Do not forget to include the version of all package.\n"
+        prompt += "IMPORTANT 3: Be careful to provide packages that are mutually compatible. Deal with versions to avoid incompatibilities.\n\n"
+        prompt += "Example of answer (a list of package names, one per line):\n\n"
+        prompt += "aiohttp==3.9.4\n"
+        prompt += "aiosignal==1.3.1\n"
+        prompt += "async-timeout==4.0.3\n"
+        prompt += "attrs==23.2.0\n"
     
         # Send the prompt to the AI using the AIConnector and get the response
         response = self.ai_connector.send_prompt(instructions,"asst_ML7do1y0Qgh7brtYk8jjRgK7",prompt)
+
+        print("\n\nAI's response:\n")
+        print(response)
 
         # Parse the AI's response to extract the package names
         packages = response.strip().split("\n")
