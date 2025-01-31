@@ -71,6 +71,17 @@ class SolutionImporter:
                 print(Fore.BLUE + f"Code: {component.code}\n")
                 print(Fore.BLUE + f"Description: {component.semantic_description}\n")
 
+        instructions1 = """Context:
+        
+        You are going to determine the overall description of a Solution. 
+        Each Component will be designed as a piece of code that solves a specific problem. 
+
+        Expected answer format:
+
+        Overall description of the solution. Include the purpose and how the components interact with each other.
+        
+        """
+
         # Generate a final prompt for the AI to provide an overall solution description
         final_prompt = Fore.WHITE + f"Based on the analysis of the following components:\n\n"
         for component in components:
@@ -79,7 +90,7 @@ class SolutionImporter:
         final_prompt += "Provide an overall description of the solution. Include the purpose and how the components interact with each other."
 
         # Send the final prompt to the AI using the AIConnector and get the response
-        final_response = self.ai_connector.send_prompt(final_prompt)
+        final_response = self.ai_connector.send_prompt(instructions1, "asst_uMULFW7zgDTSlGi8wGRuyFd1", final_prompt)
 
         solution_description = final_response.strip()
 
