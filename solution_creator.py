@@ -45,7 +45,7 @@ Expected answer format:
 
 For the response parser to be possible, each Component description must be on a single line, 
 starting with the word "Component N:", where N is the number of the Component. 
-Do not send the code now.  Add a blank line and describe the Components required to implement this Solution. 
+Do not send the code now. Add a blank line and describe the Components required to implement this Solution. 
 After every Component, put the file associatated with the Component using the label File.  
 All the Components should be numbered and separated by a new line. 
 This will make the Solution modular and each Component is self-contained.  
@@ -88,7 +88,7 @@ File 3: main.py
             print(prompt)
 
             # Send the prompt to the AI and get the response
-            response = self.ai_connector.send_prompt(instructions,"asst_6NQycWIDfMqhXtZBC0JAfpWT",prompt)
+            response = self.ai_connector.send_prompt(instructions,prompt)
 
             print("\nAI-generated solution and components:")
             print(response)
@@ -131,15 +131,11 @@ File 3: main.py
             instructions = """Context for creating the code of a Solution:
         
         You are going to create the Python code for a Component of a solution. 
-        The Solutions are composed by Components.  
-        Each Component will be designed as a piece of code that solves a specific problem. 
-        Make the Solution with the minimum number of Components possible. 
-        The previous Components are classes to be initiatized in the main.py program.
-        Therefeore, the main.py program must be able to import all the required classes. 
-        After every Component, put the file associatated with the Component using the label File. 
-        All the Components should be numbered and separated by a new line. 
-        This will make the Solution modular and each Component is self-contained.  
-        All files need to have different names obrigatory.
+
+        Instructions:  
+
+        A Component has exactly on file.
+        All Components need to have different names obrigatory.
         The last Component will always named as main.py program. 
         Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
         inializing and running the all the solution.
@@ -163,7 +159,7 @@ File 3: main.py
                 print(prompt)
 
                 # Send the prompt to the AI and get the response
-                response = self.ai_connector.send_prompt(instructions, "asst_82K016RjEavlHzZN9YeZPeI5", prompt)
+                response = self.ai_connector.send_prompt(instructions, prompt)
 
                 # Parse the code from the AI-generated component implementation
                 code = self.code_parser.parse_code(response)

@@ -39,7 +39,7 @@ class SolutionCorrecting:
         1. If SOME corrections are required, send ONLY the corrected Python code of this Component.
         In addtion, do not rename the file name. Do nothing else. 
 
-        2. If NO corrections are required, do not send any code. Send just a word saying "NO".
+        2. If NO corrections are required in some Component, do not send any code. Send just a word saying "NO".
         
         
         """
@@ -50,15 +50,14 @@ class SolutionCorrecting:
                 prompt += f"The solution aim is to: {solution.semantic_description}\n\n"
                 prompt += f"{error_message}\n\nPlease analyze the following Component:\n\n"
                 prompt += f"{component.name}\n\nCode:\n{component.code}\n\n"
-                prompt += "IMPORTANT 1: If SOME corrections are required, send ONLY the corrected Python code of this Component. In addtion, do not rename the file name. Do nothing else.\n"
-                prompt += "IMPORTANT 2: If NO corrections are required, do not send any code. Send just a word saying \"NO\".\n"
-                prompt += "IMPORTANT 3: Do not remove the function if __name__ == \"__main__\" from the main.py file."
+                prompt += "IMPORTANT 1: If some corrections are required, send ONLY the corrected Python code of this Component. In addtion, do not rename the file name. Do nothing else.\n"
+                prompt += "IMPORTANT 2: Do not remove the function if __name__ == \"__main__\" from the main.py file."
 
                 print("\nThis is the prompt being sent to the AI:\n")
                 print(prompt)
 
                 # Send the prompt to the AI using the AIConnector and get the response
-                response = self.ai_connector.send_prompt(instructions,"asst_YiljxNBLxlvdPiGiKINWHOB6",prompt)
+                response = self.ai_connector.send_prompt(instructions,prompt)
 
                 print("\n\nAI's response:\n")
                 print(response)

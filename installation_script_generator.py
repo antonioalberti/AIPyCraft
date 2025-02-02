@@ -46,7 +46,7 @@ class InstallationScriptGenerator:
         prompt += "attrs==23.2.0\n"
     
         # Send the prompt to the AI using the AIConnector and get the response
-        response = self.ai_connector.send_prompt(instructions,"asst_ML7do1y0Qgh7brtYk8jjRgK7",prompt)
+        response = self.ai_connector.send_prompt(instructions,prompt)
 
         print("\n\nAI's response:\n")
         print(response)
