@@ -53,7 +53,7 @@ class InstallationScriptGenerator:
 
         # Parse the AI's response to extract the package names
         packages = response.strip().split("\n")
-        print(f"These are the required packages: {packages}")
+        print(f"\n\nThese are the required packages: {packages}")
 
         # Remove markers, duplicates, and invalid package names from the package list
         packages = [package.split("==")[0] for package in packages if "==" in package]
