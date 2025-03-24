@@ -11,7 +11,7 @@ from solution import Solution
 from solution_creator import SolutionCreator
 from solution_loader import SolutionLoader
 from solution_runner import SolutionRunner
-from solution_shower import SolutionShower
+from solution_displayer import SolutionDisplayer
 from installation_script_generator import InstallationScriptGenerator
 from solution_correcting import SolutionCorrecting
 from solution_feature_adding import SolutionFeatureAdding
@@ -35,7 +35,7 @@ class Dispatcher:
         self.current_solution = None
         self.solution_loader = SolutionLoader(solutions_folder)
         self.solution_runner = SolutionRunner()
-        self.solution_shower = SolutionShower(self.solutions)
+        self.solution_displayer = SolutionDisplayer(self.solutions)
         self.script_generator = InstallationScriptGenerator(solutions_folder)
         self.solution_correcting = SolutionCorrecting()
         self.solution_feature_adding = SolutionFeatureAdding()
@@ -123,7 +123,7 @@ class Dispatcher:
                             print(Fore.RED + "Invalid input. Please enter a valid number.")
 
             elif choice == '5':
-                self.solution_shower.show_solution()
+                self.solution_displayer.show_solution()
 
             elif choice == '6':
                 solution_name = input("Enter the name of the solution to remove: ")
