@@ -34,8 +34,8 @@ The Solutions are composed by Components.
 Each Component will be designed as a piece of code that solves a specific problem. 
 Make the Solution with the minimum number of Components possible. 
 The last Component will always be a main.py program. 
-The previous Components are classes to be initiatized in the main.py program. 
-Therefeore, the main.py program must be able to import all the required classes. 
+The previous Components are classes to be initiatized in the main.py program or other language scripts that will be used by our python components. 
+Therefeore, the main.py program must be able to import all the required classes and other language components. 
 After every Component, put the file associatated with the Component using the label File. 
 All the Components should be numbered and separated by a new line.
 This will make the Solution modular and each Component is self-contained.  
@@ -58,21 +58,25 @@ Here is just an example of a Solution with 3 Components, but you always should k
 
 Description: Plot Mandelbrot fractal with resolution 1000x1000 and color mapping.
 
-Component 1: Create a class MandelbrotFractal that will handle the calculations and generation of the Mandelbrot fractal. Include methods to determine the escape time for each point in the fractal, based on the Mandelbrot set formula. 
+Component 1: This initializes the plot with the specified resolution and color mapping. Must be included by main.py.
+
+File 1: init.txt
+
+Component 2: Create a class MandelbrotFractal that will handle the calculations and generation of the Mandelbrot fractal. Include methods to determine the escape time for each point in the fractal, based on the Mandelbrot set formula. 
 This class will be in a file named mandelbrot.py.
 
-File 1: mandelbrot.py
+File 2: mandelbrot.py
 
-Component 2: Create a class FractalPlotter that will handle the plotting of the Mandelbrot fractal. Include methods to generate the plot with customizable resolution and color mapping. 
+Component 3: Create a class FractalPlotter that will handle the plotting of the Mandelbrot fractal. Include methods to generate the plot with customizable resolution and color mapping. 
 This class will be in a file named fractal_plotter.py.
 
-File 2: fractal_plotter.py
+File 3: fractal_plotter.py
 
-Component 3: Implement a main program in a file named main.py that will instantiate the MandelbrotFractal class and the FractalPlotter class. 
+Component 4: Implement a main program in a file named main.py that will instantiate the MandelbrotFractal class and the FractalPlotter class. 
 Use these classes to calculate the escape times and plot the Mandelbrot fractal. Allow the user to specify the resolution of the plot and the color mapping. 
 Include a if __name__ == "__main__": at the end of the main.py program, inializing and running the all the Solution.
 
-File 3: main.py
+File 4: main.py
 """
 
         interaction_count = 1
@@ -88,7 +92,7 @@ File 3: main.py
             print(prompt)
 
             # Send the prompt to the AI and get the response
-            response = self.ai_connector.send_prompt(instructions,prompt)
+            response = self.ai_connector.send_prompt(instructions, prompt)
 
             print("\nAI-generated solution and components:")
             print(response)
@@ -139,13 +143,13 @@ File 3: main.py
         The last Component will always named as main.py program. 
         Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
         inializing and running the all the solution.
-        The previous Components are classes to be initiatized in the main.py program. 
+        The previous Components are classes to be initiatized in the main.py program or other language scripts that will be used by our python components. 
         Therefeore, the main.py program must be able to import all the required classes.
         Do not take user parameters as input in the main.py.
 
         Expected answer format:
 
-        A Python code for just one component (file). Keep the code coherent and compatible to other components of the same solution. 
+        A Python code or a script required for just one component (file). Keep the code coherent and compatible to other components of the same solution. 
         Use the same names of the classes and functions of the previous Components, but do not repeat code in more than one Component.
         
         """
@@ -155,7 +159,7 @@ File 3: main.py
                 prompt = f"""We are going to create the Solution {self.solution.name} with the following decription: \n\n{solution_description}\n\n"""
                 prompt += f"{component_description}\n\nPlease provide a Python implementation for the Component {file_name}.{extension}.\n"
 
-                print("\nThis is the propmt being sent to the AI:\n")
+                print("\nThis is the prompt being sent to the AI:\n")
                 print(prompt)
 
                 # Send the prompt to the AI and get the response
@@ -166,9 +170,7 @@ File 3: main.py
 
                 if code:
                     # Ask the human operator for approval
-                    ##approval = input("Do you approve the component implementation? (yes/no): ")
-
-                    approval = "yes"
+                    approval = input("Do you approve the component implementation? (yes/no): ")
 
                     if approval.lower() == "yes":
                         # Save the approved component implementation to a file
@@ -176,8 +178,7 @@ File 3: main.py
                         self.code_parser.save_code_to_file(code, file_path)
 
                         # Create a Component object with the file name, extension, and component description
-                        component = Component(file_name, extension, code, component_description)
-                        component.extension = extension
+                        component = Component(file_name, extension, code, component_description, language="python" if extension == "py" else "other")
                         self.solution.add_component(component)
                         break
                     else:
@@ -213,7 +214,6 @@ File 3: main.py
                         "file_name": file_name,
                         "extension": extension
                     })
-                    print(f"\nAdded component: {component_description}, File: {file_name}.{extension}\n")
                 component_description = line.split(":")[1].strip()
                 file_name = ""
                 extension = ""
@@ -229,6 +229,5 @@ File 3: main.py
                 "file_name": file_name,
                 "extension": extension
             })
-            print(f"\nAdded component: {component_description}, File: {file_name}.{extension}\n")
 
         return components

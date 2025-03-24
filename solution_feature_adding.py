@@ -1,13 +1,14 @@
 # solution_feature_adding.py
 
 import os
-import re
 from colorama import init, Fore, Style
 from ai_connector import AIConnector
+from ai_code_parser import AICodeParser
 
 class SolutionFeatureAdding:
     def __init__(self):
         self.ai_connector = AIConnector()
+        self.code_parser = AICodeParser()
 
     def add_feature_to_solution(self, solution):
         print(f"\nAdding a new feature to solution: {solution.name}\n")
@@ -33,43 +34,44 @@ class SolutionFeatureAdding:
             # Generate a prompt for the AI to add the new feature to the component
             prompt = f"The following solution needs a new feature or improvement:\n\n"
             prompt += f"Solution: {solution.name}\n"
-            prompt += f"Component: {component.name}\nCode:\n{component.code}\n\n"
-            prompt += f"Improvement or issue: {feature_description}\n\nPlease improve this component. Provide the updated code for the component, keeping the original file name."
+            prompt += f"Component: {component.name}.{component.extension}\n"
+            prompt += f"Language: {component.language}\n"
+            prompt += f"Code:\n{component.code}\n\n"
+            prompt += f"Improvement or issue: {feature_description}\n\n"
+            prompt += f"Please improve this component. Provide the updated code for the component, keeping the original file name and language."
 
-            print("\n\nAI's prompt:\n")
-            print(prompt)
+            print(Fore.CYAN + "\nAnalyzing component:")
+            print(Fore.CYAN + f"Name: {component.name}.{component.extension}")
+            print(Fore.CYAN + f"Language: {component.language}")
 
             # Send the prompt to the AI using the AIConnector and get the response
             response = self.ai_connector.send_prompt(instructions, prompt)
 
-            print("\n\nAI's response:\n")
+            print(Fore.WHITE + "\nAI's response:\n")
             print(response)
 
-            # Extract code blocks from the AI's response
-            code_blocks = re.findall(r'```(?:python)?\n(.*?)\n```', response, re.DOTALL)
+            # Use AICodeParser to extract code from the AI's response
+            updated_code = self.code_parser.parse_code(response)
 
-            if code_blocks:
-                updated_code = code_blocks[0]
+            if updated_code:
                 # Save the updated code to the component file
                 component_file_path = os.path.join(solution.folder, f"{component.name}.{component.extension}")
                 
-                print(Fore.YELLOW + f"\nSolution Folder: {solution.folder}")
-                print(Fore.YELLOW + f"Component File Path: {component_file_path}")
+                print(Fore.YELLOW + f"\nUpdating component file:")
+                print(Fore.YELLOW + f"Path: {component_file_path}")
                 
                 try:
-                    with open(component_file_path, 'w') as file:
-                        file.write(updated_code)
-                    print(Fore.GREEN + f"\nComponent '{component.name}' file updated successfully with the new feature.")
+                    # Use AICodeParser to save the code
+                    if self.code_parser.save_code_to_file(updated_code, component_file_path):
+                        # Update the component code with the AI-generated code
+                        component.code = updated_code
+                        print(Fore.GREEN + f"\nComponent '{component.name}.{component.extension}' successfully updated.")
+                    else:
+                        print(Fore.RED + f"\nFailed to save updated code for component '{component.name}.{component.extension}'.")
                 except Exception as e:
-                    print(Fore.RED + f"\nError occurred while updating component '{component.name}' file:")
+                    print(Fore.RED + f"\nError updating component file:")
                     print(Fore.RED + str(e))
-
-                # Update the component code with the AI-generated code
-                component.code = updated_code
-
-                print(Fore.YELLOW + f"\nComponent '{component.name}' has been updated with the new feature by the AI.\n")
-                #print(Fore.YELLOW + "Updated Component Details:")
-                #print(Fore.YELLOW + f"Name: {component.name}\n")
-                #print(Fore.YELLOW + f"Code:\n{component.code}\n")
             else:
-                print(Fore.BLUE + f"\nNo code blocks found in the AI's response for component '{component.name}'.\n")
+                print(Fore.BLUE + f"\nNo changes required for component '{component.name}.{component.extension}'.")
+
+        print(Fore.GREEN + "\nFeature addition process completed.")

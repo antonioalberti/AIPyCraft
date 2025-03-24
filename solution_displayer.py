@@ -2,7 +2,7 @@
 
 from colorama import init, Fore, Style
 
-class SolutionShower:
+class SolutionDisplayer:
     def __init__(self, solutions):
         self.solutions = solutions
 
@@ -42,6 +42,7 @@ class SolutionShower:
         for component in solution.components:
             print(Fore.BLUE + f"\n\nName: {component.name}")
             print(Fore.BLUE + f"Extension: {component.extension}")
+            print(Fore.BLUE + f"Language: {component.language}")  # Display the language of the component
             print(Fore.BLUE + f"Code:")
             print(Fore.WHITE + f"{component.code}")
             print(Fore.BLUE + f"Semantic Description: {component.semantic_description}")
