@@ -6,7 +6,7 @@ from component import Component
 class Solution:
     def __init__(self, name, components=None, execution_time=0):
         self.name = name
-        self.description = ""
+        self.model = ""
         self.semantic_description = ""
         self.components = components or []
         self.execution_time = execution_time
@@ -46,7 +46,7 @@ class Solution:
         """
         return {
             'name': self.name,
-            'description': self.description,
+            'model': self.model,
             'semantic_description': self.semantic_description,
             'components': [component.to_dict() for component in self.components],
             'execution_time': self.execution_time,
@@ -65,7 +65,7 @@ class Solution:
         execution_time = data.get('execution_time', 0)
         
         solution = cls(name, components, execution_time)
-        solution.description = data.get('description', '')
+        solution.model = data.get('model', '')
         solution.semantic_description = data.get('semantic_description', '')
         solution.status = data.get('status', 'PENDING')
         solution.result_description = data.get('result_description', '')

@@ -16,7 +16,7 @@ class SolutionLoader:
             return None
 
         # Read the approved solution file
-        descriptor_file = os.path.join(solution_folder, "descriptor.txt")
+        descriptor_file = os.path.join(solution_folder, "model.txt")
         if not os.path.exists(descriptor_file):
             print(f"\n\nApproved solution file not found for '{solution_name}'.\n\n")
             return None

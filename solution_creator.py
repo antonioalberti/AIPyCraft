@@ -101,8 +101,8 @@ File 4: main.py
             approval = input("\nDo you approve the solution and its components? (yes/no): \n\n")
 
             if approval.lower() == "yes":
-                # Save the approved solution description to a file
-                with open(os.path.join(solution_directory, f"descriptor.txt"), "w") as file:
+                # Save the approved solution model to a file
+                with open(os.path.join(solution_directory, f"model.txt"), "w") as file:
                     file.write(response)
                 break
             else:

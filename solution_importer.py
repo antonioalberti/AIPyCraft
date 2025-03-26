@@ -38,21 +38,12 @@ class SolutionImporter:
         
         You are going to determine the Components of a Solution. 
         Each Component is a file in the operating system. 
-        The main.py program must be able to import all the required Python classes and use one or more components in other languages. 
-        The last Component will always be named as main.py program. 
-        Therefore, always consider a if __name__ == "__main__": at the end of the main.py program, 
-        initializing and running the entire solution.
+        What is the purpose of the file? What is the content of the file?
+        Keep it simple and clear. Not more than a paragraph in the answer.
 
         Expected answer format:
 
-        File 1: The file name with extension.
-
-        Description 1: A brief description of the functionality and purpose of the script.
-
-        File 2: The file name with extension.
-
-        Description 2: A brief description of the functionality and purpose of the script.
-        
+        A paragraph with the semantic description of the file content.  
         """
 
         # Generate prompts for each file in the Solution folder
@@ -95,11 +86,12 @@ class SolutionImporter:
         instructions1 = """Context:
         
         You are going to determine the overall description of a Solution. 
-        Each Component is a file that contains code or text. 
+        What is the purpose of the Solution? What is the overall description of the Solution?
+        Keep it simple and clear. Not more than a paragraph in the answer.
 
         Expected answer format:
 
-        Overall description of the solution. Include the purpose and how the components interact with each other.
+        A paragraph with the semantic description of the Solution.
         
         """
 
@@ -108,7 +100,7 @@ class SolutionImporter:
         for component in components:
             final_prompt += f"Component: {component.name}.{component.extension}\n"
             final_prompt += f"Description: {component.semantic_description}\n\n"
-        final_prompt += "Provide an overall description of the solution. Include the purpose and how the components interact with each other."
+        final_prompt += "Provide an overall description of the solution."
 
         # Send the final prompt to the AI using the AIConnector and get the response
         final_response = self.ai_connector.send_prompt(instructions1, final_prompt)
@@ -120,6 +112,8 @@ class SolutionImporter:
         # Create a Solution object using the extracted information
         solution = Solution(solution_name, components)
 
+        solution.semantic_description = solution_description
+
         # Create the solution folder and save the solution description
         solution_folder = os.path.join(self.solutions_folder, solution_name)
         os.makedirs(solution_folder, exist_ok=True)
@@ -129,17 +123,15 @@ class SolutionImporter:
         # Set solution folder at the new solution object
         solution.folder = solution_folder
 
-        # Generate the content for the descriptor.txt file
+        # Generate the content for the model.txt file
         descriptor_content = f"Description: {solution_description}\n\n"
-
-        solution.semantic_description = solution_description
 
         for i, component in enumerate(components, start=1):
             descriptor_content += f"Component {i}: {component.semantic_description}\n\n"
             descriptor_content += f"File {i}: {component.name}.{component.extension}\n\n"
 
-        # Save the descriptor.txt file
-        with open(os.path.join(solution_folder, "descriptor.txt"), "w") as file:
+        # Save the model.txt file
+        with open(os.path.join(solution_folder, "model.txt"), "w", encoding="utf-8") as file:
             file.write(descriptor_content)
 
         # Save the components' content files in the solution folder
