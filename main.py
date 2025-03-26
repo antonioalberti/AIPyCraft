@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from colorama import init, Fore, Style
 from logger import logger
 from ai_connector import AIConnector
-from solution import Solution, export_solution_to_toml
+from solution import Solution
 from solution_creator import SolutionCreator
 from solution_loader import SolutionLoader
 from solution_runner import SolutionRunner
@@ -214,7 +214,7 @@ class Dispatcher:
 
             elif choice == '12':
                 if self.current_solution:
-                    path = export_solution_to_toml(self.current_solution)
+                    path = self.current_solution.export_solution_to_toml()
                     logger.info(f"Solution exported to TOML at: {path}")
                     print(Fore.GREEN + f"TOML file saved: {path}")
                 else:
