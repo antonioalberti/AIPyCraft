@@ -1,10 +1,10 @@
 # component.py
 
 class Component:
-    def __init__(self, name, extension, code, semantic_description, language="python"):
+    def __init__(self, name, extension, content, semantic_description, language="python"):
         self.name = name
         self.extension = extension
-        self.code = code
+        self.content = content
         self.semantic_description = semantic_description
         self.language = language
         self.status = 'PENDING'
@@ -19,7 +19,7 @@ class Component:
                 return
             
             # Execute Python code
-            exec(self.code, globals())
+            exec(self.content, globals())
             
             # Check if the component code has a main function
             if 'main' in globals():

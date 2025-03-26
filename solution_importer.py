@@ -28,29 +28,33 @@ class SolutionImporter:
         instructions = """Context:
         
         You are going to determine the Components of a Solution. 
-        Each Component will be designed as a piece of code that solves a specific problem. 
-        Therefore, the main.py program must be able to import all the required classes. 
+        Each Component is a file in the operating system. 
+        The main.py program must be able to import all the required Python classes and use one or more components in other languages. 
         The last Component will always be named as main.py program. 
-        Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
+        Therefore, always consider a if __name__ == "__main__": at the end of the main.py program, 
         initializing and running the entire solution.
 
         Expected answer format:
 
-        File: The file name with extension.
+        File 1: The file name with extension.
 
-        Description: A brief description of the functionality and purpose of the script.
+        Description 1: A brief description of the functionality and purpose of the script.
+
+        File 2: The file name with extension.
+
+        Description 2: A brief description of the functionality and purpose of the script.
         
         """
 
-        # Generate prompts for each script file
+        # Generate prompts for each file in the Solution folder
         for file_name in script_files:
             file_path = os.path.join(folder_path, file_name)
             with open(file_path, "r") as file:
-                code = file.read()
+                content = file.read()
 
-                prompt = "Follow your instructions to describe the following code:\n\n"
+                prompt = "Follow your instructions to describe the following content:\n\n"
                 prompt += f"File: {file_name}\n"
-                prompt += f"Code:\n{code}\n\n"
+                prompt += f"Content:\n{content}\n\n"
 
                 # Send the prompt to the AI using the AIConnector and get the response
                 response = self.ai_connector.send_prompt(instructions, prompt)
@@ -63,7 +67,7 @@ class SolutionImporter:
                 language = self.detect_language(component_extension)
 
                 # Create a Component object using the extracted information
-                component = Component(component_name, component_extension, code, response.strip(), language)
+                component = Component(component_name, component_extension, content, response.strip(), language)
                 components.append(component)
 
                 print(f"\n\nParsed from AI response:\n\n")
@@ -71,13 +75,13 @@ class SolutionImporter:
                 print(Fore.BLUE + f"\n\nName: {component.name}\n")
                 print(Fore.BLUE + f"Extension: {component.extension}\n")
                 print(Fore.BLUE + f"Language: {component.language}\n")
-                print(Fore.BLUE + f"Code: {component.code}\n")
+                print(Fore.BLUE + f"Content: {component.content}\n")
                 print(Fore.BLUE + f"Description: {component.semantic_description}\n")
 
         instructions1 = """Context:
         
         You are going to determine the overall description of a Solution. 
-        Each Component will be designed as a piece of code that solves a specific problem. 
+        Each Component is a file that contains code or text. 
 
         Expected answer format:
 
@@ -124,11 +128,11 @@ class SolutionImporter:
         with open(os.path.join(solution_folder, "descriptor.txt"), "w") as file:
             file.write(descriptor_content)
 
-        # Save the components' code files in the solution folder
+        # Save the components' content files in the solution folder
         for component in components:
             component_file_path = os.path.join(solution_folder, f"{component.name}.{component.extension}")
             with open(component_file_path, "w") as file:
-                file.write(component.code)
+                file.write(component.content)
 
         print(Fore.GREEN + f"\nSolution '{solution_name}' imported successfully.")
 
@@ -136,7 +140,7 @@ class SolutionImporter:
 
     def detect_language(self, extension):
         """
-        Detect the programming language based on the file extension.
+        Detect a component file content language based on the file extension.
         """
         language_map = {
             "py": "python",

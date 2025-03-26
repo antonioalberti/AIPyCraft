@@ -25,13 +25,13 @@ class SolutionCorrecting:
 
         Instructions:
 
-        You need to correct the code of the Component that is causing a certain error.
+        You need to correct the content of the Component that is causing a certain error.
         In addtion, you need to adjust the other components correspondingly to keep consistency. 
         The main.py program must be able to import all the required Python classes, as well as to input (read from file) other language code.
         The last Component will always be the main.py program. Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
         initializing and running the all the solution.
         Whenever you correct components, check the consistency of attributes. This is one of the main problems in the code. 
-        Keep the code of each Component coherent and compatible with the others on the same solution.
+        Keep the content of each Component coherent and compatible with the others on the same solution.
         Check consistency of naming and number of parameters in the components. 
 
         Expected answer format:
@@ -49,7 +49,7 @@ class SolutionCorrecting:
                 prompt = f"The Solution {solution.name} created from the following Solution description encountered an error during execution and you need to correct it.\n\n"
                 prompt += f"The solution aim is to: {solution.semantic_description}\n\n"
                 prompt += f"{error_message}\n\nPlease analyze the following Component:\n\n"
-                prompt += f"{component.name}\n\nCode:\n{component.code}\n\n"
+                prompt += f"{component.name}\n\Content:\n{component.content}\n\n"
                 prompt += "IMPORTANT 1: If some corrections are required, send ONLY the corrected code of this Component. In addtion, do not rename the file name. Do nothing else.\n"
                 prompt += "IMPORTANT 2: Do not remove the function if __name__ == \"__main__\" from the main.py file."
 
@@ -66,7 +66,7 @@ class SolutionCorrecting:
                 code_blocks = re.findall(r'```(?:python)?\n(.*?)\n```', response, re.DOTALL)
 
                 if code_blocks:
-                    updated_code = code_blocks[0]
+                    updated_content = code_blocks[0]
                     # Save the updated code to the component file
                     component_file_path = os.path.join(solution.folder, f"{component.name}.{component.extension}")
                     
@@ -75,19 +75,14 @@ class SolutionCorrecting:
                     
                     try:
                         with open(component_file_path, 'w') as file:
-                            file.write(updated_code)
+                            file.write(updated_content)
                         print(Fore.GREEN + f"\nComponent '{component.name}' file updated successfully.")
                     except Exception as e:
                         print(Fore.RED + f"\nError occurred while updating component '{component.name}' file:")
                         print(Fore.RED + str(e))
 
-                    # Update the component code with the AI-generated code
-                    component.code = updated_code
-
-                    #print(Fore.YELLOW + f"\nComponent '{component.name}' has been improved by the AI.\n")
-                    #print(Fore.YELLOW + "Updated Component Details:")
-                    #print(Fore.YELLOW + f"Name: {component.name}\n")
-                    #print(Fore.YELLOW + f"Code:\n{component.code}\n")
+                    # Update the component content with the AI-generated content
+                    component.content = updated_content
                 else:
                     print(Fore.BLUE + f"\nNo code blocks found in the AI's response for component '{component.name}'.\n")
         else:

@@ -36,7 +36,7 @@ class SolutionFeatureAdding:
             prompt += f"Solution: {solution.name}\n"
             prompt += f"Component: {component.name}.{component.extension}\n"
             prompt += f"Language: {component.language}\n"
-            prompt += f"Code:\n{component.code}\n\n"
+            prompt += f"Content:\n{component.content}\n\n"
             prompt += f"Improvement or issue: {feature_description}\n\n"
             prompt += f"Please improve this component. Provide the updated code for the component, keeping the original file name and language."
 
@@ -51,10 +51,10 @@ class SolutionFeatureAdding:
             print(response)
 
             # Use AICodeParser to extract code from the AI's response
-            updated_code = self.code_parser.parse_code(response)
+            updated_content = self.code_parser.parse_code(response)
 
-            if updated_code:
-                # Save the updated code to the component file
+            if updated_content:
+                # Save the updated content to the component file
                 component_file_path = os.path.join(solution.folder, f"{component.name}.{component.extension}")
                 
                 print(Fore.YELLOW + f"\nUpdating component file:")
@@ -62,12 +62,12 @@ class SolutionFeatureAdding:
                 
                 try:
                     # Use AICodeParser to save the code
-                    if self.code_parser.save_code_to_file(updated_code, component_file_path):
-                        # Update the component code with the AI-generated code
-                        component.code = updated_code
+                    if self.code_parser.save_code_to_file(updated_content, component_file_path):
+                        # Update the component content with the AI-generated content
+                        component.content = updated_content
                         print(Fore.GREEN + f"\nComponent '{component.name}.{component.extension}' successfully updated.")
                     else:
-                        print(Fore.RED + f"\nFailed to save updated code for component '{component.name}.{component.extension}'.")
+                        print(Fore.RED + f"\nFailed to save updated content for component '{component.name}.{component.extension}'.")
                 except Exception as e:
                     print(Fore.RED + f"\nError updating component file:")
                     print(Fore.RED + str(e))

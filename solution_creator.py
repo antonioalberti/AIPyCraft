@@ -31,7 +31,7 @@ class SolutionCreator:
 Context:
 
 The Solutions are composed by Components.  
-Each Component will be designed as a piece of code that solves a specific problem. 
+Each Component will be designed as a piece of content for a certain purpose. 
 Make the Solution with the minimum number of Components possible. 
 The last Component will always be a main.py program. 
 The previous Components are classes to be initiatized in the main.py program or other language scripts that will be used by our python components. 
@@ -45,7 +45,7 @@ Expected answer format:
 
 For the response parser to be possible, each Component description must be on a single line, 
 starting with the word "Component N:", where N is the number of the Component. 
-Do not send the code now. Add a blank line and describe the Components required to implement this Solution. 
+Do not send the component content now. Add a blank line and describe the Components required to implement this Solution. 
 After every Component, put the file associatated with the Component using the label File.  
 All the Components should be numbered and separated by a new line. 
 This will make the Solution modular and each Component is self-contained.  
@@ -132,9 +132,9 @@ File 4: main.py
             extension = component_info['extension']
             print(f"\nComponent Interaction {interaction_count}:")
 
-            instructions = """Context for creating the code of a Solution:
+            instructions = """Context for creating the content of a Solution:
         
-        You are going to create the Python code for a Component of a solution. 
+        You are going to create the Python content for a Component of a solution. 
 
         Instructions:  
 
@@ -149,15 +149,15 @@ File 4: main.py
 
         Expected answer format:
 
-        A Python code or a script required for just one component (file). Keep the code coherent and compatible to other components of the same solution. 
-        Use the same names of the classes and functions of the previous Components, but do not repeat code in more than one Component.
+        A Python code or other language as required for this component only (file). Keep the content coherent and compatible to other components of the same solution. 
+        Use the same names of the classes and functions of the previous Components, but do not repeat content in more than one Component.
         
         """
 
             while True:
                 # Generate a prompt for the AI to create the component implementation
                 prompt = f"""We are going to create the Solution {self.solution.name} with the following decription: \n\n{solution_description}\n\n"""
-                prompt += f"{component_description}\n\nPlease provide a Python implementation for the Component {file_name}.{extension}.\n"
+                prompt += f"{component_description}\n\nPlease provide the content for the Component {file_name}.{extension}.\n"
 
                 print("\nThis is the prompt being sent to the AI:\n")
                 print(prompt)
@@ -165,20 +165,23 @@ File 4: main.py
                 # Send the prompt to the AI and get the response
                 response = self.ai_connector.send_prompt(instructions, prompt)
 
-                # Parse the code from the AI-generated component implementation
-                code = self.code_parser.parse_code(response)
+                print("\nThis is the AI response:\n")
+                print(response)
 
-                if code:
+                # Parse the content from the AI-generated component implementation
+                content = self.content_parser.parse_content(response)
+
+                if content:
                     # Ask the human operator for approval
                     approval = input("Do you approve the component implementation? (yes/no): ")
 
                     if approval.lower() == "yes":
                         # Save the approved component implementation to a file
                         file_path = os.path.join(solution_directory, f"{file_name}.{extension}")
-                        self.code_parser.save_code_to_file(code, file_path)
+                        self.content_parser.save_content_to_file(content, file_path)
 
                         # Create a Component object with the file name, extension, and component description
-                        component = Component(file_name, extension, code, component_description, language="python" if extension == "py" else "other")
+                        component = Component(file_name, extension, content, component_description, language="python" if extension == "py" else "other")
                         self.solution.add_component(component)
                         break
                     else:

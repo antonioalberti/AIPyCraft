@@ -43,8 +43,8 @@ class SolutionDisplayer:
             print(Fore.BLUE + f"\n\nName: {component.name}")
             print(Fore.BLUE + f"Extension: {component.extension}")
             print(Fore.BLUE + f"Language: {component.language}")  # Display the language of the component
-            print(Fore.BLUE + f"Code:")
-            print(Fore.WHITE + f"{component.code}")
+            print(Fore.BLUE + f"Content:")
+            print(Fore.WHITE + f"{component.content}")
             print(Fore.BLUE + f"Semantic Description: {component.semantic_description}")
 
         print(Style.RESET_ALL)

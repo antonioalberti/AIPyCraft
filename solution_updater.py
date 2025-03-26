@@ -10,10 +10,10 @@ class SolutionUpdater:
         self.ai_connector = AIConnector()
 
     def update_solution(self, solution):
-        # Create a context string with all components' code.
+        # Create a context string with all components' content.
         context = "Solution Components:\n"
         for comp in solution.components:
-            context += f"{comp.name}.{comp.extension}:\n{comp.code}\n\n"
+            context += f"{comp.name}.{comp.extension}:\n{comp.content}\n\n"
 
         # Get the error message from the solution's result description
         error_message = solution.result_description
@@ -34,15 +34,15 @@ class SolutionUpdater:
             response = self.ai_connector.send_prompt("", prompt)
             print(f"AI response for {comp.name}.{comp.extension}:\n{response}\n")
 
-            # Try to extract a Python code block.
-            code_match = re.search(r"```(?:python)?\n(.*?)\n```", response, re.DOTALL)
-            if code_match:
-                updated_code = code_match.group(1)
+            # Try to extract a Python content block.
+            content_match = re.search(r"```(?:python)?\n(.*?)\n```", response, re.DOTALL)
+            if content_match:
+                updated_content = content_match.group(1)
                 file_path = os.path.join(solution.folder, f"{comp.name}.{comp.extension}")
                 try:
                     with open(file_path, "w") as file:
-                        file.write(updated_code)
-                    comp.code = updated_code
+                        file.write(updated_content)
+                    comp.content = updated_content
                     print(Fore.GREEN + f"Updated {comp.name}.{comp.extension} successfully.")
                 except Exception as e:
                     print(Fore.RED + f"Error updating {comp.name}.{comp.extension}: {e}")

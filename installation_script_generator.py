@@ -46,7 +46,7 @@ class InstallationScriptGenerator:
         # Generate the prompt for the AI to determine the necessary packages
         prompt = f"Given the following Python solution components:\n\n"
         for component in python_components:
-            prompt += f"Component: {component.name}\n\nCode:\n{component.code}\n\n"
+            prompt += f"Component: {component.name}\n\Content:\n{component.content}\n\n"
         prompt += f"Solution Result Description:\n{solution.result_description}\n\n"
         prompt += "Please provide a list of the necessary Python packages that need to be installed via pip in order to run this Solution.\n"
         prompt += "IMPORTANT 1: Provide only the required package names, one per line, without any additional text or explanations. \n"
