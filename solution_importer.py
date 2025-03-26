@@ -1,7 +1,5 @@
-# solution_importer.py
-
 import os
-from colorama import init, Fore, Style
+from colorama import Fore
 from ai_connector import AIConnector
 from solution import Solution
 from component import Component
@@ -19,9 +17,20 @@ class SolutionImporter:
             print(Fore.RED + f"Folder '{folder_path}' does not exist.")
             return None
 
-        # Get the list of script files in the folder
-        script_extensions = ['.py', '.sh', '.bat', '.js']  # Add more extensions if needed
-        script_files = [file for file in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, file)) and os.path.splitext(file)[1].lower() in script_extensions]
+        # Supported file extensions
+        supported_extensions = [
+            '.py', '.sh', '.bat', '.ps1', '.js', '.txt', '.toml', '.json', '.md', '.html', '.css', '.yaml', '.yml'
+        ]
+
+        # Get the list of files in the folder with supported extensions
+        script_files = [
+            file for file in os.listdir(folder_path)
+            if os.path.isfile(os.path.join(folder_path, file)) and os.path.splitext(file)[1].lower() in supported_extensions
+        ]
+
+        if not script_files:
+            print(Fore.YELLOW + f"No supported files found in {folder_path}")
+            return None
 
         components = []
 
@@ -49,7 +58,7 @@ class SolutionImporter:
         # Generate prompts for each file in the Solution folder
         for file_name in script_files:
             file_path = os.path.join(folder_path, file_name)
-            with open(file_path, "r") as file:
+            with open(file_path, "r", encoding="utf-8") as file:
                 content = file.read()
 
                 prompt = "Follow your instructions to describe the following content:\n\n"
@@ -67,11 +76,16 @@ class SolutionImporter:
                 language = self.detect_language(component_extension)
 
                 # Create a Component object using the extracted information
-                component = Component(component_name, component_extension, content, response.strip(), language)
+                component = Component(
+                    name=component_name,
+                    extension=component_extension,
+                    content=content,
+                    semantic_description=response.strip(),
+                    language=language
+                )
                 components.append(component)
 
                 print(f"\n\nParsed from AI response:\n\n")
-
                 print(Fore.BLUE + f"\n\nName: {component.name}\n")
                 print(Fore.BLUE + f"Extension: {component.extension}\n")
                 print(Fore.BLUE + f"Language: {component.language}\n")
@@ -131,7 +145,7 @@ class SolutionImporter:
         # Save the components' content files in the solution folder
         for component in components:
             component_file_path = os.path.join(solution_folder, f"{component.name}.{component.extension}")
-            with open(component_file_path, "w") as file:
+            with open(component_file_path, "w", encoding="utf-8") as file:
                 file.write(component.content)
 
         print(Fore.GREEN + f"\nSolution '{solution_name}' imported successfully.")
@@ -146,6 +160,7 @@ class SolutionImporter:
             "py": "python",
             "sh": "bash",
             "bat": "batch",
+            "ps1": "powershell",
             "js": "javascript",
             "txt": "text",
             "json": "json",
