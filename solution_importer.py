@@ -29,10 +29,10 @@ class SolutionImporter:
         
         You are going to determine the Components of a Solution. 
         Each Component will be designed as a piece of code that solves a specific problem. 
-        Therefeore, the main.py program must be able to import all the required classes. 
-        The last Component will always named as main.py program. 
+        Therefore, the main.py program must be able to import all the required classes. 
+        The last Component will always be named as main.py program. 
         Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
-        inializing and running the all the solution.
+        initializing and running the entire solution.
 
         Expected answer format:
 
@@ -51,7 +51,6 @@ class SolutionImporter:
                 prompt = "Follow your instructions to describe the following code:\n\n"
                 prompt += f"File: {file_name}\n"
                 prompt += f"Code:\n{code}\n\n"
-                prompt += ""
 
                 # Send the prompt to the AI using the AIConnector and get the response
                 response = self.ai_connector.send_prompt(instructions, prompt)
@@ -60,14 +59,18 @@ class SolutionImporter:
                 component_name, component_extension = os.path.splitext(file_name)
                 component_extension = component_extension[1:]  # Remove the leading dot
 
+                # Determine the language based on the file extension
+                language = self.detect_language(component_extension)
+
                 # Create a Component object using the extracted information
-                component = Component(component_name, component_extension, code, response.strip())
+                component = Component(component_name, component_extension, code, response.strip(), language)
                 components.append(component)
 
                 print(f"\n\nParsed from AI response:\n\n")
 
                 print(Fore.BLUE + f"\n\nName: {component.name}\n")
                 print(Fore.BLUE + f"Extension: {component.extension}\n")
+                print(Fore.BLUE + f"Language: {component.language}\n")
                 print(Fore.BLUE + f"Code: {component.code}\n")
                 print(Fore.BLUE + f"Description: {component.semantic_description}\n")
 
@@ -85,7 +88,7 @@ class SolutionImporter:
         # Generate a final prompt for the AI to provide an overall solution description
         final_prompt = Fore.WHITE + f"Based on the analysis of the following components:\n\n"
         for component in components:
-            final_prompt += f"Component: {component.name}{component.extension}\n"
+            final_prompt += f"Component: {component.name}.{component.extension}\n"
             final_prompt += f"Description: {component.semantic_description}\n\n"
         final_prompt += "Provide an overall description of the solution. Include the purpose and how the components interact with each other."
 
@@ -108,16 +111,10 @@ class SolutionImporter:
         # Set solution folder at the new solution object
         solution.folder = solution_folder
 
-        #with open(os.path.join(solution_folder, "solution_description.txt"), "w") as file:
-        #    file.write(solution_description)
-
         # Generate the content for the descriptor.txt file
         descriptor_content = f"Description: {solution_description}\n\n"
 
         solution.semantic_description = solution_description
-
-        # Generate the content for the descriptor.txt file
-        descriptor_content = f"Description: {solution_description}\n\n"
 
         for i, component in enumerate(components, start=1):
             descriptor_content += f"Component {i}: {component.semantic_description}\n\n"
@@ -136,3 +133,23 @@ class SolutionImporter:
         print(Fore.GREEN + f"\nSolution '{solution_name}' imported successfully.")
 
         return solution
+
+    def detect_language(self, extension):
+        """
+        Detect the programming language based on the file extension.
+        """
+        language_map = {
+            "py": "python",
+            "sh": "bash",
+            "bat": "batch",
+            "js": "javascript",
+            "txt": "text",
+            "json": "json",
+            "md": "markdown",
+            "html": "html",
+            "css": "css",
+            "yaml": "yaml",
+            "yml": "yaml",
+            "toml": "toml"
+        }
+        return language_map.get(extension, "unknown")

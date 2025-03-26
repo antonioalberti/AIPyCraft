@@ -15,12 +15,12 @@ class SolutionRunner:
 
         main_component = None
         for component in solution.components:
-            if component.name.lower() == "main":
+            if component.name.lower() == "main" and component.language == "python":
                 main_component = component
                 break
 
         if main_component is None:
-            print(Fore.RED + "No 'main.py' component found in the solution.")
+            print(Fore.RED + "No 'main.py' Python component found in the solution.")
             return
 
         print(Fore.RED + f"\n\nExecuting component: {main_component.name}.{main_component.extension}\n\n")

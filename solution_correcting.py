@@ -18,17 +18,17 @@ class SolutionCorrecting:
 
             instructions = """Context:
         
-        You are going to correct Python codes for Components of a Solution developed in Python. 
+        You are going to correct Components of a Solution. 
         The Solution has a descriptor that is going to be provided to you in the prompts.
-        Each Component is a Python file that solves a specific problem. 
-        
+        Each Component is a Python file or other language code that solves a specific problem. 
+        Please, do not change the programming language of Components. 
 
         Instructions:
 
         You need to correct the code of the Component that is causing a certain error.
         In addtion, you need to adjust the other components correspondingly to keep consistency. 
-        The main.py program must be able to import all the required classes. 
-        The last Component will always named as main.py program. Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
+        The main.py program must be able to import all the required Python classes, as well as to input (read from file) other language code.
+        The last Component will always be the main.py program. Therefore, always put a if __name__ == "__main__": at the end of the main.py program, 
         initializing and running the all the solution.
         Whenever you correct components, check the consistency of attributes. This is one of the main problems in the code. 
         Keep the code of each Component coherent and compatible with the others on the same solution.
@@ -36,7 +36,7 @@ class SolutionCorrecting:
 
         Expected answer format:
 
-        1. If SOME corrections are required, send ONLY the corrected Python code of this Component.
+        1. If SOME corrections are required, send ONLY the corrected code of this Component.
         In addtion, do not rename the file name. Do nothing else. 
 
         2. If NO corrections are required in some Component, do not send any code. Send just a word saying "NO".
@@ -50,7 +50,7 @@ class SolutionCorrecting:
                 prompt += f"The solution aim is to: {solution.semantic_description}\n\n"
                 prompt += f"{error_message}\n\nPlease analyze the following Component:\n\n"
                 prompt += f"{component.name}\n\nCode:\n{component.code}\n\n"
-                prompt += "IMPORTANT 1: If some corrections are required, send ONLY the corrected Python code of this Component. In addtion, do not rename the file name. Do nothing else.\n"
+                prompt += "IMPORTANT 1: If some corrections are required, send ONLY the corrected code of this Component. In addtion, do not rename the file name. Do nothing else.\n"
                 prompt += "IMPORTANT 2: Do not remove the function if __name__ == \"__main__\" from the main.py file."
 
                 print("\nThis is the prompt being sent to the AI:\n")

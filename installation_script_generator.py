@@ -1,3 +1,5 @@
+# installation_script_generator.py
+
 import os
 import subprocess
 from ai_connector import AIConnector
@@ -31,13 +33,24 @@ class InstallationScriptGenerator:
         attrs==23.2.0
         """
 
+        # Filter Python components
+        python_components = [component for component in solution.components if component.language == "python"]
+        non_python_components = [component for component in solution.components if component.language != "python"]
+
+        # Notify about non-Python components
+        if non_python_components:
+            print("\nThe following non-Python components are part of the solution and must be handled manually:")
+            for component in non_python_components:
+                print(f"- {component.name}.{component.extension} ({component.language})")
+
         # Generate the prompt for the AI to determine the necessary packages
-        prompt = f"Given the following solution components:\n\n"
-        for component in solution.components:
+        prompt = f"Given the following Python solution components:\n\n"
+        for component in python_components:
             prompt += f"Component: {component.name}\n\nCode:\n{component.code}\n\n"
+        prompt += f"Solution Result Description:\n{solution.result_description}\n\n"
         prompt += "Please provide a list of the necessary Python packages that need to be installed via pip in order to run this Solution.\n"
         prompt += "IMPORTANT 1: Provide only the required package names, one per line, without any additional text or explanations. \n"
-        prompt += "IMPORTANT 2: Do not forget to include the version of all package.\n"
+        prompt += "IMPORTANT 2: Do not forget to include the version of all packages.\n"
         prompt += "IMPORTANT 3: Be careful to provide packages that are mutually compatible. Deal with versions to avoid incompatibilities.\n\n"
         prompt += "Example of answer (a list of package names, one per line):\n\n"
         prompt += "aiohttp==3.9.4\n"
@@ -46,7 +59,7 @@ class InstallationScriptGenerator:
         prompt += "attrs==23.2.0\n"
     
         # Send the prompt to the AI using the AIConnector and get the response
-        response = self.ai_connector.send_prompt(instructions,prompt)
+        response = self.ai_connector.send_prompt(instructions, prompt)
 
         print("\n\nAI's response:\n")
         print(response)
@@ -56,13 +69,13 @@ class InstallationScriptGenerator:
         print(f"\n\nThese are the required packages: {packages}")
 
         # Remove markers, duplicates, and invalid package names from the package list
-        packages = [package.split("==")[0] for package in packages if "==" in package]
+        packages = [package.strip() for package in packages if "==" in package]
         packages = list(set(packages))
 
         # Write the packages to the requirements.txt file
         with open(requirements_file_path, 'w') as req_file:
             for package in packages:
-                req_file.write(package.strip() + '\n')
+                req_file.write(package + '\n')
 
         # Ask the user to select the installation method
         while True:
@@ -83,7 +96,7 @@ class InstallationScriptGenerator:
 
             # Install the packages using pip within the virtual environment
             if os.name == 'nt':  # Windows
-                pip_executable = os.path.join(venv_directory, "Scripts", "pip3.exe")
+                pip_executable = os.path.join(venv_directory, "Scripts", "pip.exe")
                 subprocess.run([pip_executable, "install", "-r", requirements_file_path])
                 print(f"\n\nPackages installed using pip in {venv_directory}\n\n")
             else:  # Unix-based systems
