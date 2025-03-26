@@ -26,7 +26,7 @@ class SolutionUpdater:
                 f"{context}\n\n"
                 f"After trying to run the solution, the results was: \n\n{error_message}\n\n"
                 f"Review the component '{comp.name}.{comp.extension}'. If any improvements are needed, "
-                "return ONLY the corrected code inside a code block. "
+                "return ONLY the complete code corrected inside a code block. It must be complete, not a partial fix."
                 "If no changes are necessary, reply with 'NO'."
             )
 

@@ -50,7 +50,8 @@ class SolutionCorrecting:
                 prompt += f"The solution aim is to: {solution.semantic_description}\n\n"
                 prompt += f"{error_message}\n\nPlease analyze the following Component:\n\n"
                 prompt += f"{component.name}\n\Content:\n{component.content}\n\n"
-                prompt += "IMPORTANT 1: If some corrections are required, send ONLY the corrected code of this Component. In addtion, do not rename the file name. Do nothing else.\n"
+                prompt += "IMPORTANT 1: If some corrections are required, send ONLY the complete corrected code of this Component.\n"
+                prompt += "In addtion, do not rename the file name. Do nothing else.\n"
                 prompt += "IMPORTANT 2: Do not remove the function if __name__ == \"__main__\" from the main.py file."
 
                 print("\nThis is the prompt being sent to the AI:\n")
