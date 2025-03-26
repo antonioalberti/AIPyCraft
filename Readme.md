@@ -2,20 +2,22 @@
 
 This project is an AI-powered solution creator that assists users in generating, managing, and running code solutions. It leverages the power of AI to create code components based on user-provided descriptions and seamlessly integrates them into a complete solution.
 
-The program was cocreated with Cody using Claude 3 Opus.
+The program was cocreated with GitHub Copilot using Claude 3.5 Sonnet.
 
 ## Features
 
 - Create new solutions by providing a name and description
 - Generate code components using AI based on user requirements
+- Support multiple programming languages (Python, JavaScript, Bash, JSON, etc.)
 - Load existing solutions from a folder
-- Install dependencies for a solution using virtual environments
-- Run solutions and execute the main component
+- Install dependencies for Python components using virtual environments
+- Run solutions (Python components are executed, other languages are skipped)
 - Display detailed information about a solution and its components
 - Remove solutions and their associated files
 - Correct and improve existing solutions using AI
 - Add new features to solutions using AI
 - Import solutions from external folders
+- Export solutions to TOML format
 - Delete solutions from the program (files will be preserved)
 
 ## Prerequisites
@@ -62,7 +64,7 @@ The program was cocreated with Cody using Claude 3 Opus.
    - Enter `1` to load an existing solution from a folder
    - Enter `2` to create a new solution by providing a name and description
    - Enter `3` to install dependencies for a solution using a virtual environment
-   - Enter `4` to run a solution and execute the main component
+   - Enter `4` to run a solution (executes Python components, skips others)
    - Enter `5` to display detailed information about a solution and its components
    - Enter `6` to remove a solution and its associated files
    - Enter `7` to correct and improve an existing solution using AI
@@ -70,27 +72,40 @@ The program was cocreated with Cody using Claude 3 Opus.
    - Enter `9` to manually improve or correct a solution
    - Enter `10` to import a solution from an external folder
    - Enter `11` to delete a solution from the program (files will be preserved)
-   - Enter `12` to exit the program
+   - Enter `12` to export current solution to TOML
+   - Enter `13` to exit the program
 
-3. Follow the prompts and provide the necessary information as requested by the program.
+## Component Languages
+
+The project supports various file types and programming languages:
+- Python (.py)
+- JavaScript (.js)
+- Bash scripts (.sh)
+- Batch files (.bat)
+- JSON (.json)
+- Text files (.txt)
+- Markdown (.md)
+- YAML (.yml, .yaml)
+- TOML (.toml)
+
+Note: Only Python components are executed when running a solution. Other components are automatically skipped but remain part of the solution structure.
 
 ## Folder Structure
 
 - main.py: The main entry point of the program
 - ai_connector.py: Handles the connection and communication with the OpenAI API
-- ai_code_parser.py: Parses code from AI-generated responses
-- component.py: Defines the structure and behavior of a code component
+- ai_code_parser.py: Parses code from AI-generated responses with language detection
+- component.py: Defines the structure and behavior of a multilanguage code component
 - solution.py: Defines the structure and behavior of a solution
-- solution_creator.py: Handles the creation of new solutions
+- solution_creator.py: Handles the creation of new solutions with multilanguage support
 - solution_loader.py: Loads existing solutions from a folder
-- solution_runner.py: Executes a solution and its main component
-- solution_shower.py: Displays detailed information about a solution and its components
-- installation_script_generator.py: Generates installation scripts for a solution
+- solution_runner.py: Executes Python components and skips non-Python components
+- solution_shower.py: Displays detailed information about solutions and their components
+- installation_script_generator.py: Generates installation scripts for Python dependencies
 - solution_correcting.py: Corrects and improves existing solutions using AI
 - solution_feature_adding.py: Adds new features to solutions using AI
-- solution_importer.py: Imports solutions from external folders
+- solution_importer.py: Imports solutions from external folders with language detection
 - solution_updater.py: Applies alternative solution correction using AI
-- `prompt_to_create_a_solution.py`: Generates prompts for creating solutions and components
 
 ## Contributing
 
