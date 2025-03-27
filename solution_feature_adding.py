@@ -8,7 +8,7 @@ from ai_code_parser import AICodeParser
 class SolutionFeatureAdding:
     def __init__(self):
         self.ai_connector = AIConnector()
-        self.code_parser = AICodeParser()
+        self.content_parser = AICodeParser()
 
     def add_feature_to_solution(self, solution):
         print(f"\nAdding a new feature to solution: {solution.name}\n")
@@ -51,7 +51,7 @@ class SolutionFeatureAdding:
             print(response)
 
             # Use AICodeParser to extract code from the AI's response
-            updated_content = self.code_parser.parse_code(response)
+            updated_content = self.content_parser.parse_content(response)
 
             if updated_content:
                 # Save the updated content to the component file

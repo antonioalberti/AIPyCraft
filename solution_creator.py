@@ -11,7 +11,7 @@ class SolutionCreator:
         self.solutions_folder = solutions_folder
         self.solution = None
         self.ai_connector = AIConnector()
-        self.code_parser = AICodeParser()
+        self.content_parser = AICodeParser()
 
     def create_new_solution(self):
         solution_name = input(Fore.BLUE + "\n\nEnter a name for the new solution: ")

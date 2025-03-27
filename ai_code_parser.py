@@ -2,7 +2,7 @@ import re
 import os
 
 class AICodeParser:
-    def parse_code(self, ai_response):
+    def parse_content(self, ai_response):
         """
         Extracts the code block from the AI response, regardless of the language.
         Handles cases with or without a language specifier (e.g., ```json, ```python, etc.).
@@ -23,7 +23,7 @@ class AICodeParser:
         
         return None
 
-    def save_code_to_file(self, code, file_path):
+    def save_content_to_file(self, code, file_path):
         """
         Saves the extracted code to the specified file path.
         """
