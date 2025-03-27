@@ -17,13 +17,13 @@ from installation_script_generator import InstallationScriptGenerator
 from solution_correcting import SolutionCorrecting
 from solution_feature_adding import SolutionFeatureAdding
 from solution_importer import SolutionImporter
-from solution_updater import SolutionUpdater  
+from solution_updater import SolutionUpdater
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Initialize colorama
-init()
+init(autoreset=True)
 
 logger.info("AIPyCraft program started.")
 
@@ -44,19 +44,19 @@ class Dispatcher:
     def run(self):
         logger.info("Main menu started.")
         while True:
-            print(Fore.GREEN + "\n\n1. Load a solution from a folder")
-            print(Fore.GREEN + "2. Create a new solution")
-            print(Fore.GREEN + "3. Install a solution environment")
-            print(Fore.GREEN + "4. Run a solution")
-            print(Fore.GREEN + "5. Show a solution details")
-            print(Fore.GREEN + "6. Remove a solution folder (all files will be deleted)")
-            print(Fore.GREEN + "7. Correct a solution")
-            print(Fore.GREEN + "8. Alternative solution correction")
-            print(Fore.GREEN + "9. Manually improve or correct a solution")
-            print(Fore.GREEN + "10. Import a folder as a solution")
-            print(Fore.GREEN + "11. Delete a solution (files will be preserved)")
-            print(Fore.GREEN + "12. Export current solution to TOML")
-            print(Fore.GREEN + "13. Exit")
+            print(Fore.GREEN + Style.BRIGHT + "\n\n1. Load a solution from a folder")
+            print(Fore.CYAN + "2. Create a new solution")
+            print(Fore.MAGENTA + "3. Install a solution environment")
+            print(Fore.YELLOW + "4. Run a solution")
+            print(Fore.CYAN + "5. Show a solution details")
+            print(Fore.MAGENTA + "6. Remove a solution folder (all files will be deleted)")
+            print(Fore.GREEN + Style.BRIGHT + "7. Correct a solution")
+            print(Fore.CYAN + "8. Alternative solution correction")
+            print(Fore.MAGENTA + "9. Manually improve or correct a solution")
+            print(Fore.YELLOW + "10. Import a folder as a solution")
+            print(Fore.RED + "11. Delete a solution (files will be preserved)")
+            print(Fore.LIGHTWHITE_EX + "12. Export current solution to TOML")
+            print(Fore.RED + "13. Exit")
             choice = input("Enter your choice (1-13): ")
 
             logger.info(f"User selected option: {choice}")
@@ -81,10 +81,10 @@ class Dispatcher:
 
             elif choice == '3':
                 if not self.solutions:
-                    print("No solutions available. Please load or create a solution first.")
+                    print(Fore.RED + "No solutions available. Please load or create a solution first.")
                 else:
                     for i, solution in enumerate(self.solutions, start=1):
-                        print(f"{i}. {solution.name}")
+                        print(Fore.YELLOW + f"{i}. {solution.name}")
                     while True:
                         choice = input("Enter the number of the solution to install the environment for (or 'q' to quit): ")
                         if choice.lower() == 'q':
@@ -101,10 +101,10 @@ class Dispatcher:
 
             elif choice == '4':
                 if not self.solutions:
-                    print("No solutions available. Please load or create a solution first.")
+                    print(Fore.RED + "No solutions available. Please load or create a solution first.")
                 else:
                     for i, solution in enumerate(self.solutions, start=1):
-                        print(f"{i}. {solution.name}")
+                        print(Fore.YELLOW + f"{i}. {solution.name}")
                     while True:
                         choice = input("Enter the number of the solution to run (or 'q' to quit): ")
                         if choice.lower() == 'q':
@@ -120,7 +120,6 @@ class Dispatcher:
                             pass
 
             elif choice == '5':
-
                 logger.info("Showing details of the current solution")
                 self.solution_displayer.show_solution()
 
@@ -137,7 +136,7 @@ class Dispatcher:
 
             elif choice == '7':
                 for i, solution in enumerate(self.solutions, start=1):
-                    print(f"{i}. {solution.name}")
+                    print(Fore.YELLOW + f"{i}. {solution.name}")
                 while True:
                     opt = input("Enter the number of the solution to correct (or 'q' to quit): ")
                     if opt.lower() == 'q':
@@ -154,7 +153,7 @@ class Dispatcher:
 
             elif choice == '8':
                 for i, solution in enumerate(self.solutions, start=1):
-                    print(f"{i}. {solution.name}")
+                    print(Fore.YELLOW + f"{i}. {solution.name}")
                 while True:
                     opt = input("Enter the number of the solution to apply alternative correction (or 'q' to quit): ")
                     if opt.lower() == 'q':
@@ -171,7 +170,7 @@ class Dispatcher:
 
             elif choice == '9':
                 for i, solution in enumerate(self.solutions, start=1):
-                    print(f"{i}. {solution.name}")
+                    print(Fore.YELLOW + f"{i}. {solution.name}")
                 while True:
                     choice = input("Enter the number of the solution to add a feature to (or 'q' to quit): ")
                     if choice.lower() == 'q':
@@ -197,7 +196,7 @@ class Dispatcher:
 
             elif choice == '11':
                 for i, solution in enumerate(self.solutions, start=1):
-                    print(f"{i}. {solution.name}")
+                    print(Fore.YELLOW + f"{i}. {solution.name}")
                 while True:
                     opt = input("Enter the number of the solution to delete (or 'q' to quit): ")
                     if opt.lower() == 'q':
@@ -216,7 +215,7 @@ class Dispatcher:
                 if self.current_solution:
                     path = self.current_solution.export_solution_to_toml()
                     logger.info(f"Solution exported to TOML at: {path}")
-                    print(Fore.GREEN + f"TOML file saved: {path}")
+                    print(Fore.GREEN + Style.BRIGHT + f"TOML file saved: {path}")
                 else:
                     logger.warning("No solution currently selected.")
                     print(Fore.RED + "No solution currently selected.")

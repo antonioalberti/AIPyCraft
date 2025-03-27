@@ -1,6 +1,6 @@
 import chardet
 import os
-from colorama import Fore
+from colorama import Fore, Style
 from ai_connector import AIConnector
 from solution import Solution
 from component import Component
@@ -17,11 +17,11 @@ class SolutionImporter:
             return result['encoding']
 
     def import_solution_from_folder(self, solution_name, folder_path):
-        print(f"\nImporting solution from folder: {folder_path}\n")
+        print(Style.BRIGHT + f"\nImporting solution from folder: {folder_path}\n" + Style.RESET_ALL)
 
         # Check if the folder exists
         if not os.path.exists(folder_path):
-            print(Fore.RED + f"Folder '{folder_path}' does not exist.")
+            print(Fore.RED + Style.BRIGHT + f"Folder '{folder_path}' does not exist." + Style.RESET_ALL)
             return None
 
         # Supported file extensions
@@ -36,21 +36,21 @@ class SolutionImporter:
         ]
 
         if not script_files:
-            print(Fore.YELLOW + f"No supported files found in {folder_path}")
+            print(Fore.YELLOW + Style.BRIGHT + f"No supported files found in {folder_path}" + Style.RESET_ALL)
             return None
 
         components = []
 
         instructions = """Context:
-        
-        You are going to determine the Components of a Solution. 
-        Each Component is a file in the operating system. 
+
+        You are going to determine the Components of a Solution.
+        Each Component is a file in the operating system.
         What is the purpose of the file? What is the content of the file?
         Keep it simple and clear. Not more than a paragraph in the answer.
 
         Expected answer format:
 
-        A paragraph with the semantic description of the file content.  
+        A paragraph with the semantic description of the file content.
         """
 
         # Generate prompts for each file in the Solution folder
@@ -88,27 +88,27 @@ class SolutionImporter:
                 )
                 components.append(component)
 
-                print(f"\n\nParsed from AI response:\n\n")
-                print(Fore.BLUE + f"\n\nName: {component.name}\n")
-                print(Fore.BLUE + f"Extension: {component.extension}\n")
-                print(Fore.BLUE + f"Language: {component.language}\n")
-                print(Fore.BLUE + f"Content: {component.content}\n")
-                print(Fore.BLUE + f"Description: {component.semantic_description}\n")
+                print(Style.BRIGHT + Fore.BLUE + f"\n\nParsed from AI response:\n\n" + Style.RESET_ALL)
+                print(Fore.CYAN + Style.BRIGHT + f"Name: {component.name}\n" + Style.RESET_ALL)
+                print(Fore.CYAN + Style.BRIGHT + f"Extension: {component.extension}\n" + Style.RESET_ALL)
+                print(Fore.CYAN + Style.BRIGHT + f"Language: {component.language}\n" + Style.RESET_ALL)
+                print(Fore.CYAN + Style.BRIGHT + f"Content: {component.content}\n" + Style.RESET_ALL)
+                print(Fore.CYAN + Style.BRIGHT + f"Description: {component.semantic_description}\n" + Style.RESET_ALL)
 
         instructions1 = """Context:
-        
-        You are going to determine the overall description of a Solution. 
+
+        You are going to determine the overall description of a Solution.
         What is the purpose of the Solution? What is the overall description of the Solution?
         Keep it simple and clear. Not more than a paragraph in the answer.
 
         Expected answer format:
 
         A paragraph with the semantic description of the Solution.
-        
+
         """
 
         # Generate a final prompt for the AI to provide an overall solution description
-        final_prompt = Fore.WHITE + f"Based on the analysis of the following components:\n\n"
+        final_prompt = f"Based on the analysis of the following components:\n\n"
         for component in components:
             final_prompt += f"Component: {component.name}.{component.extension}\n"
             final_prompt += f"Description: {component.semantic_description}\n\n"
@@ -119,7 +119,7 @@ class SolutionImporter:
 
         solution_description = final_response.strip()
 
-        print(f"\nSolutions folder: {self.solutions_folder}\n")
+        print(Fore.BLUE + Style.BRIGHT + f"\nSolutions folder: {self.solutions_folder}\n" + Style.RESET_ALL)
 
         # Create a Solution object using the extracted information
         solution = Solution(solution_name, components)
@@ -130,7 +130,7 @@ class SolutionImporter:
         solution_folder = os.path.join(self.solutions_folder, solution_name)
         os.makedirs(solution_folder, exist_ok=True)
 
-        print(f"\nSolution folder to save the files: {solution_folder}\n")
+        print(Fore.BLUE + Style.BRIGHT + f"\nSolution folder to save the files: {solution_folder}\n" + Style.RESET_ALL)
 
         # Set solution folder at the new solution object
         solution.folder = solution_folder
@@ -152,7 +152,7 @@ class SolutionImporter:
             with open(component_file_path, "w", encoding="utf-8") as file:
                 file.write(component.content)
 
-        print(Fore.GREEN + f"\nSolution '{solution_name}' imported successfully.")
+        print(Fore.GREEN + Style.BRIGHT + f"\nSolution '{solution_name}' imported successfully." + Style.RESET_ALL)
 
         return solution
 

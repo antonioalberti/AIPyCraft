@@ -3,6 +3,9 @@
 import os
 import subprocess
 from ai_connector import AIConnector
+from colorama import Fore, Style, init
+
+init(autoreset=True)
 
 class InstallationScriptGenerator:
     def __init__(self, solutions_folder):
@@ -11,14 +14,14 @@ class InstallationScriptGenerator:
 
     def generate_installation_scripts(self, solution):
         solution_directory = os.path.join(self.solutions_folder, solution.name)
-        print(f"This is the solution directory: {solution_directory}")
+        print(f"{Fore.BLUE}This is the solution directory: {solution_directory}")
         os.makedirs(solution_directory, exist_ok=True)
 
         requirements_file_path = os.path.join(solution_directory, "requirements.txt")
 
         instructions = """Context:
-        
-        You are going to determine the required Python packages for a Solution. 
+
+        You are going to determine the required Python packages for a Solution.
 
         Expected answer format:
 
@@ -26,7 +29,7 @@ class InstallationScriptGenerator:
         Be careful to provide packages that are mutually compatible. Deal with versions to avoid incompatibilities.
 
         Example of answer (a list of package names, one per line):
-        
+
         aiohttp==3.9.4
         aiosignal==1.3.1
         async-timeout==4.0.3
@@ -39,9 +42,9 @@ class InstallationScriptGenerator:
 
         # Notify about non-Python components
         if non_python_components:
-            print("\nThe following non-Python components are part of the solution and must be handled manually:")
+            print(f"{Fore.YELLOW}\nThe following non-Python components are part of the solution and must be handled manually:")
             for component in non_python_components:
-                print(f"- {component.name}.{component.extension} ({component.language})")
+                print(f"{Fore.YELLOW}- {component.name}.{component.extension} ({component.language})")
 
         # Generate the prompt for the AI to determine the necessary packages
         prompt = f"Given the following Python solution components:\n\n"
@@ -57,16 +60,16 @@ class InstallationScriptGenerator:
         prompt += "aiosignal==1.3.1\n"
         prompt += "async-timeout==4.0.3\n"
         prompt += "attrs==23.2.0\n"
-    
+
         # Send the prompt to the AI using the AIConnector and get the response
         response = self.ai_connector.send_prompt(instructions, prompt)
 
-        print("\n\nAI's response:\n")
-        print(response)
+        print(f"{Fore.CYAN}\n\nAI's response:\n")
+        print(f"{response}")
 
         # Parse the AI's response to extract the package names
         packages = response.strip().split("\n")
-        print(f"\n\nThese are the required packages: {packages}")
+        print(f"{Fore.GREEN}\n\nThese are the required packages: {packages}")
 
         # Remove markers, duplicates, and invalid package names from the package list
         packages = [package.strip() for package in packages if "==" in package]
@@ -79,14 +82,14 @@ class InstallationScriptGenerator:
 
         # Ask the user to select the installation method
         while True:
-            installation_method = input("Select the installation method (pip/conda/quit): ")
+            installation_method = input(f"{Fore.BLUE}Select the installation method (pip/conda/quit): ")
             if installation_method.lower() in ['pip', 'conda', 'quit']:
                 break
             else:
-                print("Invalid installation method. Please enter 'pip', 'conda', or 'quit'.")
+                print(f"{Fore.RED}Invalid installation method. Please enter 'pip', 'conda', or 'quit'.")
 
         if installation_method.lower() == 'quit':
-            print("Installation process aborted.")
+            print(f"{Fore.RED}Installation process aborted.")
             return
 
         if installation_method.lower() == 'pip':
@@ -98,28 +101,28 @@ class InstallationScriptGenerator:
             if os.name == 'nt':  # Windows
                 pip_executable = os.path.join(venv_directory, "Scripts", "pip.exe")
                 subprocess.run([pip_executable, "install", "-r", requirements_file_path])
-                print(f"\n\nPackages installed using pip in {venv_directory}\n\n")
+                print(f"{Fore.GREEN}\n\nPackages installed using pip in {venv_directory}\n\n")
             else:  # Unix-based systems
                 activate_script = os.path.join(venv_directory, "bin", "activate")
                 pip_executable = os.path.join(venv_directory, "bin", "pip")
-                
+
                 # Activate the virtual environment and install the packages using pip
                 subprocess.run(f"source {activate_script} && {pip_executable} install -r {requirements_file_path}", shell=True, executable="/bin/bash")
-                
-                print(f"\n\nPackages installed using pip in {venv_directory}\n\n")
+
+                print(f"{Fore.GREEN}\n\nPackages installed using pip in {venv_directory}\n\n")
         else:
             # Check if conda is installed
             try:
                 subprocess.run(["conda", "--version"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 # Create a Conda environment within the solution directory
                 subprocess.run(["conda", "create", "--prefix", os.path.join(solution_directory, "conda_env"), "--file", requirements_file_path, "-y"])
-                print(f"\n\nConda environment created and packages installed in {os.path.join(solution_directory, 'conda_env')}\n\n")
+                print(f"{Fore.GREEN}\n\nConda environment created and packages installed in {os.path.join(solution_directory, 'conda_env')}\n\n")
             except FileNotFoundError:
-                print("Conda is not installed. Falling back to using pip.")
+                print(f"{Fore.RED}Conda is not installed. Falling back to using pip.")
                 # Create a virtual environment within the solution directory
                 venv_directory = os.path.join(solution_directory, "venv")
                 subprocess.run(["python", "-m", "venv", venv_directory])
 
                 # Install the packages using pip within the virtual environment
                 subprocess.run([os.path.join(venv_directory, "bin", "pip"), "install", "-r", requirements_file_path])
-                print(f"\n\nPackages installed using pip in {venv_directory}\n\n")
+                print(f"{Fore.GREEN}\n\nPackages installed using pip in {venv_directory}\n\n")

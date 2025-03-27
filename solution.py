@@ -23,22 +23,22 @@ class Solution:
             start_time = datetime.now()
             for component in self.components:
                 component.execute()
-            
+
             # Update solution status based on component statuses
             if all(component.status == 'SUCCESS' for component in self.components if component.language == "python"):
                 self.status = 'SUCCESS'
-                self.result_description = 'All Python components executed successfully.'
+                self.result_description = '\033[92mAll Python components executed successfully.\033[0m'  # Green
             elif any(component.status == 'ERROR' for component in self.components):
                 self.status = 'ERROR'
-                self.result_description = 'One or more components failed during execution.'
+                self.result_description = '\033[31mOne or more components failed during execution.\033[0m'  # Red
             else:
                 self.status = 'PARTIAL'
-                self.result_description = 'Some components were skipped or not executed.'
-            
+                self.result_description = '\033[33mSome components were skipped or not executed.\033[0m'  # Yellow
+
             self.execution_time = (datetime.now() - start_time).total_seconds()
         except Exception as e:
             self.status = 'ERROR'
-            self.result_description = f"An error occurred during solution execution: {str(e)}"
+            self.result_description = f"\033[31mAn error occurred during solution execution: {str(e)}\033[0m"  # Red
 
     def to_dict(self):
         """
@@ -63,7 +63,7 @@ class Solution:
         name = data['name']
         components = [Component.from_dict(component_data) for component_data in data.get('components', [])]
         execution_time = data.get('execution_time', 0)
-        
+
         solution = cls(name, components, execution_time)
         solution.model = data.get('model', '')
         solution.semantic_description = data.get('semantic_description', '')

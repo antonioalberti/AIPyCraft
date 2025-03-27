@@ -2,7 +2,7 @@
 
 import os
 import re
-from colorama import Fore
+from colorama import Fore, Style
 from ai_connector import AIConnector
 
 class SolutionUpdater:
@@ -32,7 +32,7 @@ class SolutionUpdater:
 
             print(f"\nPrompt for {comp.name}.{comp.extension}:\n{prompt}\n\n")
             response = self.ai_connector.send_prompt("", prompt)
-            print(f"AI response for {comp.name}.{comp.extension}:\n{response}\n")
+            print(Fore.BLUE + Style.BRIGHT + f"AI response for {comp.name}.{comp.extension}:\n{response}\n" + Style.RESET_ALL)
 
             # Try to extract a Python content block.
             content_match = re.search(r"```(?:python)?\n(.*?)\n```", response, re.DOTALL)
@@ -43,10 +43,10 @@ class SolutionUpdater:
                     with open(file_path, "w") as file:
                         file.write(updated_content)
                     comp.content = updated_content
-                    print(Fore.GREEN + f"Updated {comp.name}.{comp.extension} successfully.")
+                    print(Fore.GREEN + Style.BRIGHT + f"Updated {comp.name}.{comp.extension} successfully." + Style.RESET_ALL)
                 except Exception as e:
-                    print(Fore.RED + f"Error updating {comp.name}.{comp.extension}: {e}")
+                    print(Fore.RED + f"Error updating {comp.name}.{comp.extension}: {e}" + Style.RESET_ALL)
             elif response.strip() == "NO":
-                print(Fore.YELLOW + f"No changes needed for {comp.name}.{comp.extension}.")
+                print(Fore.CYAN + f"No changes needed for {comp.name}.{comp.extension}." + Style.RESET_ALL)
             else:
-                print(Fore.BLUE + f"No valid correction provided for {comp.name}.{comp.extension}.")
+                print(Fore.MAGENTA + Style.DIM + f"No valid correction provided for {comp.name}.{comp.extension}." + Style.RESET_ALL)
