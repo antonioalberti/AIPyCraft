@@ -62,7 +62,7 @@ class SolutionFeatureAdding:
                 
                 try:
                     # Use AICodeParser to save the code
-                    if self.code_parser.save_code_to_file(updated_content, component_file_path):
+                    if self.content_parser.save_content_to_file(updated_content, component_file_path):
                         # Update the component content with the AI-generated content
                         component.content = updated_content
                         print(Fore.GREEN + f"\nComponent '{component.name}.{component.extension}' successfully updated.")
