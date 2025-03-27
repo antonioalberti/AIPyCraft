@@ -1,3 +1,4 @@
+import chardet
 import os
 from colorama import Fore
 from ai_connector import AIConnector
@@ -8,6 +9,12 @@ class SolutionImporter:
     def __init__(self, solutions_folder):
         self.solutions_folder = solutions_folder
         self.ai_connector = AIConnector()
+
+    def detect_file_encoding(self, file_path):
+        with open(file_path, 'rb') as file:
+            raw_data = file.read()
+            result = chardet.detect(raw_data)
+            return result['encoding']
 
     def import_solution_from_folder(self, solution_name, folder_path):
         print(f"\nImporting solution from folder: {folder_path}\n")
@@ -49,7 +56,12 @@ class SolutionImporter:
         # Generate prompts for each file in the Solution folder
         for file_name in script_files:
             file_path = os.path.join(folder_path, file_name)
-            with open(file_path, "r", encoding="utf-8") as file:
+
+            # Detect the file encoding
+            encoding = self.detect_file_encoding(file_path)
+
+            # Open the file with the detected encoding
+            with open(file_path, "r", encoding=encoding) as file:
                 content = file.read()
 
                 prompt = "Follow your instructions to describe the following content:\n\n"
