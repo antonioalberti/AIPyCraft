@@ -3,6 +3,7 @@ import pexpect.popen_spawn
 import sys
 import time
 import os
+import argparse # Import argparse
 
 # Constants
 TIMEOUT_SECONDS = 60  # General timeout for expect operations
@@ -44,11 +45,12 @@ PROMPT_CORRECT_COMPONENT_NAME = r"Enter the name of the component to correct in 
 PROMPT_CORRECT_INSTRUCTIONS = r"Enter any specific instructions for the AI \(or leave blank\):\s*"
 # Removed unused prompts like FEATURE_SELECT, FEATURE_DESC, INSTALL_SELECT, INSTALL_METHOD
 
-def main():
+def main(loop_count): # Add loop_count parameter
     print("Starting AIPyCraft test with pexpect...")
     python_executable = sys.executable # Use the same python that runs this script
     command = f"{python_executable} main.py"
     print(f"Running command: {command}")
+    print(f"Looping correction/run steps {loop_count} times.") # Indicate loop count
 
     try:
         # Spawn the process using PopenSpawn for Windows compatibility
@@ -135,49 +137,57 @@ def main():
         print("\nEXPECT: Main Menu Choice (after Run 2)")
         child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
 
-        # --- Second Correction ---
-        # 11: Choose "Correct a single component"
-        print("\nEXPECT: Main Menu Choice (Correct 2)")
-        # Removed redundant child.expect(PROMPT_CHOICE) here
-        print(f"SEND: {inputs[11]}")
-        child.sendline(inputs[11])
+        # --- Loop for Correction and Run ---
+        for i in range(loop_count):
+            loop_num = i + 1
+            print(f"\n--- Starting Loop Iteration {loop_num}/{loop_count} ---")
 
-        # 12: Select solution 'toml1' to correct
-        print("\nEXPECT: Correct Solution Select Prompt (Correct 2)")
-        child.expect(PROMPT_CORRECT_SELECT_SOLUTION)
-        print(f"SEND: {inputs[12]}")
-        child.sendline(inputs[12])
+            # --- Correction (Loop Iteration {loop_num}) ---
+            # 11: Choose "Correct a single component"
+            print(f"\nEXPECT: Main Menu Choice (Correct Loop {loop_num})")
+            # Removed redundant child.expect(PROMPT_CHOICE) here
+            print(f"SEND: {inputs[11]}")
+            child.sendline(inputs[11])
 
-        # 13: Enter component name
-        print("\nEXPECT: Correct Component Name Prompt (Correct 2)")
-        child.expect(PROMPT_CORRECT_COMPONENT_NAME)
-        print(f"SEND: {inputs[13]}")
-        child.sendline(inputs[13])
+            # 12: Select solution 'toml1' to correct
+            print(f"\nEXPECT: Correct Solution Select Prompt (Correct Loop {loop_num})")
+            child.expect(PROMPT_CORRECT_SELECT_SOLUTION)
+            print(f"SEND: {inputs[12]}")
+            child.sendline(inputs[12])
 
-        # 14: Send empty correction instructions
-        print("\nEXPECT: Correct Instructions Prompt (Correct 2)")
-        child.expect(PROMPT_CORRECT_INSTRUCTIONS)
-        print(f"SEND: [Empty Instructions]")
-        child.sendline(inputs[14])
-        print(f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing (Correct 2)...")
-        print("\nEXPECT: Main Menu Choice (after Correct 2)")
-        child.expect(PROMPT_CHOICE, timeout=AI_PROCESSING_WAIT_TIME + TIMEOUT_SECONDS)
+            # 13: Enter component name
+            print(f"\nEXPECT: Correct Component Name Prompt (Correct Loop {loop_num})")
+            child.expect(PROMPT_CORRECT_COMPONENT_NAME)
+            print(f"SEND: {inputs[13]}")
+            child.sendline(inputs[13])
 
-        # --- Third Run ---
-        # 15: Choose "Run solution"
-        print("\nEXPECT: Main Menu Choice (Run 3)")
-        # Removed redundant child.expect(PROMPT_CHOICE) here
-        print(f"SEND: {inputs[15]}")
-        child.sendline(inputs[15])
+            # 14: Send empty correction instructions
+            print(f"\nEXPECT: Correct Instructions Prompt (Correct Loop {loop_num})")
+            child.expect(PROMPT_CORRECT_INSTRUCTIONS)
+            print(f"SEND: [Empty Instructions]")
+            child.sendline(inputs[14])
+            print(f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing (Correct Loop {loop_num})...")
+            print(f"\nEXPECT: Main Menu Choice (after Correct Loop {loop_num})")
+            child.expect(PROMPT_CHOICE, timeout=AI_PROCESSING_WAIT_TIME + TIMEOUT_SECONDS)
 
-        # 16: Select solution 'toml1' to run
-        print("\nEXPECT: Run Solution Select Prompt (Run 3)")
-        child.expect(PROMPT_RUN_SELECT)
-        print(f"SEND: {inputs[16]}")
-        child.sendline(inputs[16])
-        print(f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run 3)...")
-        print("\nEXPECT: Main Menu Choice (after Run 3)")
-        child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
+            # --- Run (Loop Iteration {loop_num}) ---
+            # 15: Choose "Run solution"
+            print(f"\nEXPECT: Main Menu Choice (Run Loop {loop_num})")
+            # Removed redundant child.expect(PROMPT_CHOICE) here
+            print(f"SEND: {inputs[15]}")
+            child.sendline(inputs[15])
+
+            # 16: Select solution 'toml1' to run
+            print(f"\nEXPECT: Run Solution Select Prompt (Run Loop {loop_num})")
+            child.expect(PROMPT_RUN_SELECT)
+            print(f"SEND: {inputs[16]}")
+            child.sendline(inputs[16])
+            print(f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run Loop {loop_num})...")
+            print(f"\nEXPECT: Main Menu Choice (after Run Loop {loop_num})")
+            child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
+
+            print(f"\n--- Finished Loop Iteration {loop_num}/{loop_count} ---")
+        # --- End Loop ---
 
         # --- Exit ---
         # 17: Choose "Exit"
@@ -225,4 +235,12 @@ def main():
     return 0 # Indicate success
 
 if __name__ == "__main__":
-    sys.exit(main())
+    parser = argparse.ArgumentParser(description="Run AIPyCraft tester with optional looping.")
+    parser.add_argument("--loops", type=int, default=1, help="Number of times to loop the correction/run sequence.")
+    args = parser.parse_args()
+
+    if args.loops < 1:
+        print("Error: Number of loops must be at least 1.")
+        sys.exit(1)
+
+    sys.exit(main(args.loops)) # Pass loop count to main

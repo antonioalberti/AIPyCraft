@@ -62,9 +62,18 @@ class SolutionRunner:
 
             if result.stderr:
                 print(Fore.LIGHTRED_EX + "Error:" + Style.RESET_ALL)
+                print(Fore.LIGHTRED_EX + "Error:" + Style.RESET_ALL)
                 print(Fore.LIGHTRED_EX + result.stderr + Style.RESET_ALL)
                 execution_log += f"Error:\n{result.stderr}\n"
+                # Don't set status here yet, check return code below
+
+            # Check return code AND stderr to determine status
+            if result.returncode != 0 or result.stderr:
                 solution.status = 'ERROR'
+                if result.returncode != 0 and not result.stderr: # Add note if only return code indicated error
+                     error_msg = f"Process exited with non-zero status code: {result.returncode}"
+                     print(Fore.LIGHTRED_EX + error_msg + Style.RESET_ALL)
+                     execution_log += f"Error: {error_msg}\n"
             else:
                 solution.status = 'SUCCESS'
         except Exception as e:
