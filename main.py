@@ -253,7 +253,7 @@ class Dispatcher:
 
 if __name__ == '__main__':
     api_config = {}
-    solutions_folder = input("Enter the solutions folder path: ")
+    solutions_folder = input("Enter the solutions folder path:")
     os.makedirs(solutions_folder, exist_ok=True)
     logger.info(f"Solutions folder set: {solutions_folder}")
     dispatcher = Dispatcher(solutions_folder)
