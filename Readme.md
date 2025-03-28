@@ -65,7 +65,7 @@ The program was cocreated with GitHub Copilot using Claude 3.5 Sonnet.
    - Enter `2` to create a new solution by providing a name and description
    - Enter `3` to install dependencies for a solution using a virtual environment
    - Enter `4` to run a solution (executes Python components, skips others)
-   - Enter `5` to display detailed information about a solution and its components
+   - Enter `5` to list loaded solutions and display detailed information about a selected solution
    - Enter `6` to remove a solution and its associated files
    - Enter `7` to correct and improve an existing solution using AI
    - Enter `8` to apply alternative solution correction using AI
@@ -73,7 +73,8 @@ The program was cocreated with GitHub Copilot using Claude 3.5 Sonnet.
    - Enter `10` to import a solution from an external folder
    - Enter `11` to delete a solution from the program (files will be preserved)
    - Enter `12` to export current solution to TOML
-   - Enter `13` to exit the program
+   - Enter `13` to list existing project folders (containing model.txt)
+   - Enter `14` to exit the program
 
 ## Component Languages
 
@@ -100,7 +101,7 @@ Note: Only Python components are executed when running a solution. Other compone
 - solution_creator.py: Handles the creation of new solutions with multilanguage support
 - solution_loader.py: Loads existing solutions from a folder
 - solution_runner.py: Executes Python components and skips non-Python components
-- solution_shower.py: Displays detailed information about solutions and their components
+- solution_displayer.py: Lists loaded solutions and displays detailed information about solutions and their components
 - installation_script_generator.py: Generates installation scripts for Python dependencies
 - solution_correcting.py: Corrects and improves existing solutions using AI
 - solution_feature_adding.py: Adds new features to solutions using AI
