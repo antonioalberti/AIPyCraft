@@ -10,30 +10,39 @@ AI_PROCESSING_WAIT_TIME = 20 # Increased wait time after sending feature descrip
 INSTALLATION_WAIT_TIME = 15 # Increased wait time after selecting install method
 EXECUTION_WAIT_TIME = 10 # Increased wait time after selecting run
 
-# Inputs (same as before)
+# Inputs based on the provided log
 solutions_folder_path = r"C:\Users\Scalifax\workspace"
-feature_description = r"""Modify the solution’s TOML file. The TOML configuration file should define a Chainlink job that creates an external price oracle. The job listens for oracle requests on contract 0xc970705401D0D61A05d49C33ab2A39A5C49b2f94 on chain ID 1337, with external ID ca98366c-c731-4957-b8c0-12c72f05aeea. When triggered, it performs a GET request to the CoinGecko API to fetch the price of Ethereum in USD, parses the result, multiplies it by 100 (to handle decimals), and sends the result back to the blockchain via a transaction that calls the fulfillOracleRequest2 method. The data pipeline includes decoding the request log, HTTP fetch, JSON parsing, value multiplication, and data encoding for the response transaction."""
+correction_instructions = r"""The config.toml file should define a Chainlink job that creates an external price oracle. The job listens for oracle requests on contract 0xc970705401D0D61A05d49C33ab2A39A5C49b2f94 on chain ID 1337, with external ID ca98366c-c731-4957-b8c0-12c72f05aeea. When triggered, it performs a GET request to the CoinGecko API to fetch the price of Ethereum in USD, parses the result, multiplies it by 100 (to handle decimals), and sends the result back to the blockchain via a transaction that calls the fulfillOracleRequest2 method. The data pipeline includes decoding the request log, HTTP fetch, JSON parsing, value multiplication, and data encoding for the response transaction. The job includes all essential Job Configuration properties at the top of the file. These include: type (defines the job type, e.g., "directrequest"), schemaVersion (typically set to 1), name (a human-readable identifier), externalJobID (a unique UUID for external reference), contractAddress (address of the triggering smart contract, required for job types like directrequest), evmChainID (identifies the EVM chain, e.g., 1 for Ethereum mainnet or 1337 for local testnets), forwardingAllowed (boolean, often false for direct requests), minIncomingConfirmations (minimum block confirmations before processing, e.g., 0), minContractPaymentLinkJuels (minimum LINK payment in juels, e.g., "0"), and maxTaskDuration (maximum time a task may run, e.g., "30s"). When generating or validating a job spec, include these fields with appropriate formatting and values based on the job type, and follow with the observationSource block for defining the task pipeline (e.g., http -> jsonparse -> multiply -> ethtx)."""
 inputs = [
-    solutions_folder_path,  # 0: Solutions folder path
-    "1",  # 1: Load a solution
-    "toml1",  # 2: Solution name
-    "9",  # 3: Manually improve or correct
-    "1",  # 4: Select solution 'toml1' for feature
-    feature_description,  # 5: Feature description
-    "4",  # 5: Run solution
-    "1",  # 6: Select solution 'toml1' for run
-    "14"  # 7: Exit
+    solutions_folder_path,          # 0: Solutions folder path
+    "1",                            # 1: Load a solution
+    "toml1",                        # 2: Solution name to load
+    "4",                            # 3: Run solution (first run)
+    "1",                            # 4: Select solution 'toml1' to run
+    "10",                           # 5: Correct a single component (first correction)
+    "1",                            # 6: Select solution 'toml1' to correct
+    "config.toml",                  # 7: Component name to correct
+    correction_instructions,        # 8: Correction instructions
+    "4",                            # 9: Run solution (second run)
+    "1",                            # 10: Select solution 'toml1' to run
+    "10",                           # 11: Correct a single component (second correction)
+    "1",                            # 12: Select solution 'toml1' to correct
+    "config.toml",                  # 13: Component name to correct
+    "",                             # 14: Empty correction instructions
+    "4",                            # 15: Run solution (third run)
+    "1",                            # 16: Select solution 'toml1' to run
+    "15"                            # 17: Exit
 ]
 
 # Prompts to expect (using more specific regex where helpful)
 PROMPT_FOLDER = r"Enter the solutions folder path:\s*"
-PROMPT_CHOICE = r"Enter your choice \(1-14\):\s*"
+PROMPT_CHOICE = r"Enter your choice \(1-15\):\s*" # Updated range
 PROMPT_LOAD_NAME = r"Enter the name of the solution to be loaded:\s*"
-PROMPT_FEATURE_SELECT = r"Enter the number of the solution to add a feature to \(or 'q' to quit\):\s*"
-PROMPT_FEATURE_DESC = r"Enter the description of what to you want to do with the solution:\s*"
-PROMPT_INSTALL_SELECT = r"Enter the number of the solution to install the environment for \(or 'q' to quit\):\s*"
-PROMPT_INSTALL_METHOD = r"Select the installation method \(pip/conda/quit\):\s*"
 PROMPT_RUN_SELECT = r"Enter the number of the solution to run \(or 'q' to quit\):\s*"
+PROMPT_CORRECT_SELECT_SOLUTION = r"Enter the number of the solution containing the component to correct \(or 'q' to quit\):\s*"
+PROMPT_CORRECT_COMPONENT_NAME = r"Enter the name of the component to correct in '.*?' \(e.g., main.py\):\s*"
+PROMPT_CORRECT_INSTRUCTIONS = r"Enter any specific instructions for the AI \(or leave blank\):\s*"
+# Removed unused prompts like FEATURE_SELECT, FEATURE_DESC, INSTALL_SELECT, INSTALL_METHOD
 
 def main():
     print("Starting AIPyCraft test with pexpect...")
@@ -66,47 +75,116 @@ def main():
         print(f"SEND: {inputs[2]}")
         child.sendline(inputs[2])
 
-        # 3: Choose "Manually improve or correct"
-        print("\nEXPECT: Main Menu Choice")
+        # --- First Run ---
+        # 3: Choose "Run solution"
+        print("\nEXPECT: Main Menu Choice (Run 1)")
         child.expect(PROMPT_CHOICE)
         print(f"SEND: {inputs[3]}")
         child.sendline(inputs[3])
 
-        # 4: Select solution for feature
-        print("\nEXPECT: Feature Solution Select Prompt")
-        child.expect(PROMPT_FEATURE_SELECT)
+        # 4: Select solution 'toml1' to run
+        print("\nEXPECT: Run Solution Select Prompt (Run 1)")
+        child.expect(PROMPT_RUN_SELECT)
         print(f"SEND: {inputs[4]}")
         child.sendline(inputs[4])
+        print(f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run 1)...")
+        print("\nEXPECT: Main Menu Choice (after Run 1)")
+        child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
 
-        # 5: Send feature description
-        print("\nEXPECT: Feature Description Prompt")
-        child.expect(PROMPT_FEATURE_DESC)
-        print(f"SEND: [Feature Description - Length: {len(inputs[5])}]")
+        # --- First Correction ---
+        # 5: Choose "Correct a single component"
+        print("\nEXPECT: Main Menu Choice (Correct 1)")
+        # Removed redundant child.expect(PROMPT_CHOICE) here
+        print(f"SEND: {inputs[5]}")
         child.sendline(inputs[5])
-        print(f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing...")
-        # Expect the next prompt *after* the AI response and file updates
-        # We need to wait longer here, potentially consuming intermediate output
-        # Let's expect the menu prompt again, but with a longer timeout specifically for this step
-        print("\nEXPECT: Main Menu Choice (after AI)")
-        child.expect(PROMPT_CHOICE, timeout=AI_PROCESSING_WAIT_TIME + TIMEOUT_SECONDS) # Add AI time to base timeout
 
-        # 6: Choose "Run solution" (was index 9)
+        # 6: Select solution 'toml1' to correct
+        print("\nEXPECT: Correct Solution Select Prompt (Correct 1)")
+        child.expect(PROMPT_CORRECT_SELECT_SOLUTION)
         print(f"SEND: {inputs[6]}")
         child.sendline(inputs[6])
 
-        # 7: Select solution to run (was index 10)
-        print("\nEXPECT: Run Solution Select Prompt")
-        child.expect(PROMPT_RUN_SELECT)
+        # 7: Enter component name
+        print("\nEXPECT: Correct Component Name Prompt (Correct 1)")
+        child.expect(PROMPT_CORRECT_COMPONENT_NAME)
         print(f"SEND: {inputs[7]}")
         child.sendline(inputs[7])
-        print(f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution...")
-        # Expect the menu prompt again after execution
-        print("\nEXPECT: Main Menu Choice (after Run)")
+
+        # 8: Send correction instructions
+        print("\nEXPECT: Correct Instructions Prompt (Correct 1)")
+        child.expect(PROMPT_CORRECT_INSTRUCTIONS)
+        print(f"SEND: [Correction Instructions - Length: {len(inputs[8])}]")
+        child.sendline(inputs[8])
+        print(f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing (Correct 1)...")
+        print("\nEXPECT: Main Menu Choice (after Correct 1)")
+        child.expect(PROMPT_CHOICE, timeout=AI_PROCESSING_WAIT_TIME + TIMEOUT_SECONDS)
+
+        # --- Second Run ---
+        # 9: Choose "Run solution"
+        print("\nEXPECT: Main Menu Choice (Run 2)")
+        # Removed redundant child.expect(PROMPT_CHOICE) here
+        print(f"SEND: {inputs[9]}")
+        child.sendline(inputs[9])
+
+        # 10: Select solution 'toml1' to run
+        print("\nEXPECT: Run Solution Select Prompt (Run 2)")
+        child.expect(PROMPT_RUN_SELECT)
+        print(f"SEND: {inputs[10]}")
+        child.sendline(inputs[10])
+        print(f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run 2)...")
+        print("\nEXPECT: Main Menu Choice (after Run 2)")
         child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
 
-        # 8: Choose "Exit" (was index 11)
-        print(f"SEND: {inputs[8]}")
-        child.sendline(inputs[8])
+        # --- Second Correction ---
+        # 11: Choose "Correct a single component"
+        print("\nEXPECT: Main Menu Choice (Correct 2)")
+        # Removed redundant child.expect(PROMPT_CHOICE) here
+        print(f"SEND: {inputs[11]}")
+        child.sendline(inputs[11])
+
+        # 12: Select solution 'toml1' to correct
+        print("\nEXPECT: Correct Solution Select Prompt (Correct 2)")
+        child.expect(PROMPT_CORRECT_SELECT_SOLUTION)
+        print(f"SEND: {inputs[12]}")
+        child.sendline(inputs[12])
+
+        # 13: Enter component name
+        print("\nEXPECT: Correct Component Name Prompt (Correct 2)")
+        child.expect(PROMPT_CORRECT_COMPONENT_NAME)
+        print(f"SEND: {inputs[13]}")
+        child.sendline(inputs[13])
+
+        # 14: Send empty correction instructions
+        print("\nEXPECT: Correct Instructions Prompt (Correct 2)")
+        child.expect(PROMPT_CORRECT_INSTRUCTIONS)
+        print(f"SEND: [Empty Instructions]")
+        child.sendline(inputs[14])
+        print(f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing (Correct 2)...")
+        print("\nEXPECT: Main Menu Choice (after Correct 2)")
+        child.expect(PROMPT_CHOICE, timeout=AI_PROCESSING_WAIT_TIME + TIMEOUT_SECONDS)
+
+        # --- Third Run ---
+        # 15: Choose "Run solution"
+        print("\nEXPECT: Main Menu Choice (Run 3)")
+        # Removed redundant child.expect(PROMPT_CHOICE) here
+        print(f"SEND: {inputs[15]}")
+        child.sendline(inputs[15])
+
+        # 16: Select solution 'toml1' to run
+        print("\nEXPECT: Run Solution Select Prompt (Run 3)")
+        child.expect(PROMPT_RUN_SELECT)
+        print(f"SEND: {inputs[16]}")
+        child.sendline(inputs[16])
+        print(f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run 3)...")
+        print("\nEXPECT: Main Menu Choice (after Run 3)")
+        child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
+
+        # --- Exit ---
+        # 17: Choose "Exit"
+        print("\nEXPECT: Main Menu Choice (Exit)")
+        # Removed redundant child.expect(PROMPT_CHOICE) here
+        print(f"SEND: {inputs[17]}")
+        child.sendline(inputs[17])
 
         # Wait for the process to finish
         print("\nEXPECT: Process termination (EOF)")
