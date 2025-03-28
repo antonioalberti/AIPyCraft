@@ -4,6 +4,8 @@ import sys
 import time
 import os
 import argparse # Import argparse
+from colorama import init, Fore, Style # Import colorama
+init(autoreset=True) # Initialize colorama
 
 # Constants
 TIMEOUT_SECONDS = 60  # General timeout for expect operations
@@ -46,11 +48,11 @@ PROMPT_CORRECT_INSTRUCTIONS = r"Enter any specific instructions for the AI \(or 
 # Removed unused prompts like FEATURE_SELECT, FEATURE_DESC, INSTALL_SELECT, INSTALL_METHOD
 
 def main(loop_count): # Add loop_count parameter
-    print("Starting AIPyCraft test with pexpect...")
+    print(Fore.LIGHTBLACK_EX + "Starting AIPyCraft test with pexpect...")
     python_executable = sys.executable # Use the same python that runs this script
     command = f"{python_executable} main.py"
-    print(f"Running command: {command}")
-    print(f"Looping correction/run steps {loop_count} times.") # Indicate loop count
+    print(Fore.LIGHTBLACK_EX + f"Running command: {command}")
+    print(Fore.LIGHTBLACK_EX + f"Looping correction/run steps {loop_count} times.") # Indicate loop count
 
     try:
         # Spawn the process using PopenSpawn for Windows compatibility
@@ -60,178 +62,178 @@ def main(loop_count): # Add loop_count parameter
         # --- Interaction Sequence ---
 
         # 0: Send solutions folder path
-        print("\nEXPECT: Folder Path Prompt")
+        print(Fore.CYAN + "\nEXPECT: Folder Path Prompt")
         child.expect(PROMPT_FOLDER)
-        print(f"SEND: {inputs[0]}")
+        print(Fore.YELLOW + f"SEND: {inputs[0]}")
         child.sendline(inputs[0])
 
         # 1: Choose "Load a solution"
-        print("\nEXPECT: Main Menu Choice")
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice")
         child.expect(PROMPT_CHOICE)
-        print(f"SEND: {inputs[1]}")
+        print(Fore.YELLOW + f"SEND: {inputs[1]}")
         child.sendline(inputs[1])
 
         # 2: Send solution name to load
-        print("\nEXPECT: Solution Load Name Prompt")
+        print(Fore.CYAN + "\nEXPECT: Solution Load Name Prompt")
         child.expect(PROMPT_LOAD_NAME)
-        print(f"SEND: {inputs[2]}")
+        print(Fore.YELLOW + f"SEND: {inputs[2]}")
         child.sendline(inputs[2])
 
         # --- First Run ---
         # 3: Choose "Run solution"
-        print("\nEXPECT: Main Menu Choice (Run 1)")
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (Run 1)")
         child.expect(PROMPT_CHOICE)
-        print(f"SEND: {inputs[3]}")
+        print(Fore.YELLOW + f"SEND: {inputs[3]}")
         child.sendline(inputs[3])
 
         # 4: Select solution 'toml1' to run
-        print("\nEXPECT: Run Solution Select Prompt (Run 1)")
+        print(Fore.CYAN + "\nEXPECT: Run Solution Select Prompt (Run 1)")
         child.expect(PROMPT_RUN_SELECT)
-        print(f"SEND: {inputs[4]}")
+        print(Fore.YELLOW + f"SEND: {inputs[4]}")
         child.sendline(inputs[4])
-        print(f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run 1)...")
-        print("\nEXPECT: Main Menu Choice (after Run 1)")
+        print(Fore.MAGENTA + f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run 1)...")
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (after Run 1)")
         child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
 
         # --- First Correction ---
         # 5: Choose "Correct a single component"
-        print("\nEXPECT: Main Menu Choice (Correct 1)")
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (Correct 1)")
         # Removed redundant child.expect(PROMPT_CHOICE) here
-        print(f"SEND: {inputs[5]}")
+        print(Fore.YELLOW + f"SEND: {inputs[5]}")
         child.sendline(inputs[5])
 
         # 6: Select solution 'toml1' to correct
-        print("\nEXPECT: Correct Solution Select Prompt (Correct 1)")
+        print(Fore.CYAN + "\nEXPECT: Correct Solution Select Prompt (Correct 1)")
         child.expect(PROMPT_CORRECT_SELECT_SOLUTION)
-        print(f"SEND: {inputs[6]}")
+        print(Fore.YELLOW + f"SEND: {inputs[6]}")
         child.sendline(inputs[6])
 
         # 7: Enter component name
-        print("\nEXPECT: Correct Component Name Prompt (Correct 1)")
+        print(Fore.CYAN + "\nEXPECT: Correct Component Name Prompt (Correct 1)")
         child.expect(PROMPT_CORRECT_COMPONENT_NAME)
-        print(f"SEND: {inputs[7]}")
+        print(Fore.YELLOW + f"SEND: {inputs[7]}")
         child.sendline(inputs[7])
 
         # 8: Send correction instructions
-        print("\nEXPECT: Correct Instructions Prompt (Correct 1)")
+        print(Fore.CYAN + "\nEXPECT: Correct Instructions Prompt (Correct 1)")
         child.expect(PROMPT_CORRECT_INSTRUCTIONS)
-        print(f"SEND: [Correction Instructions - Length: {len(inputs[8])}]")
+        print(Fore.YELLOW + f"SEND: [Correction Instructions - Length: {len(inputs[8])}]")
         child.sendline(inputs[8])
-        print(f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing (Correct 1)...")
-        print("\nEXPECT: Main Menu Choice (after Correct 1)")
+        print(Fore.MAGENTA + f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing (Correct 1)...")
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (after Correct 1)")
         child.expect(PROMPT_CHOICE, timeout=AI_PROCESSING_WAIT_TIME + TIMEOUT_SECONDS)
 
         # --- Second Run ---
         # 9: Choose "Run solution"
-        print("\nEXPECT: Main Menu Choice (Run 2)")
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (Run 2)")
         # Removed redundant child.expect(PROMPT_CHOICE) here
-        print(f"SEND: {inputs[9]}")
+        print(Fore.YELLOW + f"SEND: {inputs[9]}")
         child.sendline(inputs[9])
 
         # 10: Select solution 'toml1' to run
-        print("\nEXPECT: Run Solution Select Prompt (Run 2)")
+        print(Fore.CYAN + "\nEXPECT: Run Solution Select Prompt (Run 2)")
         child.expect(PROMPT_RUN_SELECT)
-        print(f"SEND: {inputs[10]}")
+        print(Fore.YELLOW + f"SEND: {inputs[10]}")
         child.sendline(inputs[10])
-        print(f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run 2)...")
-        print("\nEXPECT: Main Menu Choice (after Run 2)")
+        print(Fore.MAGENTA + f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run 2)...")
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (after Run 2)")
         child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
 
         # --- Loop for Correction and Run ---
         for i in range(loop_count):
             loop_num = i + 1
-            print(f"\n--- Starting Loop Iteration {loop_num}/{loop_count} ---")
+            print(Fore.BLUE + f"\n--- Starting Loop Iteration {loop_num}/{loop_count} ---")
 
             # --- Correction (Loop Iteration {loop_num}) ---
             # 11: Choose "Correct a single component"
-            print(f"\nEXPECT: Main Menu Choice (Correct Loop {loop_num})")
+            print(Fore.CYAN + f"\nEXPECT: Main Menu Choice (Correct Loop {loop_num})")
             # Removed redundant child.expect(PROMPT_CHOICE) here
-            print(f"SEND: {inputs[11]}")
+            print(Fore.YELLOW + f"SEND: {inputs[11]}")
             child.sendline(inputs[11])
 
             # 12: Select solution 'toml1' to correct
-            print(f"\nEXPECT: Correct Solution Select Prompt (Correct Loop {loop_num})")
+            print(Fore.CYAN + f"\nEXPECT: Correct Solution Select Prompt (Correct Loop {loop_num})")
             child.expect(PROMPT_CORRECT_SELECT_SOLUTION)
-            print(f"SEND: {inputs[12]}")
+            print(Fore.YELLOW + f"SEND: {inputs[12]}")
             child.sendline(inputs[12])
 
             # 13: Enter component name
-            print(f"\nEXPECT: Correct Component Name Prompt (Correct Loop {loop_num})")
+            print(Fore.CYAN + f"\nEXPECT: Correct Component Name Prompt (Correct Loop {loop_num})")
             child.expect(PROMPT_CORRECT_COMPONENT_NAME)
-            print(f"SEND: {inputs[13]}")
+            print(Fore.YELLOW + f"SEND: {inputs[13]}")
             child.sendline(inputs[13])
 
             # 14: Send empty correction instructions
-            print(f"\nEXPECT: Correct Instructions Prompt (Correct Loop {loop_num})")
+            print(Fore.CYAN + f"\nEXPECT: Correct Instructions Prompt (Correct Loop {loop_num})")
             child.expect(PROMPT_CORRECT_INSTRUCTIONS)
-            print(f"SEND: [Empty Instructions]")
+            print(Fore.YELLOW + f"SEND: [Empty Instructions]")
             child.sendline(inputs[14])
-            print(f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing (Correct Loop {loop_num})...")
-            print(f"\nEXPECT: Main Menu Choice (after Correct Loop {loop_num})")
+            print(Fore.MAGENTA + f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing (Correct Loop {loop_num})...")
+            print(Fore.CYAN + f"\nEXPECT: Main Menu Choice (after Correct Loop {loop_num})")
             child.expect(PROMPT_CHOICE, timeout=AI_PROCESSING_WAIT_TIME + TIMEOUT_SECONDS)
 
             # --- Run (Loop Iteration {loop_num}) ---
             # 15: Choose "Run solution"
-            print(f"\nEXPECT: Main Menu Choice (Run Loop {loop_num})")
+            print(Fore.CYAN + f"\nEXPECT: Main Menu Choice (Run Loop {loop_num})")
             # Removed redundant child.expect(PROMPT_CHOICE) here
-            print(f"SEND: {inputs[15]}")
+            print(Fore.YELLOW + f"SEND: {inputs[15]}")
             child.sendline(inputs[15])
 
             # 16: Select solution 'toml1' to run
-            print(f"\nEXPECT: Run Solution Select Prompt (Run Loop {loop_num})")
+            print(Fore.CYAN + f"\nEXPECT: Run Solution Select Prompt (Run Loop {loop_num})")
             child.expect(PROMPT_RUN_SELECT)
-            print(f"SEND: {inputs[16]}")
+            print(Fore.YELLOW + f"SEND: {inputs[16]}")
             child.sendline(inputs[16])
-            print(f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run Loop {loop_num})...")
-            print(f"\nEXPECT: Main Menu Choice (after Run Loop {loop_num})")
+            print(Fore.MAGENTA + f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run Loop {loop_num})...")
+            print(Fore.CYAN + f"\nEXPECT: Main Menu Choice (after Run Loop {loop_num})")
             child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
 
-            print(f"\n--- Finished Loop Iteration {loop_num}/{loop_count} ---")
+            print(Fore.BLUE + f"\n--- Finished Loop Iteration {loop_num}/{loop_count} ---")
         # --- End Loop ---
 
         # --- Exit ---
         # 17: Choose "Exit"
-        print("\nEXPECT: Main Menu Choice (Exit)")
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (Exit)")
         # Removed redundant child.expect(PROMPT_CHOICE) here
-        print(f"SEND: {inputs[17]}")
+        print(Fore.YELLOW + f"SEND: {inputs[17]}")
         child.sendline(inputs[17])
 
         # Wait for the process to finish
-        print("\nEXPECT: Process termination (EOF)")
+        print(Fore.CYAN + "\nEXPECT: Process termination (EOF)")
         # Use the base pexpect EOF exception
         child.expect(pexpect.EOF)
-        print("\nProcess finished.")
+        print(Fore.GREEN + "\nProcess finished.")
 
     # Use the base pexpect TIMEOUT exception
     except pexpect.TIMEOUT:
-        print("\nError: Timeout waiting for expected output.")
-        print("------- Last 500 characters of output: -------")
-        print(child.before[-500:])
-        print("---------------------------------------------")
+        print(Fore.RED + "\nError: Timeout waiting for expected output.")
+        print(Fore.RED + "------- Last 500 characters of output: -------")
+        print(Fore.RED + child.before[-500:])
+        print(Fore.RED + "---------------------------------------------")
         return 1 # Indicate error
     # Use the base pexpect EOF exception
     except pexpect.EOF:
-        print("\nError: Process ended unexpectedly.")
-        print("------- Output before EOF: -------")
-        print(child.before)
-        print("----------------------------------")
+        print(Fore.RED + "\nError: Process ended unexpectedly.")
+        print(Fore.RED + "------- Output before EOF: -------")
+        print(Fore.RED + child.before)
+        print(Fore.RED + "----------------------------------")
         return 1 # Indicate error
     except Exception as e:
-        print(f"\nAn unexpected error occurred: {e}")
+        print(Fore.RED + f"\nAn unexpected error occurred: {e}")
         # Check if process is alive using poll() on the underlying Popen object
         if 'child' in locals() and hasattr(child, 'proc') and child.proc.poll() is None:
-            print("------- Last 500 characters of output: -------")
-            print(child.before[-500:])
-            print("---------------------------------------------")
+            print(Fore.RED + "------- Last 500 characters of output: -------")
+            print(Fore.RED + child.before[-500:])
+            print(Fore.RED + "---------------------------------------------")
         return 1 # Indicate error
     finally:
         # Check if process is alive using poll() on the underlying Popen object
         if 'child' in locals() and hasattr(child, 'proc') and child.proc.poll() is None:
-            print("\nTerminating child process...")
+            print(Fore.LIGHTBLACK_EX + "\nTerminating child process...")
             child.proc.terminate() # Call terminate on the underlying Popen object
-            print("Child process terminated.")
+            print(Fore.LIGHTBLACK_EX + "Child process terminated.")
 
-    print("\nTester finished successfully.")
+    print(Fore.GREEN + "\nTester finished successfully.")
     return 0 # Indicate success
 
 if __name__ == "__main__":
@@ -240,7 +242,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.loops < 1:
-        print("Error: Number of loops must be at least 1.")
+        print(Fore.RED + "Error: Number of loops must be at least 1.")
         sys.exit(1)
 
     sys.exit(main(args.loops)) # Pass loop count to main
