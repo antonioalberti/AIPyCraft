@@ -56,8 +56,9 @@ class Dispatcher:
             print(Fore.YELLOW + "10. Import a folder as a solution")
             print(Fore.RED + "11. Delete a solution (files will be preserved)")
             print(Fore.LIGHTWHITE_EX + "12. Export current solution to TOML")
-            print(Fore.RED + "13. Exit")
-            choice = input("Enter your choice (1-13): ")
+            print(Fore.BLUE + "13. List existing projects")
+            print(Fore.RED + "14. Exit")
+            choice = input("Enter your choice (1-14): ")
 
             logger.info(f"User selected option: {choice}")
 
@@ -221,6 +222,28 @@ class Dispatcher:
                     print(Fore.RED + "No solution currently selected.")
 
             elif choice == '13':
+                logger.info("Listing existing projects with model.txt.")
+                print(Fore.BLUE + "\n--- Existing Projects (with model.txt) ---")
+                try:
+                    projects = [
+                        d for d in os.listdir(self.solutions_folder)
+                        if os.path.isdir(os.path.join(self.solutions_folder, d)) and
+                           os.path.isfile(os.path.join(self.solutions_folder, d, 'model.txt'))
+                    ]
+                    if projects:
+                        for project in projects:
+                            print(Fore.YELLOW + f"- {project}")
+                    else:
+                        print(Fore.YELLOW + "No projects with model.txt found in the solutions folder.")
+                except FileNotFoundError:
+                    print(Fore.RED + f"Error: Solutions folder not found at {self.solutions_folder}")
+                except Exception as e:
+                    print(Fore.RED + f"An error occurred: {e}")
+                    logger.error(f"Error listing projects: {e}")
+                print(Fore.BLUE + "------------------------")
+
+
+            elif choice == '14':
                 logger.info("Exiting program.")
                 break
 
