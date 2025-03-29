@@ -71,21 +71,22 @@ The program was cocreated with GitHub Copilot using Claude 3.5 Sonnet.
 
 2. Follow the on-screen menu to interact with the AI-powered solution creator:
    - Enter `1` to load an existing solution from a folder
-   - Enter `2` to create a new solution by providing a name and description
-   - Enter `3` to install dependencies for a solution using a virtual environment
-   - Enter `4` to run a solution (executes Python components, skips others)
-   - Enter `5` to list loaded solutions and display detailed information about a selected solution
-   - Enter `6` to remove a solution and its associated files
-   - Enter `7` to correct and improve an existing solution using AI
+   - Enter `2` to create a new solution
+   - Enter `3` to install a solution environment
+   - Enter `4` to run a solution
+   - Enter `5` to show solution details
+   - Enter `6` to remove a solution folder (deletes files)
+   - Enter `7` to correct a solution using AI
    - Enter `8` to apply alternative solution correction using AI
-   - Enter `9` to manually improve or correct a solution
-   - Enter `10` to import a solution from an external folder
-   - Enter `11` to delete a solution from the program (files will be preserved)
-   - Enter `12` to export current solution to TOML
-- Enter `13` to list existing project folders (containing model.txt)
-- Enter `14` to exit the program
+   - Enter `9` to manually improve or correct a solution (adds features)
+   - Enter `10` to correct a single component using AI
+   - Enter `11` to import a folder as a solution
+   - Enter `12` to delete a solution reference (preserves files)
+   - Enter `13` to export current solution to TOML
+   - Enter `14` to list existing projects (folders with `model.txt`)
+   - Enter `15` to exit the program
 
-*(Note: The exact mapping of menu options 7, 8, 9 to the correction modules might need verification by running the application.)*
+*(Note: The exact mapping of menu options 7, 8, 9, 10 to the specific correction/improvement modules (`solution_correcting.py`, `solution_updater.py`, `solution_feature_adding.py`, `component_corrector.py`) might need verification by running the application.)*
 
 ## Component Languages
 
@@ -131,7 +132,6 @@ Note: Only Python components are executed when running a solution. Other compone
 - `.gitignore`: Specifies intentionally untracked files for Git.
 - `exports/`: Default directory for exported solutions (e.g., in TOML format).
 - `logs/`: Directory where log files are stored.
-- `test_solutions/`: Contains example or test solutions.
 - `utils/`: Directory for utility modules like the logger.
 
 ## Contributing
