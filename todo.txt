@@ -1,3 +1,0 @@
-Create a function to save a solution in another folder
-
-Create a function to correct simple naming problems in the code
