@@ -40,24 +40,40 @@ class SolutionRunner:
                 return
 
             if os.name == 'nt':  # Windows
-                activate_script = os.path.join(venv_path, "Scripts", "activate.bat")
-                command = f'cmd /c "{activate_script} && python "{main_file_path}""'
-                result = subprocess.run(command, capture_output=True, text=True, shell=True)
-            else:  # Unix-based systems
+                # Directly execute the python interpreter from the venv
+                python_exe = os.path.join(venv_path, "Scripts", "python.exe")
+                if not os.path.exists(python_exe):
+                     print(Fore.LIGHTRED_EX + f"Python executable not found in venv: {python_exe}" + Style.RESET_ALL)
+                     solution.status = 'ERROR'
+                     execution_log += f"Python executable not found in venv: {python_exe}\n"
+                     return
+                command = [python_exe, main_file_path]
+                # No need for shell=True when executing directly
+                result = subprocess.run(command, capture_output=True, text=True, check=False) # check=False to handle non-zero exit codes manually
+            else:  # Unix-based systems (keep existing logic, though direct execution is also an option here)
                 activate_script = os.path.join(venv_path, "bin", "activate")
                 command = f'source "{activate_script}" && python "{main_file_path}"'
                 result = subprocess.run(command, capture_output=True, text=True, shell=True, executable="/bin/bash")
 
             # Print the captured output and error streams
-            print(Fore.GREEN + "Output:" + Style.RESET_ALL)
+            print(Fore.GREEN + "This is the output of the solution main.py run:" + Style.RESET_ALL)
             print(Fore.WHITE + result.stdout + Style.RESET_ALL)
             execution_log += f"Output:\n{result.stdout}\n"
 
             if result.stderr:
                 print(Fore.LIGHTRED_EX + "Error:" + Style.RESET_ALL)
+                print(Fore.LIGHTRED_EX + "Error:" + Style.RESET_ALL)
                 print(Fore.LIGHTRED_EX + result.stderr + Style.RESET_ALL)
                 execution_log += f"Error:\n{result.stderr}\n"
+                # Don't set status here yet, check return code below
+
+            # Check return code AND stderr to determine status
+            if result.returncode != 0 or result.stderr:
                 solution.status = 'ERROR'
+                if result.returncode != 0 and not result.stderr: # Add note if only return code indicated error
+                     error_msg = f"Process exited with non-zero status code: {result.returncode}"
+                     print(Fore.LIGHTRED_EX + error_msg + Style.RESET_ALL)
+                     execution_log += f"Error: {error_msg}\n"
             else:
                 solution.status = 'SUCCESS'
         except Exception as e:

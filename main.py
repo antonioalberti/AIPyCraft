@@ -18,6 +18,7 @@ from solution_correcting import SolutionCorrecting
 from solution_feature_adding import SolutionFeatureAdding
 from solution_importer import SolutionImporter
 from solution_updater import SolutionUpdater
+from component_corrector import ComponentCorrector # Added import
 
 # Load environment variables from .env file
 load_dotenv()
@@ -40,6 +41,7 @@ class Dispatcher:
         self.solution_feature_adding = SolutionFeatureAdding()
         self.solution_importer = SolutionImporter(solutions_folder)
         self.solution_updater = SolutionUpdater()
+        self.component_corrector = ComponentCorrector() # Added instance
 
     def run(self):
         logger.info("Main menu started.")
@@ -53,11 +55,13 @@ class Dispatcher:
             print(Fore.GREEN + Style.BRIGHT + "7. Correct a solution")
             print(Fore.CYAN + "8. Alternative solution correction")
             print(Fore.MAGENTA + "9. Manually improve or correct a solution")
-            print(Fore.YELLOW + "10. Import a folder as a solution")
-            print(Fore.RED + "11. Delete a solution (files will be preserved)")
-            print(Fore.LIGHTWHITE_EX + "12. Export current solution to TOML")
-            print(Fore.RED + "13. Exit")
-            choice = input("Enter your choice (1-13): ")
+            print(Fore.YELLOW + "10. Correct a single component") # New option
+            print(Fore.CYAN + "11. Import a folder as a solution") # Renumbered
+            print(Fore.RED + "12. Delete a solution (files will be preserved)") # Renumbered
+            print(Fore.LIGHTWHITE_EX + "13. Export current solution to TOML") # Renumbered
+            print(Fore.BLUE + "14. List existing projects") # Renumbered
+            print(Fore.RED + "15. Exit") # Renumbered
+            choice = input("Enter your choice (1-15): ") # Updated range
 
             logger.info(f"User selected option: {choice}")
 
@@ -185,7 +189,38 @@ class Dispatcher:
                     except ValueError:
                         pass
 
-            elif choice == '10':
+            elif choice == '10': # New block for single component correction
+                if not self.solutions:
+                    print(Fore.RED + "No solutions available. Please load or create a solution first.")
+                else:
+                    for i, solution in enumerate(self.solutions, start=1):
+                        print(Fore.YELLOW + f"{i}. {solution.name}")
+                    while True:
+                        opt = input("Enter the number of the solution containing the component to correct (or 'q' to quit): ")
+                        if opt.lower() == 'q':
+                            break
+                        try:
+                            index = int(opt) - 1
+                            if 0 <= index < len(self.solutions):
+                                selected_solution = self.solutions[index]
+                                component_name = input(f"Enter the name of the component to correct in '{selected_solution.name}' (e.g., main.py): ")
+                                if any(f"{c.name}.{c.extension}" == component_name for c in selected_solution.components):
+                                    user_prompt = input("Enter any specific instructions for the AI (or leave blank): ") # Ask for user prompt
+                                    logger.info(f"Correcting component '{component_name}' in solution: {selected_solution.name} with user prompt: '{user_prompt}'")
+                                    self.component_corrector.update_solution(selected_solution, component_name, user_prompt) # Pass user_prompt
+                                else:
+                                    print(Fore.RED + f"Component '{component_name}' not found in solution '{selected_solution.name}'.")
+                                break # Exit inner loop after attempting correction or finding component invalid
+                            else:
+                                print(Fore.RED + "Invalid solution number.")
+                        except ValueError:
+                            print(Fore.RED + "Invalid input. Please enter a number.")
+                        except Exception as e:
+                            logger.error(f"Error during single component correction: {e}")
+                            print(Fore.RED + f"An unexpected error occurred: {e}")
+                            break # Exit inner loop on unexpected error
+
+            elif choice == '11': # Renumbered
                 solution_to_be_imported = input("Enter the name of the solution to be imported: ")
                 folder_path = input("Enter the path to the folder to import as a solution: ")
                 solution = self.solution_importer.import_solution_from_folder(solution_to_be_imported, folder_path)
@@ -194,7 +229,7 @@ class Dispatcher:
                     self.solutions.append(solution)
                     self.current_solution = solution
 
-            elif choice == '11':
+            elif choice == '12': # Renumbered
                 for i, solution in enumerate(self.solutions, start=1):
                     print(Fore.YELLOW + f"{i}. {solution.name}")
                 while True:
@@ -211,7 +246,7 @@ class Dispatcher:
                     except ValueError:
                         pass
 
-            elif choice == '12':
+            elif choice == '13': # Renumbered
                 if self.current_solution:
                     path = self.current_solution.export_solution_to_toml()
                     logger.info(f"Solution exported to TOML at: {path}")
@@ -220,7 +255,29 @@ class Dispatcher:
                     logger.warning("No solution currently selected.")
                     print(Fore.RED + "No solution currently selected.")
 
-            elif choice == '13':
+            elif choice == '14': # Renumbered
+                logger.info("Listing existing projects with model.txt.")
+                print(Fore.BLUE + "\n--- Existing Projects (with model.txt) ---")
+                try:
+                    projects = [
+                        d for d in os.listdir(self.solutions_folder)
+                        if os.path.isdir(os.path.join(self.solutions_folder, d)) and
+                           os.path.isfile(os.path.join(self.solutions_folder, d, 'model.txt'))
+                    ]
+                    if projects:
+                        for project in projects:
+                            print(Fore.YELLOW + f"- {project}")
+                    else:
+                        print(Fore.YELLOW + "No projects with model.txt found in the solutions folder.")
+                except FileNotFoundError:
+                    print(Fore.RED + f"Error: Solutions folder not found at {self.solutions_folder}")
+                except Exception as e:
+                    print(Fore.RED + f"An error occurred: {e}")
+                    logger.error(f"Error listing projects: {e}")
+                print(Fore.BLUE + "------------------------")
+
+
+            elif choice == '15': # Renumbered
                 logger.info("Exiting program.")
                 break
 
@@ -230,7 +287,7 @@ class Dispatcher:
 
 if __name__ == '__main__':
     api_config = {}
-    solutions_folder = input("Enter the solutions folder path: ")
+    solutions_folder = input("Enter the solutions folder path:")
     os.makedirs(solutions_folder, exist_ok=True)
     logger.info(f"Solutions folder set: {solutions_folder}")
     dispatcher = Dispatcher(solutions_folder)

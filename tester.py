@@ -1,88 +1,248 @@
-import subprocess
-import os
+import pexpect
+import pexpect.popen_spawn
 import sys
-import tempfile
+import time
+import os
+import argparse # Import argparse
+from colorama import init, Fore, Style # Import colorama
+init(autoreset=True) # Initialize colorama
 
-def test_main_menu():
-    # Create a temporary folder for solutions
-    with tempfile.TemporaryDirectory() as solutions_folder:
-        print(f"[INFO] Testing with temporary solutions folder: {solutions_folder}")
+# Constants
+TIMEOUT_SECONDS = 60  # General timeout for expect operations
+AI_PROCESSING_WAIT_TIME = 20 # Increased wait time after sending feature description
+INSTALLATION_WAIT_TIME = 15 # Increased wait time after selecting install method
+EXECUTION_WAIT_TIME = 10 # Increased wait time after selecting run
 
-        # Prepare the inputs for the menu options
-        inputs = [
-            f"{solutions_folder}\n",  # Enter solutions folder path
-            "2\n",  # Create a new solution
-            "pong\n",  # Enter a name for the new solution
-            "This is a test solution for a Pong game.\n",  # Enter a description for the solution
-            "yes\n",  # Approve the solution and its components
-            "3\n",  # Install a solution environment
-            "q\n",  # Quit the submenu
-            "4\n",  # Run a solution
-            "q\n",  # Quit the submenu
-            "2\n",  # Create another solution
-            "pink\n",  # Enter a name for the new solution
-            "Plot a house with pink color.\n",  # Enter a description for the solution
-            "yes\n",  # Approve the solution and its components
-            "3\n",  # Install a solution environment
-            "q\n",  # Quit the submenu
-            "4\n",  # Run the solution
-            "7\n",  # Correct the solution
-            "q\n",  # Quit the submenu
-            "8\n",  # Apply alternative correction
-            "q\n",  # Quit the submenu
-            "4\n",  # Run the solution again
-            "3\n",  # Reinstall the environment
-            "q\n",  # Quit the submenu
-            "4\n",  # Run the solution again
-            "8\n",  # Apply another alternative correction
-            "q\n",  # Quit the submenu
-            "12\n",  # Export the solution to TOML
-            "9\n",  # Add a feature to the solution
-            "Check imports on my solution.\n",  # Enter the feature description
-            "13\n"  # Exit the program
-        ]
+# Inputs based on the provided log
+solutions_folder_path = r"C:\Users\Scalifax\workspace"
+correction_instructions = r"""The config.toml file should define a Chainlink job that creates an external price oracle. The job listens for oracle requests on contract 0xc970705401D0D61A05d49C33ab2A39A5C49b2f94 on chain ID 1337, with external ID ca98366c-c731-4957-b8c0-12c72f05aeea. When triggered, it performs a GET request to the CoinGecko API to fetch the price of Ethereum in USD, parses the result, multiplies it by 100 (to handle decimals), and sends the result back to the blockchain via a transaction that calls the fulfillOracleRequest2 method. The data pipeline includes decoding the request log, HTTP fetch, JSON parsing, value multiplication, and data encoding for the response transaction. The job includes all essential Job Configuration properties at the top of the file. These include: type (defines the job type, e.g., "directrequest"), schemaVersion (typically set to 1), name (a human-readable identifier), externalJobID (a unique UUID for external reference), contractAddress (address of the triggering smart contract, required for job types like directrequest), evmChainID (identifies the EVM chain, e.g., 1 for Ethereum mainnet or 1337 for local testnets), forwardingAllowed (boolean, often false for direct requests), minIncomingConfirmations (minimum block confirmations before processing, e.g., 0), minContractPaymentLinkJuels (minimum LINK payment in juels, e.g., "0"), and maxTaskDuration (maximum time a task may run, e.g., "30s"). When generating or validating a job spec, include these fields with appropriate formatting and values based on the job type, and follow with the observationSource block for defining the task pipeline (e.g., http -> jsonparse -> multiply -> ethtx)."""
+inputs = [
+    solutions_folder_path,          # 0: Solutions folder path
+    "1",                            # 1: Load a solution
+    "toml1",                        # 2: Solution name to load
+    "4",                            # 3: Run solution (first run)
+    "1",                            # 4: Select solution 'toml1' to run
+    "10",                           # 5: Correct a single component (first correction)
+    "1",                            # 6: Select solution 'toml1' to correct
+    "config.toml",                  # 7: Component name to correct
+    correction_instructions,        # 8: Correction instructions
+    "4",                            # 9: Run solution (second run)
+    "1",                            # 10: Select solution 'toml1' to run
+    "10",                           # 11: Correct a single component (second correction)
+    "1",                            # 12: Select solution 'toml1' to correct
+    "config.toml",                  # 13: Component name to correct
+    "",                             # 14: Empty correction instructions
+    "4",                            # 15: Run solution (third run)
+    "1",                            # 16: Select solution 'toml1' to run
+    "15"                            # 17: Exit
+]
 
-        # Combine all inputs into a single string
-        input_sequence = "".join(inputs)
-        print("[INFO] Input sequence prepared for testing.")
+# Prompts to expect (using more specific regex where helpful)
+PROMPT_FOLDER = r"Enter the solutions folder path:\s*"
+PROMPT_CHOICE = r"Enter your choice \(1-15\):\s*" # Updated range
+PROMPT_LOAD_NAME = r"Enter the name of the solution to be loaded:\s*"
+PROMPT_RUN_SELECT = r"Enter the number of the solution to run \(or 'q' to quit\):\s*"
+PROMPT_CORRECT_SELECT_SOLUTION = r"Enter the number of the solution containing the component to correct \(or 'q' to quit\):\s*"
+PROMPT_CORRECT_COMPONENT_NAME = r"Enter the name of the component to correct in '.*?' \(e.g., main.py\):\s*"
+PROMPT_CORRECT_INSTRUCTIONS = r"Enter any specific instructions for the AI \(or leave blank\):\s*"
+# Removed unused prompts like FEATURE_SELECT, FEATURE_DESC, INSTALL_SELECT, INSTALL_METHOD
 
-        # Run the main.py script and provide the inputs
-        print("[INFO] Starting the main.py script...")
-        process = subprocess.Popen(
-            [sys.executable, "main.py"],
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
+def main(loop_count): # Add loop_count parameter
+    print(Fore.LIGHTBLACK_EX + "Starting AIPyCraft test with pexpect...")
+    python_executable = sys.executable # Use the same python that runs this script
+    command = f"{python_executable} main.py"
+    print(Fore.LIGHTBLACK_EX + f"Running command: {command}")
+    print(Fore.LIGHTBLACK_EX + f"Looping correction/run steps {loop_count} times.") # Indicate loop count
 
-        try:
-            # Send the inputs to the program
-            print("[INFO] Sending inputs to the program...")
-            stdout, stderr = process.communicate(input=input_sequence, timeout=60)
+    try:
+        # Spawn the process using PopenSpawn for Windows compatibility
+        # Use encoding='utf-8' and logfile for debugging output
+        child = pexpect.popen_spawn.PopenSpawn(command, encoding='utf-8', timeout=TIMEOUT_SECONDS, logfile=sys.stdout)
 
-            # Save the outputs for verification
-            print("[INFO] Writing outputs to 'test_output.log'...")
-            with open("test_output.log", "w") as log_file:
-                log_file.write("Program Output:\n")
-                log_file.write(stdout)
-                if stderr:
-                    log_file.write("\nProgram Errors:\n")
-                    log_file.write(stderr)
+        # --- Interaction Sequence ---
 
-            # Print a summary
-            print("[INFO] Test completed. Check 'test_output.log' for details.")
-            print("[INFO] Program Output:")
-            print(stdout)
-            if stderr:
-                print("[ERROR] Program Errors:")
-                print(stderr)
+        # 0: Send solutions folder path
+        print(Fore.CYAN + "\nEXPECT: Folder Path Prompt")
+        child.expect(PROMPT_FOLDER)
+        print(Fore.YELLOW + f"SEND: {inputs[0]}")
+        child.sendline(inputs[0])
 
-        except subprocess.TimeoutExpired:
-            process.kill()
-            print("[ERROR] The program took too long to respond and was terminated.")
+        # 1: Choose "Load a solution"
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice")
+        child.expect(PROMPT_CHOICE)
+        print(Fore.YELLOW + f"SEND: {inputs[1]}")
+        child.sendline(inputs[1])
+
+        # 2: Send solution name to load
+        print(Fore.CYAN + "\nEXPECT: Solution Load Name Prompt")
+        child.expect(PROMPT_LOAD_NAME)
+        print(Fore.YELLOW + f"SEND: {inputs[2]}")
+        child.sendline(inputs[2])
+
+        # --- First Run ---
+        # 3: Choose "Run solution"
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (Run 1)")
+        child.expect(PROMPT_CHOICE)
+        print(Fore.YELLOW + f"SEND: {inputs[3]}")
+        child.sendline(inputs[3])
+
+        # 4: Select solution 'toml1' to run
+        print(Fore.CYAN + "\nEXPECT: Run Solution Select Prompt (Run 1)")
+        child.expect(PROMPT_RUN_SELECT)
+        print(Fore.YELLOW + f"SEND: {inputs[4]}")
+        child.sendline(inputs[4])
+        print(Fore.MAGENTA + f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run 1)...")
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (after Run 1)")
+        child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
+
+        # --- First Correction ---
+        # 5: Choose "Correct a single component"
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (Correct 1)")
+        # Removed redundant child.expect(PROMPT_CHOICE) here
+        print(Fore.YELLOW + f"SEND: {inputs[5]}")
+        child.sendline(inputs[5])
+
+        # 6: Select solution 'toml1' to correct
+        print(Fore.CYAN + "\nEXPECT: Correct Solution Select Prompt (Correct 1)")
+        child.expect(PROMPT_CORRECT_SELECT_SOLUTION)
+        print(Fore.YELLOW + f"SEND: {inputs[6]}")
+        child.sendline(inputs[6])
+
+        # 7: Enter component name
+        print(Fore.CYAN + "\nEXPECT: Correct Component Name Prompt (Correct 1)")
+        child.expect(PROMPT_CORRECT_COMPONENT_NAME)
+        print(Fore.YELLOW + f"SEND: {inputs[7]}")
+        child.sendline(inputs[7])
+
+        # 8: Send correction instructions
+        print(Fore.CYAN + "\nEXPECT: Correct Instructions Prompt (Correct 1)")
+        child.expect(PROMPT_CORRECT_INSTRUCTIONS)
+        print(Fore.YELLOW + f"SEND: [Correction Instructions - Length: {len(inputs[8])}]")
+        child.sendline(inputs[8])
+        print(Fore.MAGENTA + f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing (Correct 1)...")
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (after Correct 1)")
+        child.expect(PROMPT_CHOICE, timeout=AI_PROCESSING_WAIT_TIME + TIMEOUT_SECONDS)
+
+        # --- Second Run ---
+        # 9: Choose "Run solution"
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (Run 2)")
+        # Removed redundant child.expect(PROMPT_CHOICE) here
+        print(Fore.YELLOW + f"SEND: {inputs[9]}")
+        child.sendline(inputs[9])
+
+        # 10: Select solution 'toml1' to run
+        print(Fore.CYAN + "\nEXPECT: Run Solution Select Prompt (Run 2)")
+        child.expect(PROMPT_RUN_SELECT)
+        print(Fore.YELLOW + f"SEND: {inputs[10]}")
+        child.sendline(inputs[10])
+        print(Fore.MAGENTA + f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run 2)...")
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (after Run 2)")
+        child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
+
+        # --- Loop for Correction and Run ---
+        for i in range(loop_count):
+            loop_num = i + 1
+            print(Fore.BLUE + f"\n--- Starting Loop Iteration {loop_num}/{loop_count} ---")
+
+            # --- Correction (Loop Iteration {loop_num}) ---
+            # 11: Choose "Correct a single component"
+            print(Fore.CYAN + f"\nEXPECT: Main Menu Choice (Correct Loop {loop_num})")
+            # Removed redundant child.expect(PROMPT_CHOICE) here
+            print(Fore.YELLOW + f"SEND: {inputs[11]}")
+            child.sendline(inputs[11])
+
+            # 12: Select solution 'toml1' to correct
+            print(Fore.CYAN + f"\nEXPECT: Correct Solution Select Prompt (Correct Loop {loop_num})")
+            child.expect(PROMPT_CORRECT_SELECT_SOLUTION)
+            print(Fore.YELLOW + f"SEND: {inputs[12]}")
+            child.sendline(inputs[12])
+
+            # 13: Enter component name
+            print(Fore.CYAN + f"\nEXPECT: Correct Component Name Prompt (Correct Loop {loop_num})")
+            child.expect(PROMPT_CORRECT_COMPONENT_NAME)
+            print(Fore.YELLOW + f"SEND: {inputs[13]}")
+            child.sendline(inputs[13])
+
+            # 14: Send empty correction instructions
+            print(Fore.CYAN + f"\nEXPECT: Correct Instructions Prompt (Correct Loop {loop_num})")
+            child.expect(PROMPT_CORRECT_INSTRUCTIONS)
+            print(Fore.YELLOW + f"SEND: [Empty Instructions]")
+            child.sendline(inputs[14])
+            print(Fore.MAGENTA + f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing (Correct Loop {loop_num})...")
+            print(Fore.CYAN + f"\nEXPECT: Main Menu Choice (after Correct Loop {loop_num})")
+            child.expect(PROMPT_CHOICE, timeout=AI_PROCESSING_WAIT_TIME + TIMEOUT_SECONDS)
+
+            # --- Run (Loop Iteration {loop_num}) ---
+            # 15: Choose "Run solution"
+            print(Fore.CYAN + f"\nEXPECT: Main Menu Choice (Run Loop {loop_num})")
+            # Removed redundant child.expect(PROMPT_CHOICE) here
+            print(Fore.YELLOW + f"SEND: {inputs[15]}")
+            child.sendline(inputs[15])
+
+            # 16: Select solution 'toml1' to run
+            print(Fore.CYAN + f"\nEXPECT: Run Solution Select Prompt (Run Loop {loop_num})")
+            child.expect(PROMPT_RUN_SELECT)
+            print(Fore.YELLOW + f"SEND: {inputs[16]}")
+            child.sendline(inputs[16])
+            print(Fore.MAGENTA + f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run Loop {loop_num})...")
+            print(Fore.CYAN + f"\nEXPECT: Main Menu Choice (after Run Loop {loop_num})")
+            child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
+
+            print(Fore.BLUE + f"\n--- Finished Loop Iteration {loop_num}/{loop_count} ---")
+        # --- End Loop ---
+
+        # --- Exit ---
+        # 17: Choose "Exit"
+        print(Fore.CYAN + "\nEXPECT: Main Menu Choice (Exit)")
+        # Removed redundant child.expect(PROMPT_CHOICE) here
+        print(Fore.YELLOW + f"SEND: {inputs[17]}")
+        child.sendline(inputs[17])
+
+        # Wait for the process to finish
+        print(Fore.CYAN + "\nEXPECT: Process termination (EOF)")
+        # Use the base pexpect EOF exception
+        child.expect(pexpect.EOF)
+        print(Fore.GREEN + "\nProcess finished.")
+
+    # Use the base pexpect TIMEOUT exception
+    except pexpect.TIMEOUT:
+        print(Fore.RED + "\nError: Timeout waiting for expected output.")
+        print(Fore.RED + "------- Last 500 characters of output: -------")
+        print(Fore.RED + child.before[-500:])
+        print(Fore.RED + "---------------------------------------------")
+        return 1 # Indicate error
+    # Use the base pexpect EOF exception
+    except pexpect.EOF:
+        print(Fore.RED + "\nError: Process ended unexpectedly.")
+        print(Fore.RED + "------- Output before EOF: -------")
+        print(Fore.RED + child.before)
+        print(Fore.RED + "----------------------------------")
+        return 1 # Indicate error
+    except Exception as e:
+        print(Fore.RED + f"\nAn unexpected error occurred: {e}")
+        # Check if process is alive using poll() on the underlying Popen object
+        if 'child' in locals() and hasattr(child, 'proc') and child.proc.poll() is None:
+            print(Fore.RED + "------- Last 500 characters of output: -------")
+            print(Fore.RED + child.before[-500:])
+            print(Fore.RED + "---------------------------------------------")
+        return 1 # Indicate error
+    finally:
+        # Check if process is alive using poll() on the underlying Popen object
+        if 'child' in locals() and hasattr(child, 'proc') and child.proc.poll() is None:
+            print(Fore.LIGHTBLACK_EX + "\nTerminating child process...")
+            child.proc.terminate() # Call terminate on the underlying Popen object
+            print(Fore.LIGHTBLACK_EX + "Child process terminated.")
+
+    print(Fore.GREEN + "\nTester finished successfully.")
+    return 0 # Indicate success
 
 if __name__ == "__main__":
-    print("[INFO] Starting the test_main_menu function...")
-    test_main_menu()
-    print("[INFO] Test execution finished.")
+    parser = argparse.ArgumentParser(description="Run AIPyCraft tester with optional looping.")
+    parser.add_argument("--loops", type=int, default=1, help="Number of times to loop the correction/run sequence.")
+    args = parser.parse_args()
+
+    if args.loops < 1:
+        print(Fore.RED + "Error: Number of loops must be at least 1.")
+        sys.exit(1)
+
+    sys.exit(main(args.loops)) # Pass loop count to main

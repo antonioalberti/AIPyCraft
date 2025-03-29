@@ -93,15 +93,48 @@ class InstallationScriptGenerator:
             return
 
         if installation_method.lower() == 'pip':
-            # Create a virtual environment within the solution directory
             venv_directory = os.path.join(solution_directory, "venv")
-            subprocess.run(["python", "-m", "venv", venv_directory])
+
+            # Attempt to remove the existing venv directory if it exists
+            if os.path.exists(venv_directory):
+                print(f"{Fore.YELLOW}Removing existing virtual environment: {venv_directory}{Style.RESET_ALL}")
+                try:
+                    # Use shutil.rmtree for robust directory removal
+                    import shutil
+                    shutil.rmtree(venv_directory)
+                    print(f"{Fore.GREEN}Successfully removed existing virtual environment.{Style.RESET_ALL}")
+                except Exception as e:
+                    print(f"{Fore.RED}Error removing existing virtual environment: {e}{Style.RESET_ALL}")
+                    # Optionally, decide if you want to proceed or stop if removal fails
+
+            # Create a fresh virtual environment
+            print(f"{Fore.CYAN}Creating new virtual environment: {venv_directory}{Style.RESET_ALL}")
+            create_venv_result = subprocess.run(["python", "-m", "venv", venv_directory], capture_output=True, text=True)
+            if create_venv_result.returncode != 0:
+                 print(f"{Fore.RED}Failed to create virtual environment.{Style.RESET_ALL}")
+                 print(f"{Fore.RED}Stderr: {create_venv_result.stderr}{Style.RESET_ALL}")
+                 return # Stop if venv creation fails
 
             # Install the packages using pip within the virtual environment
             if os.name == 'nt':  # Windows
                 pip_executable = os.path.join(venv_directory, "Scripts", "pip.exe")
-                subprocess.run([pip_executable, "install", "-r", requirements_file_path])
-                print(f"{Fore.GREEN}\n\nPackages installed using pip in {venv_directory}\n\n")
+                # Create a clean environment for the subprocess
+                clean_env = os.environ.copy()
+                # Remove PYTHONPATH if it exists to prevent interference
+                clean_env.pop('PYTHONPATH', None)
+                # Run pip install with the cleaned environment, forcing reinstall and disabling cache
+                # Capture output for debugging
+                print(f"{Fore.YELLOW}Running pip install command: {[pip_executable, 'install', '--force-reinstall', '--no-cache-dir', '-r', requirements_file_path]}{Style.RESET_ALL}")
+                result = subprocess.run([pip_executable, "install", "--force-reinstall", "--no-cache-dir", "-r", requirements_file_path], env=clean_env, check=False, capture_output=True, text=True)
+                print(f"{Fore.CYAN}--- pip install stdout ---{Style.RESET_ALL}")
+                print(result.stdout)
+                print(f"{Fore.CYAN}--- pip install stderr ---{Style.RESET_ALL}")
+                print(result.stderr)
+                print(f"{Fore.CYAN}--- End pip install output ---{Style.RESET_ALL}")
+                if result.returncode == 0:
+                    print(f"{Fore.GREEN}\n\nPackages installed using pip in {venv_directory}\n\n")
+                else:
+                    print(f"{Fore.RED}\n\npip install failed with return code {result.returncode}\n\n")
             else:  # Unix-based systems
                 activate_script = os.path.join(venv_directory, "bin", "activate")
                 pip_executable = os.path.join(venv_directory, "bin", "pip")
