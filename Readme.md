@@ -6,19 +6,28 @@ The program was cocreated with GitHub Copilot using Claude 3.5 Sonnet.
 
 ## Features
 
-- Create new solutions by providing a name and description
-- Generate code components using AI based on user requirements
-- Support multiple programming languages (Python, JavaScript, Bash, JSON, etc.)
-- Load existing solutions from a folder
-- Install dependencies for Python components using virtual environments
-- Run solutions (Python components are executed, other languages are skipped)
-- Display detailed information about a solution and its components
-- Remove solutions and their associated files
-- Correct and improve existing solutions using AI
-- Add new features to solutions using AI
-- Import solutions from external folders
-- Export solutions to TOML format
-- Delete solutions from the program (files will be preserved)
+- **Solution Management:**
+    - Create new solutions with a name and description.
+    - Load existing solutions from folders.
+    - List loaded solutions and display detailed information.
+    - Import solutions from external folders (detects component languages).
+    - Export solutions to TOML format (stored in `exports/`).
+    - Remove solutions and their associated files.
+    - Delete solution references from the program while preserving files.
+    - List existing project folders containing `model.txt`.
+- **AI-Powered Development:**
+    - Generate code components using AI based on user requirements.
+    - Correct and improve entire solutions using AI.
+    - Apply alternative AI-driven correction strategies.
+    - Correct individual components using AI (`component_corrector.py`).
+    - Add new features to solutions using AI.
+- **Code Execution & Handling:**
+    - Support multiple component languages (Python, JS, Bash, JSON, Text, MD, YAML, TOML, etc.).
+    - Run solutions: Executes Python components, skips others.
+    - Install Python dependencies using virtual environments (`install.bat`, `installation_script_generator.py`).
+- **Utilities:**
+    - Logging mechanism (`utils/logger.py`) records operations (logs stored in `logs/`).
+    - Testing capabilities (`tester.py`).
 
 ## Prerequisites
 
@@ -73,8 +82,10 @@ The program was cocreated with GitHub Copilot using Claude 3.5 Sonnet.
    - Enter `10` to import a solution from an external folder
    - Enter `11` to delete a solution from the program (files will be preserved)
    - Enter `12` to export current solution to TOML
-   - Enter `13` to list existing project folders (containing model.txt)
-   - Enter `14` to exit the program
+- Enter `13` to list existing project folders (containing model.txt)
+- Enter `14` to exit the program
+
+*(Note: The exact mapping of menu options 7, 8, 9 to the correction modules might need verification by running the application.)*
 
 ## Component Languages
 
@@ -93,20 +104,35 @@ Note: Only Python components are executed when running a solution. Other compone
 
 ## Folder Structure
 
-- main.py: The main entry point of the program
-- ai_connector.py: Handles the connection and communication with the OpenAI API
-- ai_code_parser.py: Parses code from AI-generated responses with language detection
-- component.py: Defines the structure and behavior of a multilanguage code component
-- solution.py: Defines the structure and behavior of a solution
-- solution_creator.py: Handles the creation of new solutions with multilanguage support
-- solution_loader.py: Loads existing solutions from a folder
-- solution_runner.py: Executes Python components and skips non-Python components
-- solution_displayer.py: Lists loaded solutions and displays detailed information about solutions and their components
-- installation_script_generator.py: Generates installation scripts for Python dependencies
-- solution_correcting.py: Corrects and improves existing solutions using AI
-- solution_feature_adding.py: Adds new features to solutions using AI
-- solution_importer.py: Imports solutions from external folders with language detection
-- solution_updater.py: Applies alternative solution correction using AI
+- `main.py`: Main entry point and user interface handler.
+- `ai_connector.py`: Manages interaction with the AI API (e.g., OpenAI).
+- `ai_code_parser.py`: Parses code blocks from AI responses and detects language.
+- `component.py`: Defines the `Component` class representing a single code file.
+- `solution.py`: Defines the `Solution` class, managing a collection of components.
+- `solution_creator.py`: Handles the creation of new solutions.
+- `solution_loader.py`: Loads existing solutions from disk.
+- `solution_runner.py`: Executes runnable components (currently Python).
+- `solution_displayer.py`: Formats and displays solution information to the user.
+- `installation_script_generator.py`: Creates scripts (`install.bat`) for Python dependencies.
+- `solution_correcting.py`: Implements AI-based correction for entire solutions.
+- `solution_updater.py`: Provides alternative AI-based correction mechanisms.
+- `component_corrector.py`: Handles AI-based correction for individual components.
+- `solution_feature_adding.py`: Uses AI to add new features (components) to a solution.
+- `solution_importer.py`: Imports solutions from external directories.
+- `utils/logger.py`: Configures and provides logging functionality. (`logger.py` in root might be deprecated).
+- `tester.py`: Contains testing scripts or utilities for the project.
+- `requirements.txt`: Lists Python package dependencies.
+- `install.bat`: Batch script for easy installation on Windows.
+- `.env`: (User-created) Stores API keys and potentially other secrets.
+- `model.txt`: Likely stores metadata or the core description for a solution within its folder.
+- `Readme.md`: This file.
+- `Copyright.txt`: Contains copyright information.
+- `todo.txt`: Tracks pending tasks or ideas for the project.
+- `.gitignore`: Specifies intentionally untracked files for Git.
+- `exports/`: Default directory for exported solutions (e.g., in TOML format).
+- `logs/`: Directory where log files are stored.
+- `test_solutions/`: Contains example or test solutions.
+- `utils/`: Directory for utility modules like the logger.
 
 ## Contributing
 
