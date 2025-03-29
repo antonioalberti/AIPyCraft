@@ -105,7 +105,7 @@ A common workflow using AIPyCraft might look like this:
         *   Option `7` (`solution_correcting.py`) for whole-solution correction based on errors.
         *   Option `8` (`solution_updater.py`) for alternative AI correction.
         *   Option `10` (`component_corrector.py`) to target a specific component with optional instructions.
-    *   Use option `9` (`solution_feature_adding.py`) to add new features or manually guide improvements with AI.
+        *   Use option `9` (`solution_feature_adding.py`) to add new features or manually guide improvements with AI.
 7.  **Iterate:** Repeat steps 5 (Run) and 6 (Refine/Correct) until the solution functions as desired.
 8.  **Manage:**
     *   Use option `5` to view details of the loaded solutions.
