@@ -88,6 +88,57 @@ The program was cocreated with GitHub Copilot using Claude 3.5 Sonnet.
 
 *(Note: The exact mapping of menu options 7, 8, 9, 10 to the specific correction/improvement modules (`solution_correcting.py`, `solution_updater.py`, `solution_feature_adding.py`, `component_corrector.py`) might need verification by running the application.)*
 
+## Typical Workflow
+
+A common workflow using AIPyCraft might look like this:
+
+1.  **Start:** Run `python main.py`.
+2.  **Set Folder:** Provide the path to your desired solutions folder when prompted.
+3.  **Create/Load:**
+    *   Use option `2` to create a new solution by providing a name and description. The AI will generate initial components.
+    *   Or, use option `1` to load an existing solution from the solutions folder.
+    *   Or, use option `11` to import an external folder as a new solution.
+4.  **Install (if needed):** If the solution contains Python components with dependencies, use option `3` to generate and run an installation script (`install.bat`) within a virtual environment (`venv`).
+5.  **Run:** Use option `4` to execute the solution (runs Python components). Check the output for errors or unexpected behavior.
+6.  **Refine/Correct:**
+    *   If errors occur or improvements are needed, use AI correction options:
+        *   Option `7` (`solution_correcting.py`) for whole-solution correction based on errors.
+        *   Option `8` (`solution_updater.py`) for alternative AI correction.
+        *   Option `10` (`component_corrector.py`) to target a specific component with optional instructions.
+    *   Use option `9` (`solution_feature_adding.py`) to add new features or manually guide improvements with AI.
+7.  **Iterate:** Repeat steps 5 (Run) and 6 (Refine/Correct) until the solution functions as desired.
+8.  **Manage:**
+    *   Use option `5` to view details of the loaded solutions.
+    *   Use option `13` to export the current solution structure to a TOML file in the `exports/` directory.
+    *   Use option `14` to list all recognized projects in the solutions folder.
+    *   Use option `6` to permanently delete a solution's folder and files.
+    *   Use option `12` to remove a solution reference from the program's memory but keep the files.
+9.  **Exit:** Use option `15` to close the application.
+
+## Testing (`tester.py`)
+
+The `tester.py` script provides automated integration testing for the main application flow.
+
+**How it Works:**
+
+*   It uses the `pexpect` library to launch `main.py` as a subprocess.
+*   It simulates user interaction by sending predefined inputs (like menu choices, folder paths, solution names, correction instructions) based on a sequence defined within the script.
+*   It expects specific prompts from `main.py` at each step to verify the application is responding correctly.
+*   It includes timeouts and waits to handle potentially long-running operations like AI processing or script execution.
+*   It focuses on a specific workflow: loading a solution, running it, correcting a component using AI, and running it again. This correction/run cycle can be repeated multiple times.
+
+**Running the Tester:**
+
+You can run the tester from your terminal:
+
+```bash
+python tester.py [--loops N]
+```
+
+*   `--loops N`: (Optional) Specify the number of times (`N`) to repeat the core correction/run cycle. Defaults to 1 if omitted.
+
+The script will print its actions (EXPECT/SEND/WAIT) and the output from `main.py`. It will exit with code 0 on success or 1 on failure (e.g., timeout, unexpected output, crash).
+
 ## Component Languages
 
 The project supports various file types and programming languages:
