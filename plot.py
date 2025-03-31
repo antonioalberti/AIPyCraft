@@ -5,6 +5,8 @@ import statistics
 import matplotlib.pyplot as plt
 import glob
 from collections import Counter
+import numpy as np # Import numpy
+from scipy import stats # Import scipy.stats
 
 LOG_DIR = "logs"
 PLOT_DIR = "plots" # Define the output directory for plots
@@ -97,10 +99,10 @@ def main(trials, loops_value, solution_name):
             # trial_results[i] = -2 # Example: -2 for missing log
 
     # --- Statistics ---
-    successful_iterations = [iters for iters in trial_results.values() if iters > 0]
+    successful_iterations_overall = [iters for iters in trial_results.values() if iters > 0]
     # Failures are trials processed where result is <= 0
     failed_trials = len([res for res in trial_results.values() if res <= 0])
-    num_successful = len(successful_iterations)
+    num_successful = len(successful_iterations_overall)
     num_processed = len(trial_results) # Number of trials where logs were found
 
     print("\n--- Analysis Results ---")
@@ -114,42 +116,93 @@ def main(trials, loops_value, solution_name):
          print("\nNo trials processed (no relevant log files found). Cannot generate plot.")
          return # Exit if no data
 
+    # --- Calculate Cumulative Statistics ---
+    trial_numbers_processed = sorted(trial_results.keys())
+    cumulative_trial_numbers_for_plot = []
+    cumulative_means = []
+    cumulative_ci_lowers = []
+    cumulative_ci_uppers = []
+    current_successful_iterations = []
+
+    for k in trial_numbers_processed: # Iterate through the processed trials in order
+        if trial_results[k] > 0: # Consider only successful trials for cumulative stats
+            current_successful_iterations.append(trial_results[k])
+
+        if len(current_successful_iterations) >= 2: # Need at least 2 successful points for CI
+            mean_k = np.mean(current_successful_iterations)
+            sem_k = stats.sem(current_successful_iterations)
+            df_k = len(current_successful_iterations) - 1
+            confidence_level = 0.95
+            # Calculate confidence interval using t-distribution
+            # Handle potential division by zero or invalid df if sem is 0
+            if sem_k > 0 and df_k > 0:
+                 ci_margin_k = sem_k * stats.t.ppf((1 + confidence_level) / 2., df_k)
+                 ci_lower_k = mean_k - ci_margin_k
+                 ci_upper_k = mean_k + ci_margin_k
+            else: # If SEM is 0 (all values identical), CI is just the mean
+                 ci_lower_k = mean_k
+                 ci_upper_k = mean_k
+
+            cumulative_trial_numbers_for_plot.append(k)
+            cumulative_means.append(mean_k)
+            cumulative_ci_lowers.append(ci_lower_k)
+            cumulative_ci_uppers.append(ci_upper_k)
+        elif len(current_successful_iterations) == 1: # Can plot mean but not CI yet
+             mean_k = current_successful_iterations[0]
+             cumulative_trial_numbers_for_plot.append(k)
+             cumulative_means.append(mean_k)
+             # Append NaN for CI bounds when not calculable
+             cumulative_ci_lowers.append(np.nan)
+             cumulative_ci_uppers.append(np.nan)
+
     # --- Plotting ---
-    trial_numbers = sorted(trial_results.keys())
-    # Replace -1 (failure) with 0 for plotting purposes on the bar chart
-    iteration_values = [trial_results[t] if trial_results[t] > 0 else 0 for t in trial_numbers]
+    plt.figure(figsize=(max(10, len(trial_numbers_processed) * 0.5), 6)) # Adjust width based on number of trials
 
-    plt.figure(figsize=(max(10, len(trial_numbers) * 0.5), 6)) # Adjust width based on number of trials
+    # Plot individual successful points
+    successful_trial_numbers = [t for t in trial_numbers_processed if trial_results[t] > 0]
+    successful_iteration_values = [trial_results[t] for t in successful_trial_numbers]
+    if successful_trial_numbers:
+        plt.scatter(successful_trial_numbers, successful_iteration_values, color='skyblue', label='Successful Trial Iterations', zorder=5, alpha=0.7) # Use scatter
 
-    colors = ['red' if trial_results[t] <= 0 else 'skyblue' for t in trial_numbers]
-    plt.bar(trial_numbers, iteration_values, color=colors, edgecolor='black')
+    # Plot cumulative mean line
+    if cumulative_trial_numbers_for_plot:
+        plt.plot(cumulative_trial_numbers_for_plot, cumulative_means, marker='.', linestyle='-', color='orange', label='Cumulative Mean', zorder=10)
+
+        # Shade the cumulative confidence interval band
+        # Ensure CI bounds are numpy arrays for potential NaN handling if needed by fill_between
+        ci_lowers_np = np.array(cumulative_ci_lowers)
+        ci_uppers_np = np.array(cumulative_ci_uppers)
+        plt.fill_between(cumulative_trial_numbers_for_plot, ci_lowers_np, ci_uppers_np, color='palegreen', alpha=0.4, label='Cumulative 95% CI', zorder=0)
 
     plt.xlabel("Trial Number")
-    plt.ylabel("Number of Correction Iterations to Success (0 = Failed)")
-    plt.title(f"Iterations to Success per Trial for Solution '{solution_name}'\n({num_successful} Successful, {failed_trials} Failed out of {num_processed} Processed)")
-    plt.xticks(trial_numbers) # Ensure a tick for each trial
+    plt.ylabel("Number of Correction Iterations")
+    plt.title(f"Cumulative Mean Iterations to Success for Solution '{solution_name}'\n({num_successful} Successful, {failed_trials} Failed out of {num_processed} Processed)")
+    plt.xticks(trial_numbers_processed) # Ensure a tick for each processed trial
     plt.grid(axis='y', alpha=0.75)
     plt.ylim(bottom=0) # Ensure y-axis starts at 0
+    plt.legend() # Show legend
 
-    # Add overall stats text if needed
-    # plt.text(...)
+    # Add text for failure count
+    plt.text(0.95, 0.95, f'Failed Trials: {failed_trials}',
+             horizontalalignment='right', verticalalignment='top',
+             transform=plt.gca().transAxes, fontsize=10, color='red')
 
     # Ensure the plot directory exists
     os.makedirs(PLOT_DIR, exist_ok=True)
-    plot_filename = f"iterations_per_trial_{solution_name}.png"
+    plot_filename = f"cumulative_iterations_plot_{solution_name}.png" # New filename
     plot_filepath = os.path.join(PLOT_DIR, plot_filename) # Construct full path
 
     plt.savefig(plot_filepath) # Save to the plots directory
-    print(f"\nBar chart saved to: {plot_filepath}")
+    print(f"\nCumulative iterations plot saved to: {plot_filepath}")
     # plt.show() # Uncomment to display the plot interactively
 
-    # Also print summary stats if there were successes
+    # Also print overall summary stats if there were successes
     if num_successful > 0:
-        min_iters = min(successful_iterations)
-        max_iters = max(successful_iterations)
-        mean_iters = statistics.mean(successful_iterations)
-        median_iters = statistics.median(successful_iterations)
-        print(f"\nStatistics for Successful Trials:")
+        min_iters = min(successful_iterations_overall)
+        max_iters = max(successful_iterations_overall)
+        mean_iters = statistics.mean(successful_iterations_overall)
+        median_iters = statistics.median(successful_iterations_overall)
+        print(f"\nOverall Statistics for {num_successful} Successful Trials:")
         print(f"  Min iterations: {min_iters}")
         print(f"  Max iterations: {max_iters}")
         print(f"  Mean iterations: {mean_iters:.2f}")

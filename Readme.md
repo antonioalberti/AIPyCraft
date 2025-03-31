@@ -223,10 +223,13 @@ After running batch tests using `run_tester_multiple.ps1`, you can analyze the r
 
 *   Parses the `tester_run_..._runX.log` files generated during the batch test.
 *   For each trial (log file), it determines the number of correction loop iterations required to reach the "SUCCESS" state for the specified solution.
-*   Calculates statistics on successful trials (min, max, mean, median iterations).
+*   Calculates overall statistics on successful trials (min, max, mean, median iterations).
 *   Counts failed trials (where the success message wasn't found within the log).
-*   Generates a **bar chart** visualizing the number of iterations needed for success for each individual trial. Failed trials are shown with a bar height of 0.
-*   Saves the bar chart as a PNG file in the `plots/` directory (e.g., `plots/iterations_per_trial_SolutionName.png`).
+*   Generates a **line plot** showing:
+    *   Individual successful trials as points (scatter plot).
+    *   The **cumulative mean** number of iterations required for success, calculated progressively after each trial.
+    *   A shaded **95% confidence interval band** around the cumulative mean (calculated and plotted progressively where possible, requiring at least 2 successful trials up to that point).
+*   Saves the cumulative plot as a PNG file in the `plots/` directory (e.g., `plots/cumulative_iterations_plot_SolutionName.png`).
 
 **Usage:**
 
@@ -240,11 +243,11 @@ python plot.py -Trials <number_of_trials> -LoopsValue <max_loops_per_trial> -Sol
 *   `-LoopsValue <max_loops_per_trial>`: The maximum number of correction loops configured within `tester.py` (should match the `-LoopsValue` used with `run_tester_multiple.ps1`). This helps identify failures if success isn't reached.
 *   `-SolutionName <name_of_solution>`: The name of the solution that was tested (should match the `-SolutionName` used with `run_tester_multiple.ps1`).
 
-The script will print the statistics to the console and save the bar chart image in the `plots/` directory.
+The script will print the overall statistics to the console and save the cumulative line plot image (with CI band) in the `plots/` directory.
 
 **Dependencies:**
 
-Requires `matplotlib`. Ensure it's installed (it should be if you updated `requirements.txt` and re-ran `pip install -r requirements.txt` or `install.bat`).
+Requires `matplotlib`, `numpy`, and `scipy`. Ensure they are installed (they should be if you updated `requirements.txt` and re-ran `pip install -r requirements.txt` or `install.bat`).
 
 ## Contributing
 
