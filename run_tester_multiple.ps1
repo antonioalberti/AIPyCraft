@@ -1,35 +1,44 @@
 <#
 .SYNOPSIS
-Runs the tester.py script multiple times with a specified loop count for each run.
+Runs the tester.py script multiple times for a specific solution, with initialization.
 
 .DESCRIPTION
 This script executes the Python script 'tester.py' located in the same directory
-a specified number of times (-N). For each execution, it passes the specified
-loop count (-LoopsValue) to the '--loops' argument of tester.py.
+a specified number of times (-N) for a given solution (-SolutionName).
+For each execution, it first runs 'initialization.ps1' (passing the SolutionName)
+and then runs 'tester.py', passing the specified loop count (-LoopsValue),
+the run ID, and the solution name (--solution-name).
 
-.PARAMETER N
-The total number of times to execute tester.py. Must be a positive integer.
+.PARAMETER Trials
+The total number of times (trials) to execute the initialization + tester sequence. Must be a positive integer.
 
 .PARAMETER LoopsValue
 The value to pass to the '--loops' argument of tester.py for each execution.
 Must be a positive integer.
 
-.EXAMPLE
-.\run_tester_multiple.ps1 -N 5 -LoopsValue 3
-Runs tester.py 5 times, and each time passes '--loops 3' to it.
+.PARAMETER SolutionName
+The name of the solution folder (e.g., 'toml1', 'toml2') to test and initialize.
 
 .EXAMPLE
-.\run_tester_multiple.ps1 -N 1 -LoopsValue 10
-Runs tester.py 1 time, passing '--loops 10' to it.
+.\run_tester_multiple.ps1 -Trials 5 -LoopsValue 3 -SolutionName toml1
+Runs the initialization and tester sequence 5 times (trials) for the 'toml1' solution,
+passing '--loops 3' to tester.py each time.
+
+.EXAMPLE
+.\run_tester_multiple.ps1 -Trials 1 -LoopsValue 10 -SolutionName my_other_solution
+Runs the sequence 1 time (trial) for 'my_other_solution', passing '--loops 10' to tester.py.
 #>
 param(
     [Parameter(Mandatory=$true)]
     [ValidateRange(1, [int]::MaxValue)]
-    [int]$N,
+    [int]$Trials, # Renamed from N
 
     [Parameter(Mandatory=$true)]
     [ValidateRange(1, [int]::MaxValue)]
-    [int]$LoopsValue
+    [int]$LoopsValue,
+
+    [Parameter(Mandatory=$true)]
+    [string]$SolutionName
 )
 
 # Get the directory where the script is located
@@ -43,7 +52,8 @@ if (-not (Test-Path -Path $TesterScriptPath -PathType Leaf)) {
 }
 
 Write-Host "Starting multi-run execution of tester.py..."
-Write-Host "Total runs (N): $N"
+Write-Host "Target Solution: $SolutionName"
+Write-Host "Total trials: $Trials" # Updated text and variable
 Write-Host "Loops per run (--loops): $LoopsValue"
 Write-Host "Tester script path: $TesterScriptPath"
 Write-Host "-----------------------------------------"
@@ -57,43 +67,43 @@ if (-not (Test-Path -Path $InitializationScriptPath -PathType Leaf)) {
     exit 1
 }
 
-# Loop N times
-for ($i = 1; $i -le $N; $i++) {
-    Write-Host "Starting Run $i of $N..."
+# Loop Trials times
+for ($i = 1; $i -le $Trials; $i++) { # Use $Trials in loop condition
+    Write-Host "Starting Trial $i of $Trials..." # Updated text and variable
 
     # --- Run Initialization Script ---
-    Write-Host "Executing initialization script: $InitializationScriptPath"
+    Write-Host "Executing initialization script for solution '$SolutionName' (Trial $i): $InitializationScriptPath" # Added Trial context
     try {
-        # Execute the initialization script
-        & $InitializationScriptPath
-        Write-Host "Initialization script completed for Run $i."
+        # Execute the initialization script, passing the SolutionName
+        & $InitializationScriptPath -SolutionName $SolutionName
+        Write-Host "Initialization script completed for Trial $i." # Updated text
     } catch {
         $InitErrorMessage = $_.Exception.Message
         # Use ${} to explicitly delimit both variable names for the linter
-        Write-Error "An error occurred during initialization for Run ${i}: ${InitErrorMessage}"
-        Write-Warning "Skipping tester.py execution for Run $i due to initialization error."
+        Write-Error "An error occurred during initialization for Trial ${i}: ${InitErrorMessage}" # Updated text
+        Write-Warning "Skipping tester.py execution for Trial $i due to initialization error." # Updated text
         continue # Skip to the next iteration of the loop
     }
     # --- End Initialization Script ---
 
     # --- Run Tester Script ---
-    # Pass the current loop iteration number ($i) as the --run-id
-    $Command = "python ""$TesterScriptPath"" --loops $LoopsValue --run-id $i"
+    # Pass the current loop iteration number ($i) as --run-id and the SolutionName as --solution-name
+    $Command = "python ""$TesterScriptPath"" --loops $LoopsValue --run-id $i --solution-name ""$SolutionName"""
     Write-Host "Executing: $Command"
     try {
         # Execute the tester command. Output will go to the console.
         Invoke-Expression -Command $Command
         $ExitCode = $LASTEXITCODE
-        Write-Host "Run $i finished with exit code: $ExitCode"
+        Write-Host "Trial $i finished with exit code: $ExitCode" # Updated text
     } catch {
         # Access the specific error message from the error record ($_)
         $ErrorMessage = $_.Exception.Message
         # Use ${} to explicitly delimit both variable names for the linter
-        Write-Error "An error occurred during Run ${i}: ${ErrorMessage}"
+        Write-Error "An error occurred during Trial ${i}: ${ErrorMessage}" # Updated text
         # Optionally decide if you want to stop on error or continue
         # exit 1 # Uncomment to stop the entire script on error
     }
     Write-Host "-----------------------------------------"
 }
 
-Write-Host "All $N runs completed."
+Write-Host "All $Trials trials completed." # Updated text and variable

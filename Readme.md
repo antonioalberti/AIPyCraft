@@ -153,16 +153,17 @@ For running multiple independent test cycles with initialization, use the provid
 Open PowerShell in the project directory and run:
 
 ```powershell
-.\run_tester_multiple.ps1 -N <number_of_runs> -LoopsValue <loops_per_tester_run>
+.\run_tester_multiple.ps1 -Trials <number_of_trials> -LoopsValue <loops_per_tester_run> -SolutionName <name_of_solution>
 ```
 
-*   `-N <number_of_runs>`: (Required) The total number of times to execute the initialization + tester sequence.
-*   `-LoopsValue <loops_per_tester_run>`: (Required) The value passed to the `--loops` argument of `tester.py` for *each* of the `N` runs.
+*   `-Trials <number_of_trials>`: (Required) The total number of times (trials) to execute the initialization + tester sequence.
+*   `-LoopsValue <loops_per_tester_run>`: (Required) The value passed to the `--loops` argument of `tester.py` for *each* of the trials.
+*   `-SolutionName <name_of_solution>`: (Required) The name of the solution folder (e.g., `toml1`, `my_solution`) to test and initialize.
 
 This setup ensures that:
-*   The environment is reset via `initialization.ps1` before each of the `N` runs.
-*   `tester.py` generates a unique log file for its interaction during each run (e.g., `tester_run_..._run1.log`, `tester_run_..._run2.log`).
-*   `main.py` (when called by `tester.py`) also generates a unique log file for its internal operations during each run (e.g., `AIPyCraft_main_..._run1.log`, `AIPyCraft_main_..._run2.log`).
+*   The environment is reset via `initialization.ps1` before each trial.
+*   `tester.py` generates a unique log file for its interaction during each trial (e.g., `tester_run_..._run1.log`, `tester_run_..._run2.log`).
+*   `main.py` (when called by `tester.py`) also generates a unique log file for its internal operations during each trial (e.g., `AIPyCraft_main_..._run1.log`, `AIPyCraft_main_..._run2.log`).
 
 ## Component Languages
 

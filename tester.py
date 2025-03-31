@@ -14,29 +14,41 @@ AI_PROCESSING_WAIT_TIME = 20 # Increased wait time after sending feature descrip
 INSTALLATION_WAIT_TIME = 15 # Increased wait time after selecting install method
 EXECUTION_WAIT_TIME = 10 # Increased wait time after selecting run
 
-# Inputs based on the provided log
+# --- Argument Parsing ---
+parser_tester = argparse.ArgumentParser(description="Run AIPyCraft tester with optional looping, run ID, and target solution.")
+parser_tester.add_argument("--loops", type=int, default=1, help="Number of times to loop the correction/run sequence within a single tester execution.")
+parser_tester.add_argument("--run-id", type=int, default=None, help="Optional unique ID for this specific tester run (used for log filename).")
+parser_tester.add_argument("--solution-name", type=str, required=True, help="The name of the solution to load and test.")
+args_tester = parser_tester.parse_args()
+# --- End Argument Parsing ---
+
+
+# Inputs based on the provided log - SOLUTION NAME IS NOW DYNAMIC
 solutions_folder_path = r"C:\Users\Scalifax\workspace"
 correction_instructions = r"""The config.toml file should define a Chainlink job that creates an external price oracle. The job listens for oracle requests on contract 0xc970705401D0D61A05d49C33ab2A39A5C49b2f94 on chain ID 1337, with external ID ca98366c-c731-4957-b8c0-12c72f05aeea. When triggered, it performs a GET request to the CoinGecko API to fetch the price of Ethereum in USD, parses the result, multiplies it by 100 (to handle decimals), and sends the result back to the blockchain via a transaction that calls the fulfillOracleRequest2 method. The data pipeline includes decoding the request log, HTTP fetch, JSON parsing, value multiplication, and data encoding for the response transaction. The job includes all essential Job Configuration properties at the top of the file. These include: type (defines the job type, e.g., "directrequest"), schemaVersion (typically set to 1), name (a human-readable identifier), externalJobID (a unique UUID for external reference), contractAddress (address of the triggering smart contract, required for job types like directrequest), evmChainID (identifies the EVM chain, e.g., 1 for Ethereum mainnet or 1337 for local testnets), forwardingAllowed (boolean, often false for direct requests), minIncomingConfirmations (minimum block confirmations before processing, e.g., 0), minContractPaymentLinkJuels (minimum LINK payment in juels, e.g., "0"), and maxTaskDuration (maximum time a task may run, e.g., "30s"). When generating or validating a job spec, include these fields with appropriate formatting and values based on the job type, and follow with the observationSource block for defining the task pipeline (e.g., http -> jsonparse -> multiply -> ethtx)."""
 inputs = [
     solutions_folder_path,          # 0: Solutions folder path
     "1",                            # 1: Load a solution
-    "toml1",                        # 2: Solution name to load
+    args_tester.solution_name,      # 2: Solution name to load (FROM ARG)
     "4",                            # 3: Run solution (first run)
-    "1",                            # 4: Select solution 'toml1' to run
+    "1",                            # 4: Select solution to run (ASSUMES it's the first loaded)
     "10",                           # 5: Correct a single component (first correction)
-    "1",                            # 6: Select solution 'toml1' to correct
+    "1",                            # 6: Select solution to correct (ASSUMES it's the first loaded)
     "config.toml",                  # 7: Component name to correct
     correction_instructions,        # 8: Correction instructions
     "4",                            # 9: Run solution (second run)
-    "1",                            # 10: Select solution 'toml1' to run
+    "1",                            # 10: Select solution to run (ASSUMES it's the first loaded)
     "10",                           # 11: Correct a single component (second correction)
-    "1",                            # 12: Select solution 'toml1' to correct
+    "1",                            # 12: Select solution to correct (ASSUMES it's the first loaded)
     "config.toml",                  # 13: Component name to correct
     "",                             # 14: Empty correction instructions
     "4",                            # 15: Run solution (third run)
-    "1",                            # 16: Select solution 'toml1' to run
+    "1",                            # 16: Select solution to run (ASSUMES it's the first loaded)
     "15"                            # 17: Exit
 ]
+# NOTE: The script currently assumes the target solution will always be option '1'
+# in the selection prompts (Load, Run, Correct). This might need adjustment
+# if multiple solutions are loaded before the test sequence.
 
 # Prompts to expect (using more specific regex where helpful)
 PROMPT_FOLDER = r"Enter the solutions folder path:\s*"
@@ -48,7 +60,7 @@ PROMPT_CORRECT_COMPONENT_NAME = r"Enter the name of the component to correct in 
 PROMPT_CORRECT_INSTRUCTIONS = r"Enter any specific instructions for the AI \(or leave blank\):\s*"
 # Removed unused prompts like FEATURE_SELECT, FEATURE_DESC, INSTALL_SELECT, INSTALL_METHOD
 
-def main(loop_count, run_id): # Add run_id parameter
+def main(loop_count, run_id, solution_name_arg): # Add solution_name_arg parameter
     # --- Log File Setup ---
     log_dir = "logs"
     os.makedirs(log_dir, exist_ok=True) # Ensure log directory exists
@@ -62,7 +74,11 @@ def main(loop_count, run_id): # Add run_id parameter
 
     print(Fore.LIGHTBLACK_EX + "Starting AIPyCraft test with pexpect...")
     python_executable = sys.executable # Use the same python that runs this script
-    command = f"{python_executable} main.py"
+    # Append --run-id to the command for main.py if run_id is provided
+    main_command_args = ""
+    if run_id is not None:
+        main_command_args = f" --run-id {run_id}"
+    command = f"{python_executable} main.py{main_command_args}"
     print(Fore.LIGHTBLACK_EX + f"Running command: {command}")
     print(Fore.LIGHTBLACK_EX + f"Looping correction/run steps {loop_count} times.") # Indicate loop count
 
@@ -206,8 +222,8 @@ def main(loop_count, run_id): # Add run_id parameter
             print(Fore.MAGENTA + f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run Loop {loop_num})...")
 
             # --- Check for Success or Next Prompt ---
-            solution_name = inputs[2] # Get the solution name being tested
-            success_pattern = rf"Solution '{solution_name}' completed with status: SUCCESS"
+            # Use the solution name passed as an argument for the success check
+            success_pattern = rf"Solution '{solution_name_arg}' completed with status: SUCCESS"
             print(Fore.CYAN + f"\nEXPECT: Success Message ('{success_pattern}') OR Main Menu Choice (after Run Loop {loop_num})")
 
             try:
@@ -215,11 +231,11 @@ def main(loop_count, run_id): # Add run_id parameter
                 index = child.expect([success_pattern, PROMPT_CHOICE], timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
 
                 if index == 0: # Success pattern matched
-                    print(Fore.GREEN + f"\nSUCCESS: Solution '{solution_name}' completed successfully. Stopping loop.")
-                    log_file.write(f"\n--- Solution '{solution_name}' completed successfully. Stopping loop. ---\n") # Log success and stop
+                    print(Fore.GREEN + f"\nSUCCESS: Solution '{solution_name_arg}' completed successfully. Stopping loop.")
+                    log_file.write(f"\n--- Solution '{solution_name_arg}' completed successfully. Stopping loop. ---\n") # Log success and stop
                     break # Exit the loop
                 elif index == 1: # Main menu prompt matched
-                    print(Fore.CYAN + f"INFO: Solution run finished (not SUCCESS). Continuing loop.")
+                    print(Fore.CYAN + f"INFO: Solution run finished (not SUCCESS for '{solution_name_arg}'). Continuing loop.")
                     # No action needed, loop continues
             except pexpect.TIMEOUT:
                  print(Fore.YELLOW + f"\nTIMEOUT: Waiting for success message or main menu after run in loop {loop_num}. Continuing loop.")
@@ -279,15 +295,14 @@ def main(loop_count, run_id): # Add run_id parameter
     print(Fore.GREEN + f"\nTester finished successfully. Log saved to: {log_filepath}")
     return 0 # Indicate success
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run AIPyCraft tester with optional looping and run ID.")
-    parser.add_argument("--loops", type=int, default=1, help="Number of times to loop the correction/run sequence within a single tester execution.")
-    parser.add_argument("--run-id", type=int, default=None, help="Optional unique ID for this specific tester run (used for log filename).")
-    args = parser.parse_args()
+# (Argument parsing moved to the top)
 
-    if args.loops < 1:
+if __name__ == "__main__":
+    # Argument parsing is done above using args_tester
+
+    if args_tester.loops < 1:
         print(Fore.RED + "Error: Number of loops must be at least 1.")
         sys.exit(1)
 
-    # Pass loop count and run_id to main
-    sys.exit(main(args.loops, args.run_id))
+    # Pass loop count, run_id, and solution_name to main
+    sys.exit(main(args_tester.loops, args_tester.run_id, args_tester.solution_name))

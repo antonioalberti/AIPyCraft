@@ -1,26 +1,32 @@
 <#
 .SYNOPSIS
-Initializes the test environment by clearing the config.toml file for the 'toml1' solution.
+Initializes the test environment by clearing the config.toml file for a specified solution.
 
 .DESCRIPTION
-This script prepares the 'toml1' solution for testing by ensuring its 'config.toml'
+This script prepares a specified solution for testing by ensuring its 'config.toml'
 file is empty. This is intended to be run before executing batch tests using
 run_tester_multiple.ps1 to establish a known starting state.
 
-.NOTES
-The script assumes the solutions folder is located at 'C:\Users\Scalifax\workspace'
-and the solution being initialized is named 'toml1'. Modify the paths if needed.
-#>
+.PARAMETER SolutionName
+The name of the solution folder (e.g., 'toml1', 'toml2') whose config.toml should be cleared.
 
-# Define the path to the solutions folder and the specific solution
+.NOTES
+The script assumes the solutions folder is located at 'C:\Users\Scalifax\workspace'.
+Modify the $SolutionsBasePath variable if needed.
+#>
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$SolutionName
+)
+
+# Define the path to the solutions folder
 $SolutionsBasePath = "C:\Users\Scalifax\workspace"
-$SolutionName = "toml1"
 $ConfigFileName = "config.toml"
 
-# Construct the full path to the config.toml file
+# Construct the full path to the config.toml file using the provided SolutionName
 $ConfigFilePath = Join-Path -Path $SolutionsBasePath -ChildPath $SolutionName | Join-Path -ChildPath $ConfigFileName
 
-Write-Host "Initialization script started."
+Write-Host "Initialization script started for solution: $SolutionName"
 Write-Host "Target configuration file: $ConfigFilePath"
 
 # Check if the config file exists
@@ -40,4 +46,4 @@ if (Test-Path -Path $ConfigFilePath -PathType Leaf) {
     # exit 1 # Uncomment if the file MUST exist
 }
 
-Write-Host "Initialization script finished."
+Write-Host "Initialization script finished for solution: $SolutionName"
