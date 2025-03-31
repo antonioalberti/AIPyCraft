@@ -4,9 +4,11 @@ import json
 import threading
 import os
 import shutil
+import argparse # Import argparse
 from dotenv import load_dotenv
 from colorama import init, Fore, Style
-from logger import logger
+# Import the setup function AND the logger instance
+from logger import setup_logging, logger
 from ai_connector import AIConnector
 from solution import Solution
 from solution_creator import SolutionCreator
@@ -26,7 +28,21 @@ load_dotenv()
 # Initialize colorama
 init(autoreset=True)
 
+# --- Argument Parsing ---
+# Use a distinct name for the parser to avoid conflicts if other modules use argparse
+main_parser = argparse.ArgumentParser(description="AIPyCraft Main Application")
+main_parser.add_argument("--run-id", type=int, default=None, help="Optional unique ID for this specific run (used for log filename).")
+# Use parse_known_args() in case other args are passed unexpectedly
+main_args, unknown_args = main_parser.parse_known_args()
+
+# --- Configure Logging ---
+# Call this *before* the first log message. Pass the parsed run_id.
+setup_logging(run_id=main_args.run_id)
+# Now it's safe to log the program start
 logger.info("AIPyCraft program started.")
+if unknown_args:
+    logger.warning(f"Unknown arguments received by main.py: {unknown_args}")
+
 
 class Dispatcher:
     def __init__(self, solutions_folder):
