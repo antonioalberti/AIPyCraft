@@ -19,14 +19,16 @@ Must be a positive integer.
 .PARAMETER SolutionName
 The name of the solution folder (e.g., 'toml1', 'toml2') to test and initialize.
 
-.EXAMPLE
-.\run_tester_multiple.ps1 -Trials 5 -LoopsValue 3 -SolutionName toml1
-Runs the initialization and tester sequence 5 times (trials) for the 'toml1' solution,
-passing '--loops 3' to tester.py each time.
+.PARAMETER CorrectionPrompt
+The specific correction instructions to pass to the AI during the test.
 
 .EXAMPLE
-.\run_tester_multiple.ps1 -Trials 1 -LoopsValue 10 -SolutionName my_other_solution
-Runs the sequence 1 time (trial) for 'my_other_solution', passing '--loops 10' to tester.py.
+.\run_tester_multiple.ps1 -Trials 5 -LoopsValue 3 -SolutionName toml1 -CorrectionPrompt "Ensure the TOML file has observationSource."
+Runs the sequence 5 times for 'toml1', passing '--loops 3' and the correction prompt to tester.py.
+
+.EXAMPLE
+.\run_tester_multiple.ps1 -Trials 1 -LoopsValue 10 -SolutionName my_other_solution -CorrectionPrompt "Fix the main function logic."
+Runs the sequence 1 time for 'my_other_solution', passing '--loops 10' and the prompt.
 #>
 param(
     [Parameter(Mandatory=$true)]
@@ -38,7 +40,10 @@ param(
     [int]$LoopsValue,
 
     [Parameter(Mandatory=$true)]
-    [string]$SolutionName
+    [string]$SolutionName,
+
+    [Parameter(Mandatory=$true)]
+    [string]$CorrectionPrompt
 )
 
 # Get the directory where the script is located
@@ -87,8 +92,10 @@ for ($i = 1; $i -le $Trials; $i++) { # Use $Trials in loop condition
     # --- End Initialization Script ---
 
     # --- Run Tester Script ---
-    # Pass the current loop iteration number ($i) as --run-id and the SolutionName as --solution-name
-    $Command = "python ""$TesterScriptPath"" --loops $LoopsValue --run-id $i --solution-name ""$SolutionName"""
+    # Pass run-id, solution-name, and correction-prompt. Quote the prompt carefully.
+    # Escape any double quotes within the prompt itself for the command line
+    $EscapedCorrectionPrompt = $CorrectionPrompt -replace '"','`"'
+    $Command = "python ""$TesterScriptPath"" --loops $LoopsValue --run-id $i --solution-name ""$SolutionName"" --correction-prompt ""$EscapedCorrectionPrompt"""
     Write-Host "Executing: $Command"
     try {
         # Execute the tester command. Output will go to the console.

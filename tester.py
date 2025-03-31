@@ -15,17 +15,18 @@ INSTALLATION_WAIT_TIME = 15 # Increased wait time after selecting install method
 EXECUTION_WAIT_TIME = 10 # Increased wait time after selecting run
 
 # --- Argument Parsing ---
-parser_tester = argparse.ArgumentParser(description="Run AIPyCraft tester with optional looping, run ID, and target solution.")
+parser_tester = argparse.ArgumentParser(description="Run AIPyCraft tester with optional looping, run ID, target solution, and correction prompt.")
 parser_tester.add_argument("--loops", type=int, default=1, help="Number of times to loop the correction/run sequence within a single tester execution.")
 parser_tester.add_argument("--run-id", type=int, default=None, help="Optional unique ID for this specific tester run (used for log filename).")
 parser_tester.add_argument("--solution-name", type=str, required=True, help="The name of the solution to load and test.")
+parser_tester.add_argument("--correction-prompt", type=str, required=True, help="The correction instructions to provide to the AI.") # Added argument
 args_tester = parser_tester.parse_args()
 # --- End Argument Parsing ---
 
 
-# Inputs based on the provided log - SOLUTION NAME IS NOW DYNAMIC
+# Inputs based on the provided log - SOLUTION NAME & CORRECTION PROMPT ARE NOW DYNAMIC
 solutions_folder_path = r"C:\Users\Scalifax\workspace"
-correction_instructions = r"""The config.toml file should define a Chainlink job that creates an external price oracle. The job listens for oracle requests on contract 0xc970705401D0D61A05d49C33ab2A39A5C49b2f94 on chain ID 1337, with external ID ca98366c-c731-4957-b8c0-12c72f05aeea. When triggered, it performs a GET request to the CoinGecko API to fetch the price of Ethereum in USD, parses the result, multiplies it by 100 (to handle decimals), and sends the result back to the blockchain via a transaction that calls the fulfillOracleRequest2 method. The data pipeline includes decoding the request log, HTTP fetch, JSON parsing, value multiplication, and data encoding for the response transaction. The job includes all essential Job Configuration properties at the top of the file. These include: type (defines the job type, e.g., "directrequest"), schemaVersion (typically set to 1), name (a human-readable identifier), externalJobID (a unique UUID for external reference), contractAddress (address of the triggering smart contract, required for job types like directrequest), evmChainID (identifies the EVM chain, e.g., 1 for Ethereum mainnet or 1337 for local testnets), forwardingAllowed (boolean, often false for direct requests), minIncomingConfirmations (minimum block confirmations before processing, e.g., 0), minContractPaymentLinkJuels (minimum LINK payment in juels, e.g., "0"), and maxTaskDuration (maximum time a task may run, e.g., "30s"). When generating or validating a job spec, include these fields with appropriate formatting and values based on the job type, and follow with the observationSource block for defining the task pipeline (e.g., http -> jsonparse -> multiply -> ethtx)."""
+# correction_instructions is now replaced by args_tester.correction_prompt
 inputs = [
     solutions_folder_path,          # 0: Solutions folder path
     "1",                            # 1: Load a solution
@@ -35,7 +36,7 @@ inputs = [
     "10",                           # 5: Correct a single component (first correction)
     "1",                            # 6: Select solution to correct (ASSUMES it's the first loaded)
     "config.toml",                  # 7: Component name to correct
-    correction_instructions,        # 8: Correction instructions
+    args_tester.correction_prompt,  # 8: Correction instructions (FROM ARG)
     "4",                            # 9: Run solution (second run)
     "1",                            # 10: Select solution to run (ASSUMES it's the first loaded)
     "10",                           # 11: Correct a single component (second correction)
@@ -151,6 +152,7 @@ def main(loop_count, run_id, solution_name_arg): # Add solution_name_arg paramet
         # 8: Send correction instructions
         print(Fore.CYAN + "\nEXPECT: Correct Instructions Prompt (Correct 1)")
         child.expect(PROMPT_CORRECT_INSTRUCTIONS)
+        # Use the prompt from args_tester (index 8 in inputs list)
         print(Fore.YELLOW + f"SEND: [Correction Instructions - Length: {len(inputs[8])}]")
         child.sendline(inputs[8])
         print(Fore.MAGENTA + f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing (Correct 1)...")

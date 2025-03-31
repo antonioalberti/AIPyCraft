@@ -133,9 +133,11 @@ The `tester.py` script provides automated integration testing for the main appli
 You can run the tester directly from your terminal:
 
 ```bash
-python tester.py [--loops N] [--run-id ID]
+python tester.py --solution-name <SolutionName> --correction-prompt "<Prompt Text>" [--loops N] [--run-id ID]
 ```
 
+*   `--solution-name <SolutionName>`: (Required) The name of the solution to load and test.
+*   `--correction-prompt "<Prompt Text>"`: (Required) The correction instructions to provide to the AI. Enclose in quotes if it contains spaces.
 *   `--loops N`: (Optional) Specify the number of times (`N`) to repeat the core correction/run cycle *within a single execution of `tester.py`*. Defaults to 1.
 *   `--run-id ID`: (Optional) A unique integer ID for this specific run, used to create distinct log filenames (e.g., `tester_run_..._runID.log` and `AIPyCraft_main_..._runID.log`).
 
@@ -153,12 +155,13 @@ For running multiple independent test cycles with initialization, use the provid
 Open PowerShell in the project directory and run:
 
 ```powershell
-.\run_tester_multiple.ps1 -Trials <number_of_trials> -LoopsValue <loops_per_tester_run> -SolutionName <name_of_solution>
+.\run_tester_multiple.ps1 -Trials <number_of_trials> -LoopsValue <loops_per_tester_run> -SolutionName <name_of_solution> -CorrectionPrompt "<Prompt Text>"
 ```
 
 *   `-Trials <number_of_trials>`: (Required) The total number of times (trials) to execute the initialization + tester sequence.
 *   `-LoopsValue <loops_per_tester_run>`: (Required) The value passed to the `--loops` argument of `tester.py` for *each* of the trials.
 *   `-SolutionName <name_of_solution>`: (Required) The name of the solution folder (e.g., `toml1`, `my_solution`) to test and initialize.
+*   `-CorrectionPrompt "<Prompt Text>"`: (Required) The correction instructions to pass to the AI during the test. Enclose in quotes.
 
 This setup ensures that:
 *   The environment is reset via `initialization.ps1` before each trial.
