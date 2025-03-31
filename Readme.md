@@ -201,6 +201,7 @@ Note: Only Python components are executed when running a solution. Other compone
 - `tester.py`: Contains the main integration testing script.
 - `run_tester_multiple.ps1`: PowerShell script for batch execution of tests.
 - `initialization.ps1`: PowerShell script for initializing the environment before each test run in a batch.
+- `plot.py`: Python script to analyze test logs and generate success iteration histograms.
 - `requirements.txt`: Lists Python package dependencies.
 - `install.bat`: Batch script for easy installation on Windows.
 - `.env`: (User-created) Stores API keys and potentially other secrets.
@@ -211,7 +212,39 @@ Note: Only Python components are executed when running a solution. Other compone
 - `.gitignore`: Specifies intentionally untracked files for Git.
 - `exports/`: Default directory for exported solutions (e.g., in TOML format).
 - `logs/`: Directory where log files are stored (both from `tester.py` and `main.py`).
+- `plots/`: Directory where analysis plots are saved.
 - `utils/`: (Potentially deprecated if logger moved to root) Directory for utility modules.
+
+## Log Analysis and Plotting (`plot.py`)
+
+After running batch tests using `run_tester_multiple.ps1`, you can analyze the results using `plot.py`.
+
+**Functionality:**
+
+*   Parses the `tester_run_..._runX.log` files generated during the batch test.
+*   For each trial (log file), it determines the number of correction loop iterations required to reach the "SUCCESS" state for the specified solution.
+*   Calculates statistics on successful trials (min, max, mean, median iterations).
+*   Counts failed trials (where the success message wasn't found within the log).
+*   Generates a **bar chart** visualizing the number of iterations needed for success for each individual trial. Failed trials are shown with a bar height of 0.
+*   Saves the bar chart as a PNG file in the `plots/` directory (e.g., `plots/iterations_per_trial_SolutionName.png`).
+
+**Usage:**
+
+Run the script from the command line, providing the same parameters used for the batch test run:
+
+```bash
+python plot.py -Trials <number_of_trials> -LoopsValue <max_loops_per_trial> -SolutionName <name_of_solution>
+```
+
+*   `-Trials <number_of_trials>`: The number of trials (log files) to analyze (should match the `-Trials` value used with `run_tester_multiple.ps1`).
+*   `-LoopsValue <max_loops_per_trial>`: The maximum number of correction loops configured within `tester.py` (should match the `-LoopsValue` used with `run_tester_multiple.ps1`). This helps identify failures if success isn't reached.
+*   `-SolutionName <name_of_solution>`: The name of the solution that was tested (should match the `-SolutionName` used with `run_tester_multiple.ps1`).
+
+The script will print the statistics to the console and save the bar chart image in the `plots/` directory.
+
+**Dependencies:**
+
+Requires `matplotlib`. Ensure it's installed (it should be if you updated `requirements.txt` and re-ran `pip install -r requirements.txt` or `install.bat`).
 
 ## Contributing
 
