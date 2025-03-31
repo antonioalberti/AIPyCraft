@@ -19,16 +19,16 @@ parser_tester = argparse.ArgumentParser(description="Run AIPyCraft tester with o
 parser_tester.add_argument("--loops", type=int, default=1, help="Number of times to loop the correction/run sequence within a single tester execution.")
 parser_tester.add_argument("--run-id", type=int, default=None, help="Optional unique ID for this specific tester run (used for log filename).")
 parser_tester.add_argument("--solution-name", type=str, required=True, help="The name of the solution to load and test.")
+parser_tester.add_argument("--solutions-base-path", type=str, required=True, help="The absolute path to the directory containing the solution folders.") # Added argument
 parser_tester.add_argument("--correction-prompt", type=str, required=True, help="The correction instructions to provide to the AI.") # Added argument
 args_tester = parser_tester.parse_args()
 # --- End Argument Parsing ---
 
-
-# Inputs based on the provided log - SOLUTION NAME & CORRECTION PROMPT ARE NOW DYNAMIC
-solutions_folder_path = r"C:\Users\Scalifax\workspace"
+# Inputs based on the provided log - SOLUTION NAME, SOLUTIONS BASE PATH & CORRECTION PROMPT ARE NOW DYNAMIC
+# solutions_folder_path = r"C:\Users\Scalifax\workspace" # Removed hardcoded path
 # correction_instructions is now replaced by args_tester.correction_prompt
 inputs = [
-    solutions_folder_path,          # 0: Solutions folder path
+    args_tester.solutions_base_path, # 0: Solutions folder path (FROM ARG)
     "1",                            # 1: Load a solution
     args_tester.solution_name,      # 2: Solution name to load (FROM ARG)
     "4",                            # 3: Run solution (first run)

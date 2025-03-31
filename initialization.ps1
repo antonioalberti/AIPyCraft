@@ -16,11 +16,14 @@ Modify the $SolutionsBasePath variable if needed.
 #>
 param(
     [Parameter(Mandatory=$true)]
-    [string]$SolutionName
+    [string]$SolutionName,
+
+    [Parameter(Mandatory=$true)]
+    [string]$SolutionsBasePath # Added parameter
 )
 
-# Define the path to the solutions folder
-$SolutionsBasePath = "C:\Users\Scalifax\workspace"
+# Path to the solutions folder is now provided as a parameter
+# $SolutionsBasePath = "C:\Users\Scalifax\workspace" # Removed hardcoded path
 $ConfigFileName = "config.toml"
 
 # Construct the full path to the config.toml file using the provided SolutionName

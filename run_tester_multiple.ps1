@@ -19,16 +19,19 @@ Must be a positive integer.
 .PARAMETER SolutionName
 The name of the solution folder (e.g., 'toml1', 'toml2') to test and initialize.
 
+.PARAMETER SolutionsBasePath
+The absolute path to the directory containing the solution folders.
+
 .PARAMETER CorrectionPrompt
 The specific correction instructions to pass to the AI during the test.
 
 .EXAMPLE
-.\run_tester_multiple.ps1 -Trials 5 -LoopsValue 3 -SolutionName toml1 -CorrectionPrompt "Ensure the TOML file has observationSource."
-Runs the sequence 5 times for 'toml1', passing '--loops 3' and the correction prompt to tester.py.
+.\run_tester_multiple.ps1 -Trials 5 -LoopsValue 3 -SolutionName toml1 -SolutionsBasePath "C:\Users\Scalifax\workspace" -CorrectionPrompt "Ensure the TOML file has observationSource."
+Runs the sequence 5 times for 'toml1' located in 'C:\Users\Scalifax\workspace', passing '--loops 3', the base path, and the correction prompt to tester.py.
 
 .EXAMPLE
-.\run_tester_multiple.ps1 -Trials 1 -LoopsValue 10 -SolutionName my_other_solution -CorrectionPrompt "Fix the main function logic."
-Runs the sequence 1 time for 'my_other_solution', passing '--loops 10' and the prompt.
+.\run_tester_multiple.ps1 -Trials 1 -LoopsValue 10 -SolutionName my_other_solution -SolutionsBasePath "D:\projects\aipycraft_solutions" -CorrectionPrompt "Fix the main function logic."
+Runs the sequence 1 time for 'my_other_solution' located in 'D:\projects\aipycraft_solutions', passing '--loops 10', the base path, and the prompt.
 #>
 param(
     [Parameter(Mandatory=$true)]
@@ -43,7 +46,10 @@ param(
     [string]$SolutionName,
 
     [Parameter(Mandatory=$true)]
-    [string]$CorrectionPrompt
+    [string]$CorrectionPrompt,
+
+    [Parameter(Mandatory=$true)]
+    [string]$SolutionsBasePath # Added parameter
 )
 
 # Get the directory where the script is located
@@ -79,8 +85,8 @@ for ($i = 1; $i -le $Trials; $i++) { # Use $Trials in loop condition
     # --- Run Initialization Script ---
     Write-Host "Executing initialization script for solution '$SolutionName' (Trial $i): $InitializationScriptPath" # Added Trial context
     try {
-        # Execute the initialization script, passing the SolutionName
-        & $InitializationScriptPath -SolutionName $SolutionName
+        # Execute the initialization script, passing the SolutionName and SolutionsBasePath
+        & $InitializationScriptPath -SolutionName $SolutionName -SolutionsBasePath $SolutionsBasePath # Pass the new parameter
         Write-Host "Initialization script completed for Trial $i." # Updated text
     } catch {
         $InitErrorMessage = $_.Exception.Message
@@ -92,10 +98,11 @@ for ($i = 1; $i -le $Trials; $i++) { # Use $Trials in loop condition
     # --- End Initialization Script ---
 
     # --- Run Tester Script ---
-    # Pass run-id, solution-name, and correction-prompt. Quote the prompt carefully.
+    # Pass run-id, solution-name, solutions-base-path and correction-prompt. Quote the prompt carefully.
     # Escape any double quotes within the prompt itself for the command line
     $EscapedCorrectionPrompt = $CorrectionPrompt -replace '"','`"'
-    $Command = "python ""$TesterScriptPath"" --loops $LoopsValue --run-id $i --solution-name ""$SolutionName"" --correction-prompt ""$EscapedCorrectionPrompt"""
+    # Added --solutions-base-path argument
+    $Command = "python ""$TesterScriptPath"" --loops $LoopsValue --run-id $i --solution-name ""$SolutionName"" --solutions-base-path ""$SolutionsBasePath"" --correction-prompt ""$EscapedCorrectionPrompt"""
     Write-Host "Executing: $Command"
     try {
         # Execute the tester command. Output will go to the console.

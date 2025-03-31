@@ -130,13 +130,14 @@ The `tester.py` script provides automated integration testing for the main appli
 
 **Running the Tester:**
 
-You can run the tester directly from your terminal:
+While `tester.py` is primarily designed to be run via `run_tester_multiple.ps1` (which handles path setup), you can run it directly if needed:
 
 ```bash
-python tester.py --solution-name <SolutionName> --correction-prompt "<Prompt Text>" [--loops N] [--run-id ID]
+python tester.py --solution-name <SolutionName> --solutions-base-path "<path_to_solutions_folder>" --correction-prompt "<Prompt Text>" [--loops N] [--run-id ID]
 ```
 
 *   `--solution-name <SolutionName>`: (Required) The name of the solution to load and test.
+*   `--solutions-base-path "<path_to_solutions_folder>"`: (Required) The absolute path to the directory containing the solution folders.
 *   `--correction-prompt "<Prompt Text>"`: (Required) The correction instructions to provide to the AI. Enclose in quotes if it contains spaces.
 *   `--loops N`: (Optional) Specify the number of times (`N`) to repeat the core correction/run cycle *within a single execution of `tester.py`*. Defaults to 1.
 *   `--run-id ID`: (Optional) A unique integer ID for this specific run, used to create distinct log filenames (e.g., `tester_run_..._runID.log` and `AIPyCraft_main_..._runID.log`).
@@ -155,17 +156,18 @@ For running multiple independent test cycles with initialization, use the provid
 Open PowerShell in the project directory and run:
 
 ```powershell
-.\run_tester_multiple.ps1 -Trials <number_of_trials> -LoopsValue <loops_per_tester_run> -SolutionName <name_of_solution> -CorrectionPrompt "<Prompt Text>"
+.\run_tester_multiple.ps1 -Trials <number_of_trials> -LoopsValue <loops_per_tester_run> -SolutionName <name_of_solution> -SolutionsBasePath "<path_to_solutions_folder>" -CorrectionPrompt "<Prompt Text>"
 ```
 
 *   `-Trials <number_of_trials>`: (Required) The total number of times (trials) to execute the initialization + tester sequence.
 *   `-LoopsValue <loops_per_tester_run>`: (Required) The value passed to the `--loops` argument of `tester.py` for *each* of the trials.
 *   `-SolutionName <name_of_solution>`: (Required) The name of the solution folder (e.g., `toml1`, `my_solution`) to test and initialize.
+*   `-SolutionsBasePath "<path_to_solutions_folder>"`: (Required) The absolute path to the directory containing the solution folders (e.g., `"C:\Users\YourUser\workspace"`). Enclose in quotes if the path contains spaces.
 *   `-CorrectionPrompt "<Prompt Text>"`: (Required) The correction instructions to pass to the AI during the test. Enclose in quotes.
 
 This setup ensures that:
-*   The environment is reset via `initialization.ps1` before each trial.
-*   `tester.py` generates a unique log file for its interaction during each trial (e.g., `tester_run_..._run1.log`, `tester_run_..._run2.log`).
+*   The environment is reset via `initialization.ps1` before each trial, using the correct solutions base path.
+*   `tester.py` receives the correct solutions base path and generates a unique log file for its interaction during each trial (e.g., `tester_run_..._run1.log`, `tester_run_..._run2.log`).
 *   `main.py` (when called by `tester.py`) also generates a unique log file for its internal operations during each trial (e.g., `AIPyCraft_main_..._run1.log`, `AIPyCraft_main_..._run2.log`).
 
 ## Component Languages
@@ -201,10 +203,11 @@ Note: Only Python components are executed when running a solution. Other compone
 - `solution_feature_adding.py`: Uses AI to add new features (components) to a solution.
 - `solution_importer.py`: Imports solutions from external directories.
 - `logger.py`: Configures and provides logging functionality, supporting unique run IDs.
-- `tester.py`: Contains the main integration testing script.
-- `run_tester_multiple.ps1`: PowerShell script for batch execution of tests.
-- `initialization.ps1`: PowerShell script for initializing the environment before each test run in a batch.
-- `plot.py`: Python script to analyze test logs and generate success iteration histograms.
+- `tester.py`: Contains the main integration testing script (accepts `--solutions-base-path`).
+- `run_tester_multiple.ps1`: PowerShell script for batch execution of tests (requires `-SolutionsBasePath`).
+- `initialization.ps1`: PowerShell script for initializing the environment before each test run in a batch (accepts `-SolutionsBasePath`).
+- `plot_interactions_to_success.py`: Python script to analyze `tester_run` logs and plot iterations to success.
+- `plot_total_test_time.py`: Python script to analyze `AIPyCraft_main` logs and plot total test duration.
 - `requirements.txt`: Lists Python package dependencies.
 - `install.bat`: Batch script for easy installation on Windows.
 - `.env`: (User-created) Stores API keys and potentially other secrets.
@@ -218,35 +221,56 @@ Note: Only Python components are executed when running a solution. Other compone
 - `plots/`: Directory where analysis plots are saved.
 - `utils/`: (Potentially deprecated if logger moved to root) Directory for utility modules.
 
-## Log Analysis and Plotting (`plot.py`)
+## Log Analysis and Plotting
 
-After running batch tests using `run_tester_multiple.ps1`, you can analyze the results using `plot.py`.
+After running batch tests using `run_tester_multiple.ps1`, you can analyze the results using the provided plotting scripts.
+
+### Iterations to Success (`plot_interactions_to_success.py`)
+
+This script analyzes the `tester_run_..._runX.log` files to determine how many correction loop iterations were needed to achieve success for each trial.
 
 **Functionality:**
 
-*   Parses the `tester_run_..._runX.log` files generated during the batch test.
-*   For each trial (log file), it determines the number of correction loop iterations required to reach the "SUCCESS" state for the specified solution.
-*   Calculates overall statistics on successful trials (min, max, mean, median iterations).
+*   Parses the `tester_run_..._runX.log` files.
+*   Determines the number of correction loop iterations required to reach the "SUCCESS" state for the specified solution in each trial.
+*   Calculates overall statistics for successful trials (min, max, mean, median iterations).
 *   Counts failed trials (where the success message wasn't found within the log).
-*   Generates a **line plot** showing:
-    *   Individual successful trials as points (scatter plot).
-    *   The **cumulative mean** number of iterations required for success, calculated progressively after each trial.
-    *   A shaded **95% confidence interval band** around the cumulative mean (calculated and plotted progressively where possible, requiring at least 2 successful trials up to that point).
-*   Saves the cumulative plot as a PNG file in the `plots/` directory (e.g., `plots/cumulative_iterations_plot_SolutionName.png`).
+*   Generates a cumulative line plot showing the mean iterations to success over trials, with a 95% confidence interval band.
+*   Saves the plot to `plots/cumulative_iterations_plot_SolutionName.png`.
 
 **Usage:**
 
-Run the script from the command line, providing the same parameters used for the batch test run:
-
 ```bash
-python plot.py -Trials <number_of_trials> -LoopsValue <max_loops_per_trial> -SolutionName <name_of_solution>
+python plot_interactions_to_success.py -Trials <number_of_trials> -LoopsValue <max_loops_per_trial> -SolutionName <name_of_solution>
 ```
 
-*   `-Trials <number_of_trials>`: The number of trials (log files) to analyze (should match the `-Trials` value used with `run_tester_multiple.ps1`).
-*   `-LoopsValue <max_loops_per_trial>`: The maximum number of correction loops configured within `tester.py` (should match the `-LoopsValue` used with `run_tester_multiple.ps1`). This helps identify failures if success isn't reached.
-*   `-SolutionName <name_of_solution>`: The name of the solution that was tested (should match the `-SolutionName` used with `run_tester_multiple.ps1`).
+*   `-Trials`: Number of trials to analyze (match the batch run).
+*   `-LoopsValue`: Max loops per trial configured in `tester.py` (match the batch run).
+*   `-SolutionName`: Name of the tested solution (match the batch run).
 
-The script will print the overall statistics to the console and save the cumulative line plot image (with CI band) in the `plots/` directory.
+### Total Test Time (`plot_total_test_time.py`)
+
+This script analyzes the `AIPyCraft_main_..._runX.log` files to determine the total time elapsed for each test run.
+
+**Functionality:**
+
+*   Parses the `AIPyCraft_main_..._runX.log` files.
+*   Calculates the duration for each trial by subtracting the timestamp of the first log entry from the timestamp of the last log entry.
+*   Calculates overall statistics for valid trial durations (min, max, mean, median time).
+*   Counts trials where duration couldn't be calculated (e.g., missing logs, parse errors).
+*   Generates a cumulative line plot showing the mean total test duration over trials, with a 95% confidence interval band.
+*   Saves the plot to `plots/cumulative_total_time_plot_SolutionName.png`.
+
+**Usage:**
+
+```bash
+python plot_total_test_time.py -Trials <number_of_trials> -SolutionName <name_of_solution>
+```
+
+*   `-Trials`: Number of trials to analyze (match the batch run).
+*   `-SolutionName`: Name of the tested solution (match the batch run).
+
+The script will print overall statistics and save the cumulative time plot image in the `plots/` directory.
 
 **Dependencies:**
 

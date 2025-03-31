@@ -176,7 +176,7 @@ def main(trials, loops_value, solution_name):
 
     plt.xlabel("Trial Number")
     plt.ylabel("Number of Correction Iterations")
-    plt.title(f"Cumulative Mean Iterations to Success for Solution '{solution_name}'\n({num_successful} Successful, {failed_trials} Failed out of {num_processed} Processed)")
+    #plt.title(f"Cumulative Mean Iterations to Success for Solution '{solution_name}'\n({num_successful} Successful, {failed_trials} Failed out of {num_processed} Processed)")
     plt.xticks(trial_numbers_processed) # Ensure a tick for each processed trial
     plt.grid(axis='y', alpha=0.75)
     plt.ylim(bottom=0) # Ensure y-axis starts at 0
