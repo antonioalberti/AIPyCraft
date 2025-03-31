@@ -158,6 +158,7 @@ def main(loop_count): # Add loop_count parameter
         # --- Loop for Correction and Run ---
         for i in range(loop_count):
             loop_num = i + 1
+            log_file.write(f"\n--- Starting Correction Loop Iteration {loop_num}/{loop_count} ---\n") # Log loop start
             print(Fore.BLUE + f"\n--- Starting Loop Iteration {loop_num}/{loop_count} ---")
 
             # --- Correction (Loop Iteration {loop_num}) ---
@@ -201,13 +202,35 @@ def main(loop_count): # Add loop_count parameter
             print(Fore.YELLOW + f"SEND: {inputs[16]}")
             child.sendline(inputs[16])
             print(Fore.MAGENTA + f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run Loop {loop_num})...")
-            print(Fore.CYAN + f"\nEXPECT: Main Menu Choice (after Run Loop {loop_num})")
-            child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
+
+            # --- Check for Success or Next Prompt ---
+            solution_name = inputs[2] # Get the solution name being tested
+            success_pattern = rf"Solution '{solution_name}' completed with status: SUCCESS"
+            print(Fore.CYAN + f"\nEXPECT: Success Message ('{success_pattern}') OR Main Menu Choice (after Run Loop {loop_num})")
+
+            try:
+                # Expect either the success message or the main menu prompt
+                index = child.expect([success_pattern, PROMPT_CHOICE], timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
+
+                if index == 0: # Success pattern matched
+                    print(Fore.GREEN + f"\nSUCCESS: Solution '{solution_name}' completed successfully. Stopping loop.")
+                    log_file.write(f"\n--- Solution '{solution_name}' completed successfully. Stopping loop. ---\n") # Log success and stop
+                    break # Exit the loop
+                elif index == 1: # Main menu prompt matched
+                    print(Fore.CYAN + f"INFO: Solution run finished (not SUCCESS). Continuing loop.")
+                    # No action needed, loop continues
+            except pexpect.TIMEOUT:
+                 print(Fore.YELLOW + f"\nTIMEOUT: Waiting for success message or main menu after run in loop {loop_num}. Continuing loop.")
+                 # Log timeout but continue loop as per requirement (stop only on SUCCESS)
+                 log_file.write(f"\n--- TIMEOUT waiting for run result in loop {loop_num}. Continuing loop. ---\n")
+            except pexpect.EOF:
+                 print(Fore.RED + f"\nEOF: Process ended unexpectedly after run in loop {loop_num}.")
+                 raise # Re-raise EOF to be caught by the main handler
 
             print(Fore.BLUE + f"\n--- Finished Loop Iteration {loop_num}/{loop_count} ---")
         # --- End Loop ---
 
-        # --- Exit ---
+        # --- Exit --- (Only reached if loop completes fully or breaks due to SUCCESS)
         # 17: Choose "Exit"
         print(Fore.CYAN + "\nEXPECT: Main Menu Choice (Exit)")
         # Removed redundant child.expect(PROMPT_CHOICE) here
