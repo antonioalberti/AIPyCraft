@@ -48,12 +48,14 @@ PROMPT_CORRECT_COMPONENT_NAME = r"Enter the name of the component to correct in 
 PROMPT_CORRECT_INSTRUCTIONS = r"Enter any specific instructions for the AI \(or leave blank\):\s*"
 # Removed unused prompts like FEATURE_SELECT, FEATURE_DESC, INSTALL_SELECT, INSTALL_METHOD
 
-def main(loop_count): # Add loop_count parameter
+def main(loop_count, run_id): # Add run_id parameter
     # --- Log File Setup ---
     log_dir = "logs"
     os.makedirs(log_dir, exist_ok=True) # Ensure log directory exists
     timestamp_str = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_filename = f"tester_run_{timestamp_str}.log"
+    # Incorporate run_id into the filename if provided
+    run_id_str = f"_run{run_id}" if run_id is not None else ""
+    log_filename = f"tester_run_{timestamp_str}{run_id_str}.log"
     log_filepath = os.path.join(log_dir, log_filename)
     print(Fore.LIGHTBLACK_EX + f"Logging output to: {log_filepath}")
     # --- End Log File Setup ---
@@ -278,12 +280,14 @@ def main(loop_count): # Add loop_count parameter
     return 0 # Indicate success
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run AIPyCraft tester with optional looping.")
-    parser.add_argument("--loops", type=int, default=1, help="Number of times to loop the correction/run sequence.")
+    parser = argparse.ArgumentParser(description="Run AIPyCraft tester with optional looping and run ID.")
+    parser.add_argument("--loops", type=int, default=1, help="Number of times to loop the correction/run sequence within a single tester execution.")
+    parser.add_argument("--run-id", type=int, default=None, help="Optional unique ID for this specific tester run (used for log filename).")
     args = parser.parse_args()
 
     if args.loops < 1:
         print(Fore.RED + "Error: Number of loops must be at least 1.")
         sys.exit(1)
 
-    sys.exit(main(args.loops)) # Pass loop count to main
+    # Pass loop count and run_id to main
+    sys.exit(main(args.loops, args.run_id))
