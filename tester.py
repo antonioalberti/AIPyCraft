@@ -4,6 +4,7 @@ import sys
 import time
 import os
 import argparse # Import argparse
+import datetime # Import datetime
 from colorama import init, Fore, Style # Import colorama
 init(autoreset=True) # Initialize colorama
 
@@ -48,18 +49,33 @@ PROMPT_CORRECT_INSTRUCTIONS = r"Enter any specific instructions for the AI \(or 
 # Removed unused prompts like FEATURE_SELECT, FEATURE_DESC, INSTALL_SELECT, INSTALL_METHOD
 
 def main(loop_count): # Add loop_count parameter
+    # --- Log File Setup ---
+    log_dir = "logs"
+    os.makedirs(log_dir, exist_ok=True) # Ensure log directory exists
+    timestamp_str = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_filename = f"tester_run_{timestamp_str}.log"
+    log_filepath = os.path.join(log_dir, log_filename)
+    print(Fore.LIGHTBLACK_EX + f"Logging output to: {log_filepath}")
+    # --- End Log File Setup ---
+
     print(Fore.LIGHTBLACK_EX + "Starting AIPyCraft test with pexpect...")
     python_executable = sys.executable # Use the same python that runs this script
     command = f"{python_executable} main.py"
     print(Fore.LIGHTBLACK_EX + f"Running command: {command}")
     print(Fore.LIGHTBLACK_EX + f"Looping correction/run steps {loop_count} times.") # Indicate loop count
 
+    log_file = None # Initialize log_file to None
     try:
+        # Open the log file for writing
+        log_file = open(log_filepath, 'w', encoding='utf-8')
+
         # Spawn the process using PopenSpawn for Windows compatibility
-        # Use encoding='utf-8' and logfile for debugging output
-        child = pexpect.popen_spawn.PopenSpawn(command, encoding='utf-8', timeout=TIMEOUT_SECONDS, logfile=sys.stdout)
+        # Use encoding='utf-8' and logfile parameter to write to the log file
+        child = pexpect.popen_spawn.PopenSpawn(command, encoding='utf-8', timeout=TIMEOUT_SECONDS, logfile=log_file)
 
         # --- Interaction Sequence ---
+        # Note: The print statements below will still go to the console,
+        # but the pexpect interactions and child process output go to the log file.
 
         # 0: Send solutions folder path
         print(Fore.CYAN + "\nEXPECT: Folder Path Prompt")
@@ -232,8 +248,10 @@ def main(loop_count): # Add loop_count parameter
             print(Fore.LIGHTBLACK_EX + "\nTerminating child process...")
             child.proc.terminate() # Call terminate on the underlying Popen object
             print(Fore.LIGHTBLACK_EX + "Child process terminated.")
+        if log_file:
+            log_file.close() # Ensure log file is closed
 
-    print(Fore.GREEN + "\nTester finished successfully.")
+    print(Fore.GREEN + f"\nTester finished successfully. Log saved to: {log_filepath}")
     return 0 # Indicate success
 
 if __name__ == "__main__":
