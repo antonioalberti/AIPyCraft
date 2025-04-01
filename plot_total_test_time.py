@@ -12,6 +12,37 @@ LOG_DIR = "logs"
 PLOT_DIR = "plots" # Define the output directory for plots
 TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S,%f" # Format including milliseconds
 
+# --- Helper function copied and adapted from plot_interactions_to_success.py ---
+def check_trial_success(tester_log_filepath, solution_name, max_loops):
+    """
+    Checks if a trial was successful based on its tester log file.
+
+    Args:
+        tester_log_filepath (str): Path to the tester log file.
+        solution_name (str): The name of the solution being tested.
+        max_loops (int): The maximum number of loops configured for the test run.
+
+    Returns:
+        bool: True if success message was found, False otherwise.
+    """
+    success_found = False
+    # Regex to find the success line
+    success_pattern = re.compile(rf"--- Solution '{re.escape(solution_name)}' completed successfully\. Stopping loop\. ---")
+
+    try:
+        with open(tester_log_filepath, 'r', encoding='utf-8') as f:
+            for line in f:
+                if success_pattern.search(line):
+                    success_found = True
+                    break # Found success, no need to read further
+        return success_found
+    except FileNotFoundError:
+        print(f"Warning: Tester log file not found for success check: {tester_log_filepath}")
+        return False # Treat missing tester log as failure for duration calculation
+    except Exception as e:
+        print(f"Warning: Error reading tester log file {tester_log_filepath} for success check: {e}")
+        return False # Treat errors as failure
+
 def parse_log_for_duration(log_filepath):
     """
     Parses a single AIPyCraft main log file to find the total duration.
@@ -82,128 +113,157 @@ def parse_log_for_duration(log_filepath):
         print(f"Warning: Log file not found: {log_filepath}")
         return -1.0 # Indicate file not found
     except Exception as e:
-        print(f"Warning: Error parsing log file {log_filepath}: {e}")
+        print(f"Warning: Error parsing duration log file {log_filepath}: {e}")
         return -1.0 # Indicate general parsing error
 
-def main(trials, solution_name):
+def main(trials, loops_value, solution_name):
     """
-    Main function to analyze logs and generate plot for total test time.
+    Main function to analyze logs and generate plot for total test time,
+    considering only successful trials.
     """
-    print(f"Analyzing total test time from logs for solution '{solution_name}' across {trials} trials.")
+    print(f"Analyzing total test time from logs for solution '{solution_name}' across {trials} trials (max loops: {loops_value}).")
 
     # Store results per trial: {trial_num: duration_in_seconds_or_error_code}
-    # Use -1.0 for failure/error
-    trial_results = {}
-    parse_errors = 0
+    # Use -1.0 for error, -2.0 for skipped due to failure
+    trial_durations = {}
+    duration_parse_errors = 0
+    skipped_failed_trials = 0
+    processed_trials_count = 0
 
-    # Find relevant log files (AIPyCraft_main logs)
-    log_pattern = os.path.join(LOG_DIR, f"AIPyCraft_main_*_run*.log")
-    all_log_files = glob.glob(log_pattern)
+    # Find relevant log files (AIPyCraft_main and tester logs)
+    main_log_pattern = os.path.join(LOG_DIR, f"AIPyCraft_main_*_run*.log")
+    tester_log_pattern = os.path.join(LOG_DIR, f"tester_run_*_run*.log")
+    all_main_logs = glob.glob(main_log_pattern)
+    all_tester_logs = glob.glob(tester_log_pattern)
 
-    run_id_to_log = {}
-    # Extract run_id and find the latest log for each run_id
-    for log_file in all_log_files:
+    main_run_id_to_log = {}
+    tester_run_id_to_log = {}
+
+    # Map run IDs to latest main logs
+    for log_file in all_main_logs:
         match = re.search(r"_run(\d+)\.log$", log_file)
         if match:
             run_id = int(match.group(1))
-            if run_id not in run_id_to_log or log_file > run_id_to_log[run_id]:
-                 run_id_to_log[run_id] = log_file
+            if run_id not in main_run_id_to_log or log_file > main_run_id_to_log[run_id]:
+                 main_run_id_to_log[run_id] = log_file
+
+    # Map run IDs to latest tester logs
+    for log_file in all_tester_logs:
+        match = re.search(r"_run(\d+)\.log$", log_file)
+        if match:
+            run_id = int(match.group(1))
+            if run_id not in tester_run_id_to_log or log_file > tester_run_id_to_log[run_id]:
+                 tester_run_id_to_log[run_id] = log_file
 
     # Process logs for the requested number of trials
-    processed_trials_count = 0
     for i in range(1, trials + 1):
-        log_filepath = run_id_to_log.get(i)
-        if log_filepath:
-            processed_trials_count += 1
-            print(f"Processing Trial {i}: {log_filepath}")
-            duration = parse_log_for_duration(log_filepath)
-            trial_results[i] = duration # Store duration or -1.0 for error
+        tester_log_filepath = tester_run_id_to_log.get(i)
+        main_log_filepath = main_run_id_to_log.get(i)
+
+        if not tester_log_filepath:
+            print(f"Warning: Tester log for Trial {i} not found. Skipping duration calculation.")
+            skipped_failed_trials += 1 # Count as skipped/failed
+            continue # Skip this trial
+
+        # Check if the trial was successful using the tester log
+        is_success = check_trial_success(tester_log_filepath, solution_name, loops_value)
+
+        if not is_success:
+            print(f"Info: Trial {i} failed (based on tester log). Skipping duration calculation.")
+            skipped_failed_trials += 1
+            continue # Skip this trial
+
+        # If successful, proceed to calculate duration from the main log
+        processed_trials_count += 1 # Count only trials checked for duration
+        if main_log_filepath:
+            print(f"Processing Successful Trial {i} for duration: {main_log_filepath}")
+            duration = parse_log_for_duration(main_log_filepath)
+            trial_durations[i] = duration # Store duration or -1.0 for error
             if duration < 0:
-                parse_errors += 1
+                duration_parse_errors += 1
         else:
-            print(f"Warning: Log file for Trial {i} not found.")
-            # Count missing files towards parse_errors for consistency
-            parse_errors += 1
+            print(f"Warning: Main log for successful Trial {i} not found. Cannot calculate duration.")
+            trial_durations[i] = -1.0 # Mark as error if main log is missing for a successful trial
+            duration_parse_errors += 1
 
     # --- Statistics ---
-    valid_durations = [d for d in trial_results.values() if d >= 0] # Durations >= 0 are valid
-    num_valid_trials = len(valid_durations)
-    num_processed = len(trial_results) # Number of trials where logs were found and processed
+    # Filter results to include only successful trials with valid durations
+    valid_durations = {k: v for k, v in trial_durations.items() if v >= 0}
+    num_valid_duration_trials = len(valid_durations)
 
     print("\n--- Analysis Results ---")
     print(f"Total trials requested: {trials}")
-    print(f"Trials processed (logs found): {num_processed}")
-    print(f"Trials with valid duration calculated: {num_valid_trials}")
-    print(f"Trials with errors (missing/empty/parse error): {parse_errors}")
+    print(f"Trials processed for duration (successful & main log found): {processed_trials_count}")
+    print(f"Trials skipped due to failure or missing tester log: {skipped_failed_trials}")
+    print(f"Successful trials with valid duration calculated: {num_valid_duration_trials}")
+    print(f"Successful trials with duration errors (missing main log/parse error): {duration_parse_errors}")
 
-    if num_valid_trials == 0:
-         print("\nNo trials with valid durations found. Cannot generate plot.")
+    if num_valid_duration_trials == 0:
+         print("\nNo successful trials with valid durations found. Cannot generate plot.")
          return # Exit if no data
 
-    # --- Calculate Cumulative Statistics ---
-    trial_numbers_processed = sorted(trial_results.keys())
+    # --- Calculate Cumulative Statistics (based on successful trials with valid durations) ---
+    valid_trial_numbers_sorted = sorted(valid_durations.keys())
     cumulative_trial_numbers_for_plot = []
     cumulative_means = []
     cumulative_ci_lowers = []
     cumulative_ci_uppers = []
-    current_valid_durations = []
+    current_successful_valid_durations = []
 
-    for k in trial_numbers_processed: # Iterate through the processed trials in order
-        if trial_results[k] >= 0: # Consider only trials with valid durations
-            current_valid_durations.append(trial_results[k])
+    for k in valid_trial_numbers_sorted: # Iterate through the successful trials with valid durations
+        current_successful_valid_durations.append(valid_durations[k])
 
-            if len(current_valid_durations) >= 2: # Need at least 2 points for CI
-                mean_k = np.mean(current_valid_durations)
-                sem_k = stats.sem(current_valid_durations)
-                df_k = len(current_valid_durations) - 1
-                confidence_level = 0.95
-                if sem_k > 0 and df_k > 0:
-                     ci_margin_k = sem_k * stats.t.ppf((1 + confidence_level) / 2., df_k)
-                     ci_lower_k = mean_k - ci_margin_k
-                     ci_upper_k = mean_k + ci_margin_k
-                else: # If SEM is 0 (all values identical), CI is just the mean
-                     ci_lower_k = mean_k
-                     ci_upper_k = mean_k
+        if len(current_successful_valid_durations) >= 2: # Need at least 2 points for CI
+            mean_k = np.mean(current_successful_valid_durations)
+            sem_k = stats.sem(current_successful_valid_durations)
+            df_k = len(current_successful_valid_durations) - 1
+            confidence_level = 0.95
+            if sem_k > 0 and df_k > 0:
+                 ci_margin_k = sem_k * stats.t.ppf((1 + confidence_level) / 2., df_k)
+                 ci_lower_k = mean_k - ci_margin_k
+                 ci_upper_k = mean_k + ci_margin_k
+            else: # If SEM is 0 (all values identical), CI is just the mean
+                 ci_lower_k = mean_k
+                 ci_upper_k = mean_k
 
-                cumulative_trial_numbers_for_plot.append(k)
-                cumulative_means.append(mean_k)
-                cumulative_ci_lowers.append(ci_lower_k)
-                cumulative_ci_uppers.append(ci_upper_k)
-            elif len(current_valid_durations) == 1: # Can plot mean but not CI yet
-                 mean_k = current_valid_durations[0]
-                 cumulative_trial_numbers_for_plot.append(k)
-                 cumulative_means.append(mean_k)
-                 cumulative_ci_lowers.append(np.nan) # Append NaN for CI bounds
-                 cumulative_ci_uppers.append(np.nan)
+            cumulative_trial_numbers_for_plot.append(k)
+            cumulative_means.append(mean_k)
+            cumulative_ci_lowers.append(ci_lower_k)
+            cumulative_ci_uppers.append(ci_upper_k)
+        elif len(current_successful_valid_durations) == 1: # Can plot mean but not CI yet
+             mean_k = current_successful_valid_durations[0]
+             cumulative_trial_numbers_for_plot.append(k)
+             cumulative_means.append(mean_k)
+             cumulative_ci_lowers.append(np.nan) # Append NaN for CI bounds
+             cumulative_ci_uppers.append(np.nan)
 
     # --- Plotting ---
-    # Filter processed trial numbers to only include those with valid results for plotting
-    valid_trial_numbers = [t for t in trial_numbers_processed if trial_results[t] >= 0]
-    valid_duration_values = [trial_results[t] for t in valid_trial_numbers]
+    # Use the already filtered valid_durations dictionary
+    valid_trial_numbers_plot = list(valid_durations.keys())
+    valid_duration_values_plot = list(valid_durations.values())
 
-    if not valid_trial_numbers:
+    if not valid_trial_numbers_plot:
         print("\nNo valid trial durations to plot.")
         return # Exit if no valid data points
 
-    plt.figure(figsize=(max(10, len(valid_trial_numbers) * 0.5), 6)) # Adjust size based on valid trials
+    plt.figure(figsize=(max(10, len(valid_trial_numbers_plot) * 0.5), 6)) # Adjust size based on valid trials
 
     # Plot individual valid trial durations
-    plt.scatter(valid_trial_numbers, valid_duration_values, color='skyblue', label='Trial Duration (s)', zorder=5, alpha=0.7)
+    plt.scatter(valid_trial_numbers_plot, valid_duration_values_plot, color='skyblue', label='Successful Trial Duration (s)', zorder=5, alpha=0.7)
 
-    # Plot cumulative mean line
+    # Plot cumulative mean line (using data derived from valid trials only)
     if cumulative_trial_numbers_for_plot:
-        plt.plot(cumulative_trial_numbers_for_plot, cumulative_means, marker='.', linestyle='-', color='orange', label='Cumulative Mean Duration (s)', zorder=10)
+        plt.plot(cumulative_trial_numbers_for_plot, cumulative_means, marker='.', linestyle='-', color='orange', label='Cumulative Mean Duration (Successful Trials, s)', zorder=10)
 
         # Shade the cumulative confidence interval band
         ci_lowers_np = np.array(cumulative_ci_lowers)
         ci_uppers_np = np.array(cumulative_ci_uppers)
         plt.fill_between(cumulative_trial_numbers_for_plot, ci_lowers_np, ci_uppers_np, color='palegreen', alpha=0.4, label='Cumulative 95% CI', zorder=0)
 
-    plt.xlabel("Trial Number") # Updated label
+    plt.xlabel("Successful Trial Number") # Updated label
     plt.ylabel("Total Test Duration (seconds)")
-    # Removed the subtitle line with counts
-    #plt.title(f"Cumulative Mean Total Test Duration for Solution '{solution_name}'")
-    plt.xticks(valid_trial_numbers) # Set x-ticks to only valid trial numbers
+    plt.title(f"Test Duration for Successful Trials - Solution '{solution_name}'") # Updated title
+    plt.xticks(valid_trial_numbers_plot) # Set x-ticks to only successful, valid trial numbers
     plt.grid(axis='y', alpha=0.75)
     plt.ylim(bottom=0) # Ensure y-axis starts at 0
     plt.legend()
@@ -217,23 +277,25 @@ def main(trials, solution_name):
     print(f"\nCumulative total time plot saved to: {plot_filepath}")
     # plt.show()
 
-    # Also print overall summary stats if there were valid durations
-    if num_valid_trials > 0:
-        min_dur = min(valid_durations)
-        max_dur = max(valid_durations)
-        mean_dur = statistics.mean(valid_durations)
-        median_dur = statistics.median(valid_durations)
-        print(f"\nOverall Statistics for {num_valid_trials} Valid Trials:")
+    # Also print overall summary stats for successful trials with valid durations
+    if num_valid_duration_trials > 0:
+        valid_duration_list = list(valid_durations.values())
+        min_dur = min(valid_duration_list)
+        max_dur = max(valid_duration_list)
+        mean_dur = statistics.mean(valid_duration_list)
+        median_dur = statistics.median(valid_duration_list)
+        print(f"\nOverall Statistics for {num_valid_duration_trials} Successful Trials with Valid Durations:")
         print(f"  Min duration: {min_dur:.2f} s")
         print(f"  Max duration: {max_dur:.2f} s")
         print(f"  Mean duration: {mean_dur:.2f} s")
         print(f"  Median duration: {median_dur:.2f} s")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Analyze AIPyCraft main logs and plot total test duration.")
-    # Re-use Trials and SolutionName, LoopsValue is not needed here
-    parser.add_argument("-Trials", type=int, required=True, help="The total number of trials (log files) to analyze.")
-    parser.add_argument("-SolutionName", type=str, required=True, help="The name of the solution analyzed (used for plot title/filename).")
+    parser = argparse.ArgumentParser(description="Analyze AIPyCraft main logs for successful trials and plot total test duration.")
+    parser.add_argument("-Trials", type=int, required=True, help="The total number of trials to check.")
+    # Add LoopsValue argument needed for success check
+    parser.add_argument("-LoopsValue", type=int, required=True, help="The max number of loops per trial (used for success check).")
+    parser.add_argument("-SolutionName", type=str, required=True, help="The name of the solution analyzed.")
     args = parser.parse_args()
 
-    main(args.Trials, args.SolutionName)
+    main(args.Trials, args.LoopsValue, args.SolutionName)
