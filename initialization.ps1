@@ -23,7 +23,6 @@ param(
 )
 
 # Path to the solutions folder is now provided as a parameter
-# $SolutionsBasePath = "C:\Users\Scalifax\workspace" # Removed hardcoded path
 $ConfigFileName = "config.toml"
 
 # Construct the full path to the config.toml file using the provided SolutionName

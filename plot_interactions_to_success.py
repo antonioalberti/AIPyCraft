@@ -21,14 +21,20 @@ def parse_log_file(log_filepath, solution_name, max_loops):
         max_loops (int): The maximum number of loops configured for the test run.
 
     Returns:
-        int: Number of iterations if success was found, -1 otherwise.
+        tuple[int, str | None]: A tuple containing:
+            - int: Number of iterations if success was found, -1 otherwise.
+            - str | None: An error message if failure occurred, None otherwise.
     """
     last_iteration = -1
     success_found = False
-    # Regex to find the loop iteration start line
+    toml_error_details = [] # Store unique TOML error details
+    runtime_error_details = [] # Store unique Runtime error details
+    state = "searching" # State machine: searching, found_after, found_blank, found_output
+
+    # Regex patterns
     loop_pattern = re.compile(r"--- Starting Correction Loop Iteration (\d+)/(\d+) ---")
-    # Regex to find the success line
     success_pattern = re.compile(rf"--- Solution '{re.escape(solution_name)}' completed successfully\. Stopping loop\. ---")
+    toml_error_pattern = re.compile(r"Failed to parse TOML file:(.*)") # Regex for TOML error
 
     try:
         with open(log_filepath, 'r', encoding='utf-8') as f:
@@ -44,18 +50,57 @@ def parse_log_file(log_filepath, solution_name, max_loops):
                     # If success happens before the first loop log (unlikely), last_iteration remains -1,
                     # which needs handling, but the logic implies success happens *after* a loop.
                     # If success happens *during* iteration X, last_iteration will be X.
-                    return last_iteration
+                    return (last_iteration, None) # Success
+
+                # Check for TOML error
+                toml_match = toml_error_pattern.search(line)
+                if toml_match:
+                    current_detail = toml_match.group(1).strip()
+                    # Add the detail if it's not a placeholder and not already collected
+                    if current_detail and current_detail not in ('{e}")', '{e}') and current_detail not in toml_error_details:
+                        toml_error_details.append(current_detail)
+
+                # State machine for runtime errors
+                line_strip = line.strip()
+                if state == "searching" and line_strip == "After trying to run the solution, the results was:":
+                    state = "found_after"
+                elif state == "found_after" and line_strip == "":
+                    state = "found_blank" # Expecting blank line
+                elif state == "found_blank" and line_strip == "Output:":
+                    state = "found_output" # Expecting "Output:"
+                elif state == "found_output" and line.startswith("Error: "):
+                    runtime_error = line[len("Error: "):].strip()
+                    if runtime_error and runtime_error not in runtime_error_details:
+                        runtime_error_details.append(runtime_error)
+                    state = "searching" # Reset after finding the error line
+                elif state != "searching":
+                    # If the sequence breaks, reset the state
+                    state = "searching"
+
 
     except FileNotFoundError:
-        print(f"Warning: Log file not found: {log_filepath}")
-        return -1 # Indicate file not found / error
+        # Return error message
+        return (-1, f"Log file not found: {log_filepath}") # Indicate file not found / error
     except Exception as e:
-        print(f"Warning: Error parsing log file {log_filepath}: {e}")
-        return -1 # Indicate parsing error
+        # Return error message instead of just printing warning here
+        return (-1, f"Error parsing log file {log_filepath}: {e}") # Indicate parsing error
 
-    # If the loop finishes without finding the success line
+    # After checking the whole file, determine the failure reason
     if not success_found:
-        return -1 # Indicate failure to reach success
+        if runtime_error_details:
+            # Prioritize reporting runtime errors if found
+            error_summary = "; ".join(runtime_error_details)
+            return (-1, f"Runtime errors found: {error_summary}")
+        elif toml_error_details:
+            # Report TOML errors if no runtime errors were found
+            error_summary = "; ".join(toml_error_details)
+            return (-1, f"TOML parse errors found: {error_summary}")
+        else:
+            # Otherwise, report generic failure
+            return (-1, "Success message not found within max loops")
+
+    # Fallback in case logic is flawed (should not be reached if success_found is True)
+    return (-1, "Unknown parsing state")
 
 def main(trials, loops_value, solution_name):
     """
@@ -90,13 +135,22 @@ def main(trials, loops_value, solution_name):
         if log_filepath:
             processed_trials_count += 1
             print(f"Processing Trial {i}: {log_filepath}")
-            iterations = parse_log_file(log_filepath, solution_name, loops_value)
-            trial_results[i] = iterations # Store result (-1 for failure/error)
+            # --- Modified to handle tuple return ---
+            iterations, error_msg = parse_log_file(log_filepath, solution_name, loops_value)
+            if iterations > 0:
+                print(f"  -> Trial {i} Result: SUCCESS (Iterations: {iterations})")
+            else:
+                # Print the specific error message returned by parse_log_file
+                error_reason = f" ({error_msg})" if error_msg else ""
+                print(f"  -> Trial {i} Result: FAILURE/ERROR{error_reason}")
+            # --- End of modification ---
+            trial_results[i] = iterations # Store iteration count (-1 for failure/error)
         else:
+            # Handle missing log file case directly here as well
             print(f"Warning: Log file for Trial {i} not found.")
             parse_errors += 1 # Count missing files as errors
-            # Optionally store a different code for missing logs if needed
-            # trial_results[i] = -2 # Example: -2 for missing log
+            trial_results[i] = -1 # Store -1 for missing log file
+            parse_errors += 1 # Count missing files as errors
 
     # --- Statistics ---
     successful_iterations_overall = [iters for iters in trial_results.values() if iters > 0]
