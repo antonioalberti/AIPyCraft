@@ -18,20 +18,22 @@ class ComponentCorrector:
             component_name: The name of the component file to correct (e.g., "main.py").
             user_prompt (str, optional): Additional instructions from the user. Defaults to "".
         """
-        # Create a context string with all components' content.
-        context = "Solution Components:\n"
-        for comp in solution.components:
-            context += f"{comp.name}.{comp.extension}:\n{comp.content}\n\n"
-
-        # Get the error message from the solution's result description
-        error_message = solution.result_description
-
         # Find the component to correct.
         comp_to_correct = next((c for c in solution.components if f"{c.name}.{c.extension}" == component_name), None)
 
         if not comp_to_correct:
             print(Fore.RED + f"Error: Component '{component_name}' not found in the solution." + Style.RESET_ALL)
             return
+
+        # Create a context string with only the specific component's content.
+        context = (
+            f"Component to Correct:\n"
+            f"{comp_to_correct.name}.{comp_to_correct.extension}:\n"
+            f"{comp_to_correct.content}\n\n"
+        )
+
+        # Get the error message from the solution's result description
+        error_message = solution.result_description
 
         # Use the found component
         comp = comp_to_correct

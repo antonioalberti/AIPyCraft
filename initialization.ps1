@@ -10,17 +10,14 @@ run_tester_multiple.ps1 to establish a known starting state.
 .PARAMETER SolutionName
 The name of the solution folder (e.g., 'toml1', 'toml2') whose config.toml should be cleared.
 
-.NOTES
-The script assumes the solutions folder is located at 'C:\Users\Scalifax\workspace'.
-Modify the $SolutionsBasePath variable if needed.
 #>
 param(
     [Parameter(Mandatory=$true)]
     [string]$SolutionName,
 
     [Parameter(Mandatory=$true)]
-    [string]$SolutionsBasePath # Added parameter
-)
+    [string]$SolutionsBasePath
+) # Added missing closing parenthesis
 
 # Path to the solutions folder is now provided as a parameter
 $ConfigFileName = "config.toml"
