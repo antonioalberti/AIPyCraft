@@ -196,17 +196,15 @@ class AIConnector:
             # Ensure response_claude is not None before returning
             if response_claude is None:
                  raise RuntimeError(f"OpenAI failed/skipped, and Claude also failed. Claude Error: {claude_error}")
-            # Wrap Claude's direct response for the parser if OpenAI failed
-            clean_claude_response = response_claude.strip()
-            return f"```\n{clean_claude_response}\n```"
+            # Return the raw Claude response directly
+            return response_claude
         elif response_claude is None:
             print("Warning: Claude failed or skipped, returning OpenAI response directly.")
              # Ensure response_openai is not None before returning
             if response_openai is None:
                  raise RuntimeError(f"Claude failed/skipped, and OpenAI also failed. OpenAI Error: {openai_error}")
-            # Wrap OpenAI's direct response for the parser if Claude failed
-            clean_openai_response = response_openai.strip()
-            return f"```\n{clean_openai_response}\n```"
+            # Return the raw OpenAI response directly
+            return response_openai
 
         # --- If both succeeded, proceed to evaluation ---
         print("Both models succeeded, proceeding to Gemini evaluation.")
@@ -238,20 +236,9 @@ Evaluate both responses (A and B) based *only* on the 'Original Instructions' an
             # Use the standard send_prompt_gemini for the evaluation
             final_response = self.send_prompt_gemini(evaluation_instructions, evaluation_prompt)
             print("Gemini evaluation successful.")
-            # Ensure the final response is wrapped in ``` for the parser, removing any existing ones first.
-            clean_response = final_response.strip()
-            if clean_response.startswith("```") and clean_response.endswith("```"):
-                 # Strip existing markers if present (handle nested cases potentially)
-                 clean_response = clean_response[3:-3].strip()
-                 # Further strip if language specifier was present, e.g., ```python\n...```
-                 if '\n' in clean_response:
-                     first_line, rest = clean_response.split('\n', 1)
-                     if first_line.isalnum(): # Simple check for language specifier
-                         clean_response = rest
-
-            # Wrap the cleaned response in plain backticks for the parser
-            formatted_response = f"```\n{clean_response}\n```"
-            return formatted_response
+            # Return the raw response from Gemini evaluation directly.
+            # The calling code will use AICodeParser to extract the content.
+            return final_response
         except Exception as e:
             # If evaluation fails, maybe fall back to one of the original responses? Or raise error?
             # Let's raise an error for now, but could consider returning response_gemini as a fallback.
