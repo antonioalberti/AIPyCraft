@@ -1,0 +1,2 @@
+Trial 1 (tester_run_20250402_172822_run1.log): Error creating job: 401 - {"errors":[{"detail":"session missing or expired, please login again"}]}
+Trial 2 (tester_run_20250402_173011_run2.log): Error creating job: 401 - {"errors":[{"detail":"session missing or expired, please login again"}]}

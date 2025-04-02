@@ -83,7 +83,7 @@ class SolutionRunner:
             print(Fore.LIGHTRED_EX + error_traceback + Style.RESET_ALL)
             execution_log += f"Error:\n{error_traceback}\n"
 
-        print(Fore.LIGHTMAGENTA_EX + f"\nSolution '{solution.name}' completed with status: {solution.status}\n" + Style.RESET_ALL)
+        print(Fore.LIGHTMAGENTA_EX + f"\nSolution completed with status: {solution.status}\n" + Style.RESET_ALL)
         execution_log += f"\nSolution '{solution.name}' completed with status: {solution.status}\n"
 
         solution.result_description = execution_log
