@@ -221,12 +221,12 @@ Original Prompt:
 {prompt}
 ```
 
-Response from Model A (OpenAI):
+Response from Model A:
 ---
 {response_openai}
 ---
 
-Response from Model B (Claude):
+Response from Model B:
 ---
 {response_claude}
 ---
