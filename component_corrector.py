@@ -45,8 +45,8 @@ class ComponentCorrector:
                 f"{context}\n\n"
                 f"After trying to run the solution, the results was: \n\n{error_message}\n\n"
                 f"Review the component '{comp.name}.{comp.extension}'. If any improvements are needed, "
-                "return ONLY the complete code corrected inside a code block. It must be complete, not a partial fix."
-                "If no changes are necessary, reply with 'NO'."
+                "return ONLY the complete code corrected inside a code block. It must be complete, not a partial fix. "
+                "If no changes are necessary, reply with 'NO'. This indicates that the code is correct and does not require any replacement in the OS.\n\n"
         )
 
         # Add user prompt if provided

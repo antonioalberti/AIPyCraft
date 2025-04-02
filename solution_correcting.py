@@ -64,26 +64,32 @@ class SolutionCorrecting:
                 print(Style.BRIGHT + Fore.GREEN + "\n\nAI's response:\n")
                 print(Style.NORMAL + response)
 
-                code_blocks = re.findall(r'```(?:python)?\n(.*?)\n```', response, re.DOTALL)
-
-                if code_blocks:
-                    updated_content = code_blocks[0]
-                    component_file_path = os.path.join(solution.folder, f"{component.name}.{component.extension}")
-
-                    print(Style.BRIGHT + Fore.CYAN + f"\nSolution Folder: {solution.folder}")
-                    print(Style.BRIGHT + Fore.CYAN + f"Component File Path: {component_file_path}")
-
-                    try:
-                        with open(component_file_path, 'w') as file:
-                            file.write(updated_content)
-                        print(Style.BRIGHT + Fore.CYAN + f"\nComponent '{component.name}' file updated successfully.")
-                    except Exception as e:
-                        print(Style.BRIGHT + Fore.RED + f"\nError occurred while updating component '{component.name}' file:")
-                        print(Style.NORMAL + str(e))
-
-                    component.content = updated_content
+                # Check if the response is exactly "NO" (case-insensitive check after stripping)
+                cleaned_response = response.strip()
+                if cleaned_response.upper() == "NO":
+                    print(Style.BRIGHT + Fore.CYAN + f"\nNo changes needed for component '{component.name}'.\n")
                 else:
-                    print(Style.BRIGHT + Fore.YELLOW + f"\nNo code blocks found in the AI's response for component '{component.name}'.\n")
+                    # Try to extract code block only if response is not "NO"
+                    # Use a more general pattern to catch ```python, ```, etc.
+                    content_match = re.search(r"```(?:[a-zA-Z0-9]*)?\s*\n(.*?)\n```", cleaned_response, re.DOTALL)
+                    if content_match:
+                        updated_content = content_match.group(1).strip() # Strip whitespace from extracted code
+                        component_file_path = os.path.join(solution.folder, f"{component.name}.{component.extension}")
+
+                        print(Style.BRIGHT + Fore.CYAN + f"\nSolution Folder: {solution.folder}")
+                        print(Style.BRIGHT + Fore.CYAN + f"Component File Path: {component_file_path}")
+
+                        try:
+                            with open(component_file_path, 'w') as file:
+                                file.write(updated_content)
+                            print(Style.BRIGHT + Fore.CYAN + f"\nComponent '{component.name}' file updated successfully.")
+                            component.content = updated_content # Update component content in memory
+                        except Exception as e:
+                            print(Style.BRIGHT + Fore.RED + f"\nError occurred while updating component '{component.name}' file:")
+                            print(Style.NORMAL + str(e))
+                    else:
+                        # If it wasn't "NO" but also not a valid code block
+                        print(Style.BRIGHT + Fore.YELLOW + f"\nNo valid correction code block found in the AI's response for component '{component.name}'.\n")
         else:
             print(Fore.CYAN + "The solution does not have an 'ERROR' status. No correction needed.")
 
