@@ -42,7 +42,7 @@ inputs = [
     "10",                           # 11: Correct a single component (second correction)
     "1",                            # 12: Select solution to correct (ASSUMES it's the first loaded)
     "config.toml",                  # 13: Component name to correct
-    "",                             # 14: Empty correction instructions
+    "Correct the syntax of this TOML script without loosing the meaning. Navigate on the web to check specific aspects of TOML errors. You need to be very precise in the output. Do not comment on the TOML code under any circumstances. This format does not accept comments.", # 14: Detailed TOML correction instructions
     "4",                            # 15: Run solution (third run)
     "1",                            # 16: Select solution to run (ASSUMES it's the first loaded)
     "15"                            # 17: Exit

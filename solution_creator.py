@@ -93,7 +93,7 @@ File 4: main.py
             print(prompt)
 
             # Send the prompt to the AI and get the response
-            response = self.ai_connector.send_prompt(instructions, prompt)
+            response = self.ai_connector.send_prompt_ensemble(instructions, prompt)
 
             print(Fore.GREEN + "\nAI-generated solution and components:")
             print(response)
@@ -164,7 +164,7 @@ File 4: main.py
                 print(prompt)
 
                 # Send the prompt to the AI and get the response
-                response = self.ai_connector.send_prompt(instructions, prompt)
+                response = self.ai_connector.send_prompt_ensemble(instructions, prompt)
 
                 print(Fore.CYAN + "\nThis is the AI response:\n")
                 print(response)

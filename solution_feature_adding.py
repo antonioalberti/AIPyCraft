@@ -45,7 +45,7 @@ class SolutionFeatureAdding:
             print(Fore.CYAN + f"Language: {component.language}")
 
             # Send the prompt to the AI using the AIConnector and get the response
-            response = self.ai_connector.send_prompt(instructions, prompt)
+            response = self.ai_connector.send_prompt_ensemble(instructions, prompt)
 
             print(Fore.WHITE + "\nAI's response:\n")
             print(response)

@@ -59,7 +59,7 @@ class SolutionCorrecting:
                 print(Style.BRIGHT + Fore.GREEN + "\nThis is the prompt being sent to the AI:\n")
                 print(Style.NORMAL + prompt)
 
-                response = self.ai_connector.send_prompt(instructions, prompt)
+                response = self.ai_connector.send_prompt_ensemble(instructions, prompt)
 
                 print(Style.BRIGHT + Fore.GREEN + "\n\nAI's response:\n")
                 print(Style.NORMAL + response)

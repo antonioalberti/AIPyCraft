@@ -31,7 +31,7 @@ class SolutionUpdater:
             )
 
             print(f"\nPrompt for {comp.name}.{comp.extension}:\n{prompt}\n\n")
-            response = self.ai_connector.send_prompt("", prompt)
+            response = self.ai_connector.send_prompt_ensemble("", prompt)
             print(Fore.BLUE + Style.BRIGHT + f"AI response for {comp.name}.{comp.extension}:\n{response}\n" + Style.RESET_ALL)
 
             # Try to extract a Python content block.

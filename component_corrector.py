@@ -55,7 +55,7 @@ class ComponentCorrector:
             full_prompt += f"\n\nUser Instructions:\n{user_prompt.strip()}"
 
         print(f"\nPrompt for {comp.name}.{comp.extension}:\n{full_prompt}\n\n")
-        response = self.ai_connector.send_prompt("", full_prompt)
+        response = self.ai_connector.send_prompt_ensemble("", full_prompt)
         print(Fore.BLUE + Style.BRIGHT + f"AI response for {comp.name}.{comp.extension}:\n{response}\n" + Style.RESET_ALL)
 
         # Try to extract any code block, regardless of language specifier.

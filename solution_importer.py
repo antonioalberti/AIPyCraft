@@ -69,7 +69,7 @@ class SolutionImporter:
                 prompt += f"Content:\n{content}\n\n"
 
                 # Send the prompt to the AI using the AIConnector and get the response
-                response = self.ai_connector.send_prompt(instructions, prompt)
+                response = self.ai_connector.send_prompt_ensemble(instructions, prompt)
 
                 # Extract the component name and extension from the file name
                 component_name, component_extension = os.path.splitext(file_name)
@@ -115,7 +115,7 @@ class SolutionImporter:
         final_prompt += "Provide an overall description of the solution."
 
         # Send the final prompt to the AI using the AIConnector and get the response
-        final_response = self.ai_connector.send_prompt(instructions1, final_prompt)
+        final_response = self.ai_connector.send_prompt_ensemble(instructions1, final_prompt)
 
         solution_description = final_response.strip()
 

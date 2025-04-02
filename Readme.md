@@ -16,9 +16,9 @@ The program was cocreated with GitHub Copilot using Claude 3.5 Sonnet.
     - Delete solution references from the program while preserving files.
     - List existing project folders containing `model.txt`.
 - **AI-Powered Development:**
-    - Generate code components using AI based on user requirements.
-    - Correct and improve entire solutions using AI.
-    - Apply alternative AI-driven correction strategies.
+    - Generate code components using an AI ensemble (OpenAI GPT-4o and Anthropic Claude 3.5 Sonnet for initial generation, Google Gemini 1.5 Pro for evaluation) based on user requirements.
+    - Correct and improve entire solutions using the AI ensemble.
+    - Apply alternative AI-driven correction strategies (using the ensemble).
     - Correct individual components using AI (`component_corrector.py`).
     - Add new features to solutions using AI.
 - **Code Execution & Handling:**
@@ -33,7 +33,9 @@ The program was cocreated with GitHub Copilot using Claude 3.5 Sonnet.
 ## Prerequisites
 
 - Python 3.x
-- OpenAI API key
+- OpenAI API key (required for OpenAI generation)
+- Anthropic API key (required for Claude generation)
+- Google Gemini API key (required for evaluation)
 
 ## Installation
 
@@ -59,9 +61,11 @@ The program was cocreated with GitHub Copilot using Claude 3.5 Sonnet.
 4. Set up the OpenAI API key:
    - Create a file named .env in the project root directory
    - Add the following line to the .env file, replacing `YOUR_API_KEY` with your actual OpenAI API key:
-     ```plaintext
-     OPENAI_API_KEY=YOUR_API_KEY
-     ```
+      ```plaintext
+      OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+      ANTHROPIC_API_KEY=YOUR_ANTHROPIC_API_KEY
+      GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+      ```
 
 ## Usage
 
@@ -188,7 +192,7 @@ Note: Only Python components are executed when running a solution. Other compone
 ## Folder Structure
 
 - `main.py`: Main entry point and user interface handler.
-- `ai_connector.py`: Manages interaction with the AI API (e.g., OpenAI).
+- `ai_connector.py`: Manages interaction with AI APIs (OpenAI, Anthropic Claude, Google Gemini) and implements the ensemble method.
 - `ai_code_parser.py`: Parses code blocks from AI responses and detects language.
 - `component.py`: Defines the `Component` class representing a single code file.
 - `solution.py`: Defines the `Solution` class, managing a collection of components.
