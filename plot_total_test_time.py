@@ -326,10 +326,10 @@ def main(trials, loops_value, solution_name):
 
     # Ensure the plot directory exists
     os.makedirs(PLOT_DIR, exist_ok=True)
-    plot_filename = f"cumulative_total_time_plot_{solution_name}.png" # New filename
+    plot_filename = f"cumulative_total_time_plot_{solution_name}.pdf" # Changed extension to PDF
     plot_filepath = os.path.join(PLOT_DIR, plot_filename)
 
-    plt.savefig(plot_filepath)
+    plt.savefig(plot_filepath, format='pdf') # Save as PDF
     print(f"\nCumulative total time plot saved to: {plot_filepath}")
     # plt.show()
 

@@ -232,10 +232,10 @@ def main(trials, loops_value, solution_name):
     plt.ylim(bottom=0)
     plt.legend(fontsize=7) # Reduced legend font size
 
-    # Add text for failure count (moved to top-left)
-    plt.text(0.05, 0.95, f'Failed Trials: {failed_trials}',
+    # Add text for failure count (moved down slightly)
+    plt.text(0.05, 0.85, f'Failed Trials: {failed_trials}', # Changed y from 0.95 to 0.85
              horizontalalignment='left', verticalalignment='top',
-             transform=plt.gca().transAxes, fontsize=7, color='red') # Moved to left
+             transform=plt.gca().transAxes, fontsize=7, color='red')
 
     # Removed text for processed trial count (top-left)
     # plt.text(0.05, 0.95, f'Trials Processed: {num_processed}', ...)
@@ -245,10 +245,10 @@ def main(trials, loops_value, solution_name):
 
     # Ensure the plot directory exists
     os.makedirs(PLOT_DIR, exist_ok=True)
-    plot_filename = f"cumulative_iterations_plot_{solution_name}.png" # New filename
+    plot_filename = f"cumulative_iterations_plot_{solution_name}.pdf" # Changed extension to PDF
     plot_filepath = os.path.join(PLOT_DIR, plot_filename) # Construct full path
 
-    plt.savefig(plot_filepath) # Save to the plots directory
+    plt.savefig(plot_filepath, format='pdf') # Save as PDF
     print(f"\nCumulative iterations plot saved to: {plot_filepath}")
     # plt.show() # Uncomment to display the plot interactively
 
