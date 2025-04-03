@@ -25,6 +25,26 @@ parser_tester.add_argument("--correction-prompt", type=str, required=True, help=
 args_tester = parser_tester.parse_args()
 # --- End Argument Parsing ---
 
+# --- Read Detailed Correction Prompt from File ---
+# CORRECTED: Look for Correcting.txt inside the specific solution folder
+correcting_prompt_filepath = os.path.join(args_tester.solutions_base_path, args_tester.solution_name, "Correcting.txt")
+detailed_correction_prompt = ""
+try:
+    with open(correcting_prompt_filepath, 'r', encoding='utf-8') as f:
+        detailed_correction_prompt = f.read().strip()
+    if not detailed_correction_prompt:
+         print(Fore.YELLOW + f"Warning: Correcting.txt file found at '{correcting_prompt_filepath}' but is empty.")
+         # Decide if empty prompt is acceptable or should be an error
+         # For now, allow empty, but it might cause issues later.
+except FileNotFoundError:
+    print(Fore.RED + f"Error: Correcting.txt file not found at '{correcting_prompt_filepath}'. Cannot proceed with detailed correction.")
+    sys.exit(1) # Exit if the prompt file is missing
+except Exception as e:
+    print(Fore.RED + f"Error reading Correcting.txt file at '{correcting_prompt_filepath}': {e}")
+    sys.exit(1)
+# --- End Reading Prompt ---
+
+
 # Inputs based on the provided log - SOLUTION NAME, SOLUTIONS BASE PATH & CORRECTION PROMPT ARE NOW DYNAMIC
 # solutions_folder_path = r"C:\Users\Scalifax\workspace" # Removed hardcoded path
 # correction_instructions is now replaced by args_tester.correction_prompt
@@ -43,7 +63,7 @@ inputs = [
     "10",                           # 11: Correct a single component (second correction)
     "1",                            # 12: Select solution to correct (ASSUMES it's the first loaded)
     "config.toml",                  # 13: Component name to correct
-    "Correct the syntax of this TOML script without loosing the meaning. Access https://docs.chain.link/chainlink-nodes/oracle-jobs/all-jobs to check the correct use of TOML files. You need to be very precise in the output. Do not comment on the TOML code under any circumstances. This format does not accept comments.", # 14: Detailed TOML correction instructions
+    detailed_correction_prompt,     # 14: Detailed TOML correction instructions (FROM FILE)
     "4",                            # 15: Run solution (third run)
     "1",                            # 16: Select solution to run (ASSUMES it's the first loaded)
     "15"                            # 17: Exit
@@ -201,11 +221,11 @@ def main(loop_count, run_id, solution_name_arg): # Add solution_name_arg paramet
             print(Fore.YELLOW + f"SEND: {inputs[13]}")
             child.sendline(inputs[13])
 
-            # 14: Send empty correction instructions
+            # 14: Send detailed correction instructions from file
             print(Fore.CYAN + f"\nEXPECT: Correct Instructions Prompt (Correct Loop {loop_num})")
             child.expect(PROMPT_CORRECT_INSTRUCTIONS)
-            print(Fore.YELLOW + f"SEND: [Empty Instructions]")
-            child.sendline(inputs[14])
+            print(Fore.YELLOW + f"SEND: [Detailed Correction Instructions from File - Length: {len(inputs[14])}]")
+            child.sendline(inputs[14]) # Send content read from Correcting.text
             print(Fore.MAGENTA + f"WAIT: Waiting {AI_PROCESSING_WAIT_TIME}s for AI processing (Correct Loop {loop_num})...")
             print(Fore.CYAN + f"\nEXPECT: Main Menu Choice (after Correct Loop {loop_num})")
             child.expect(PROMPT_CHOICE, timeout=AI_PROCESSING_WAIT_TIME + TIMEOUT_SECONDS)

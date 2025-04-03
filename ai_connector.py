@@ -81,7 +81,8 @@ class AIConnector:
 
             # Select the Gemini model
             # Use 'gemini-1.5-pro-latest' or a specific version like 'gemini-1.5-pro-001'
-            model = genai.GenerativeModel('gemini-1.5-pro-latest')
+            # Updated model name as requested:
+            model = genai.GenerativeModel('gemini-2.5-pro-exp-03-25')
 
             # Generation configuration (optional, adjust as needed)
             generation_config = genai.types.GenerationConfig(
