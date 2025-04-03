@@ -16,51 +16,56 @@ def extract_errors_from_log(log_filepath, solution_name):
         solution_name (str): The name of the solution being checked.
 
     Returns:
-        list[str]: A list containing the first non-blank line (stripped) after the start marker
-                   for *every* block that ended with status ERROR in the file.
-                   Returns an empty list if no such blocks are found.
+        list[tuple[str, int]]: A list of tuples, where each tuple contains:
+                                (the first non-blank line (stripped) after the start marker,
+                                 the line number of that line in the log file).
+                                Returns an empty list if no such blocks are found.
     """
     start_marker = "This is the output of the solution main.py run:"
     end_marker = f"Solution '{solution_name}' completed with status: ERROR"
 
-    collected_first_lines = [] # Store first lines from ALL valid blocks
+    collected_errors = [] # Store tuples of (line_content, line_number)
     potential_first_line = None
+    potential_line_number = -1
     # state: 0=searching start, 1=found start (searching first non-blank), 2=found first non-blank (searching end)
     state = 0
 
     try:
         with open(log_filepath, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
+            # Use enumerate to get line numbers (starting from 1)
+            for line_num, line in enumerate(f, 1):
+                line_strip = line.strip()
 
-        for line in lines:
-            line_strip = line.strip()
+                if state == 0: # Searching for start marker
+                    if line_strip == start_marker:
+                        state = 1 # Found start, now look for first non-blank line
+                        potential_first_line = None # Reset
+                        potential_line_number = -1
+                elif state == 1: # Found start, looking for first non-blank line
+                    if line_strip: # Found the first non-blank line
+                        potential_first_line = line_strip # Store the stripped line
+                        potential_line_number = line_num # Store the line number
+                        state = 2 # Now search for the end marker
+                    # else: it's a blank line, stay in state 1 and keep looking
+                elif state == 2: # Found first non-blank, searching for end marker
+                    if line_strip == end_marker:
+                        # Found end marker. This block is valid. Add its stored data to the results.
+                        if potential_first_line is not None and potential_line_number != -1:
+                            collected_errors.append((potential_first_line, potential_line_number))
+                        # Reset to search for the next block starting from scratch
+                        state = 0
+                        potential_first_line = None
+                        potential_line_number = -1
+                    elif line_strip == start_marker:
+                         # Found a new start marker before the current block ended with ERROR.
+                         # Discard the stored potential data and start over for the new block.
+                         state = 1
+                         potential_first_line = None # Reset potential line
+                         potential_line_number = -1
+                    # else: continue searching for end_marker within this block (stay in state 2)
 
-            if state == 0: # Searching for start marker
-                if line_strip == start_marker:
-                    state = 1 # Found start, now look for first non-blank line
-                    potential_first_line = None # Reset
-            elif state == 1: # Found start, looking for first non-blank line
-                if line_strip: # Found the first non-blank line
-                    potential_first_line = line_strip # Store the stripped line
-                    state = 2 # Now search for the end marker
-                # else: it's a blank line, stay in state 1 and keep looking
-            elif state == 2: # Found first non-blank, searching for end marker
-                if line_strip == end_marker:
-                    # Found end marker. This block is valid. Add its stored potential_first_line to the results.
-                    if potential_first_line is not None:
-                        collected_first_lines.append(potential_first_line) # Already stripped
-                    # Reset to search for the next block starting from scratch
-                    state = 0
-                    potential_first_line = None
-                elif line_strip == start_marker:
-                     # Found a new start marker before the current block ended with ERROR.
-                     # Discard the stored potential_first_line and start over for the new block.
-                     state = 1
-                     potential_first_line = None # Reset potential line
-                # else: continue searching for end_marker within this block (stay in state 2)
-
-        # After checking all lines, return all the collected first lines
-        return collected_first_lines
+        # After checking all lines, return all the collected errors (tuples)
+        return collected_errors
 
     except FileNotFoundError:
         print(f"Warning: Log file not found: {log_filepath}")
@@ -78,7 +83,7 @@ def main(trials, loops_value, solution_name):
     print(f"Searching for runtime errors in logs for solution '{solution_name}' across {trials} trials.")
     print(f"(LoopsValue: {loops_value} - not directly used for error extraction but kept for consistency)")
 
-    all_extracted_errors = []
+    all_formatted_errors = [] # Store formatted strings including line numbers
     processed_files_count = 0
     log_files_not_found = 0
 
@@ -101,16 +106,15 @@ def main(trials, loops_value, solution_name):
         log_filepath = run_id_to_log.get(i)
         if log_filepath:
             print(f"Processing Trial {i}: {log_filepath}")
-            # --- Pass solution_name to the function ---
-            # first_lines_list now contains all relevant first lines from this file
-            first_lines_list = extract_errors_from_log(log_filepath, solution_name)
-            if first_lines_list:
-                print(f"  -> Found {len(first_lines_list)} relevant first line(s) in Trial {i}.")
-                # Add context to each first line before adding to the main list
-                for first_line in first_lines_list:
-                     all_extracted_errors.append(f"Trial {i} ({os.path.basename(log_filepath)}): {first_line}")
+            # errors_list now contains tuples of (line_content, line_number)
+            errors_list = extract_errors_from_log(log_filepath, solution_name)
+            if errors_list:
+                print(f"  -> Found {len(errors_list)} relevant error line(s) in Trial {i}.")
+                # Add context and line number to each error before adding to the main list
+                for error_line, line_num in errors_list:
+                     all_formatted_errors.append(f"Trial {i} ({os.path.basename(log_filepath)} - Line {line_num}): {error_line}")
             else:
-                 print(f"  -> No relevant first lines found in Trial {i}.")
+                 print(f"  -> No relevant error lines found in Trial {i}.")
             processed_files_count += 1
         else:
             print(f"Warning: Log file for Trial {i} not found.")
@@ -120,17 +124,17 @@ def main(trials, loops_value, solution_name):
     print(f"Total trials requested: {trials}")
     print(f"Log files processed: {processed_files_count}")
     print(f"Log files not found: {log_files_not_found}")
-    print(f"Total error messages extracted: {len(all_extracted_errors)}")
+    print(f"Total error messages extracted: {len(all_formatted_errors)}")
 
-    # Write extracted errors to the output file
+    # Write formatted errors to the output file
     try:
         with open(OUTPUT_FILE, 'w', encoding='utf-8') as outfile:
-            if not all_extracted_errors:
-                outfile.write("No relevant first lines found in logs from blocks ending with status ERROR.\n")
+            if not all_formatted_errors:
+                outfile.write("No relevant error lines found in logs from blocks ending with status ERROR.\n")
             else:
-                # Write each extracted first line (which now includes context)
-                for line_with_context in all_extracted_errors:
-                    outfile.write(line_with_context + '\n') # Add newline after each entry
+                # Write each formatted error line (which now includes context and line number)
+                for formatted_error in all_formatted_errors:
+                    outfile.write(formatted_error + '\n') # Add newline after each entry
         print(f"\nResults successfully written to: {OUTPUT_FILE}")
     except Exception as e:
         print(f"\nError writing results to {OUTPUT_FILE}: {e}")

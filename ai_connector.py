@@ -3,6 +3,7 @@ import openai
 import google.generativeai as genai
 import anthropic
 from dotenv import load_dotenv
+from decision import Decision # Import the new Decision class
 
 class AIConnector:
     def __init__(self):
@@ -11,14 +12,14 @@ class AIConnector:
         # Configure OpenAI
         openai.api_key = os.getenv("OPENAI_API_KEY")
         if not openai.api_key:
-            print("Warning: OpenAI API key not found in 'OPENAI_API_KEY' environment variable. OpenAI calls will fail.")
+            print(f"{' ' * 20}Warning: OpenAI API key not found in 'OPENAI_API_KEY' environment variable. OpenAI calls will fail.")
             # Decide if you want to raise an error or just warn:
             # raise ValueError("OpenAI API key not found in 'OPENAI_API_KEY' environment variable.")
 
         # Configure Gemini
         gemini_api_key = os.getenv("GEMINI_API_KEY")
         if not gemini_api_key:
-            print("Warning: Gemini API key not found in 'GEMINI_API_KEY' environment variable. Gemini calls will fail.")
+            print(f"{' ' * 20}Warning: Gemini API key not found in 'GEMINI_API_KEY' environment variable. Gemini calls will fail.")
             # Decide if you want to raise an error or just warn:
             # raise ValueError("Gemini API key not found in 'GEMINI_API_KEY' environment variable.")
         else:
@@ -26,22 +27,24 @@ class AIConnector:
                 genai.configure(api_key=gemini_api_key)
                 # Optional: Test connection or model availability here if needed
             except Exception as e:
-                 print(f"Warning: Failed to configure Gemini API: {e}. Gemini calls may fail.")
+                 print(f"{' ' * 20}Warning: Failed to configure Gemini API: {e}. Gemini calls may fail.")
                  # Decide if you want to raise an error or just warn:
                  # raise RuntimeError(f"Failed to configure Gemini API: {e}") from e
 
         # Configure Anthropic
         self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
         if not self.anthropic_api_key:
-            print("Warning: Anthropic API key not found in 'ANTHROPIC_API_KEY' environment variable. Claude calls will fail.")
+            print(f"{' ' * 20}Warning: Anthropic API key not found in 'ANTHROPIC_API_KEY' environment variable. Claude calls will fail.")
             self.anthropic_client = None
         else:
             try:
                 self.anthropic_client = anthropic.Anthropic(api_key=self.anthropic_api_key)
             except Exception as e:
-                print(f"Warning: Failed to configure Anthropic API: {e}. Claude calls may fail.")
+                print(f"{' ' * 20}Warning: Failed to configure Anthropic API: {e}. Claude calls may fail.")
                 self.anthropic_client = None
 
+        # Instantiate the Decision maker
+        self.decision_maker = Decision(self)
 
     def send_prompt_openai(self, instructions: str, prompt: str) -> str:
         if not openai.api_key:
@@ -154,93 +157,71 @@ class AIConnector:
 
     def send_prompt_ensemble(self, instructions: str, prompt: str) -> str:
         """
-        Sends the prompt to OpenAI and Claude, then uses Gemini to evaluate
-        and select/synthesize the best response.
+        Sends the prompt to OpenAI and Claude, then uses the Decision class
+        to evaluate and select/synthesize the best response using Gemini.
         """
         response_openai = None
-        response_claude = None # Renamed from response_gemini
+        response_claude = None
         openai_error = None
         claude_error = None # Renamed from gemini_error
 
         # --- Call OpenAI ---
         if openai.api_key:
             try:
-                print("Attempting OpenAI call...")
+                print(f"{' ' * 20}Attempting OpenAI call...")
                 response_openai = self.send_prompt_openai(instructions, prompt)
-                print("OpenAI call successful.")
+                print(f"{' ' * 20}OpenAI call successful.")
             except Exception as e:
                 openai_error = e
-                print(f"Warning: OpenAI call failed in ensemble: {e}")
+                print(f"{' ' * 20}Warning: OpenAI call failed in ensemble: {e}")
         else:
-            print("Warning: OpenAI API key not configured, skipping OpenAI call in ensemble.")
+            print(f"{' ' * 20}Warning: OpenAI API key not configured, skipping OpenAI call in ensemble.")
             openai_error = RuntimeError("OpenAI API key not configured.")
 
         # --- Call Claude --- Changed from Gemini
         if self.anthropic_client:
             try:
-                print("Attempting Claude call...")
+                print(f"{' ' * 20}Attempting Claude call...")
                 response_claude = self._send_prompt_claude(instructions, prompt) # Use internal method
-                print("Claude call successful.")
+                print(f"{' ' * 20}Claude call successful.")
             except Exception as e:
                 claude_error = e
-                print(f"Warning: Claude call failed in ensemble: {e}")
+                print(f"{' ' * 20}Warning: Claude call failed in ensemble: {e}")
         else:
-            print("Warning: Anthropic client not configured, skipping Claude call in ensemble.")
+            print(f"{' ' * 20}Warning: Anthropic client not configured, skipping Claude call in ensemble.")
             claude_error = RuntimeError("Anthropic client not configured.")
 
         # --- Handle API call failures --- Updated variable names
         if response_openai is None and response_claude is None:
             raise RuntimeError(f"Both OpenAI and Claude calls failed or were skipped. OpenAI Error: {openai_error}, Claude Error: {claude_error}")
         elif response_openai is None:
-            print("Warning: OpenAI failed or skipped, returning Claude response directly.")
+            print(f"{' ' * 20}Warning: OpenAI failed or skipped, returning Claude response directly.")
             # Ensure response_claude is not None before returning
             if response_claude is None:
                  raise RuntimeError(f"OpenAI failed/skipped, and Claude also failed. Claude Error: {claude_error}")
             # Return the raw Claude response directly
             return response_claude
         elif response_claude is None:
-            print("Warning: Claude failed or skipped, returning OpenAI response directly.")
+            print(f"{' ' * 20}Warning: Claude failed or skipped, returning OpenAI response directly.")
              # Ensure response_openai is not None before returning
             if response_openai is None:
                  raise RuntimeError(f"Claude failed/skipped, and OpenAI also failed. OpenAI Error: {openai_error}")
             # Return the raw OpenAI response directly
             return response_openai
 
-        # --- If both succeeded, proceed to evaluation ---
-        print("Both models succeeded, proceeding to Gemini evaluation.")
-        evaluation_instructions = "You are an expert evaluator. Analyze the two provided responses based on the original instructions and prompt. Choose the best response OR synthesize a new, improved response that best fulfills the original request. Output ONLY the final chosen or synthesized response, without any explanation, preamble, or markdown formatting like ```."
-        evaluation_prompt = f"""Original Instructions:
-```
-{instructions}
-```
-
-Original Prompt:
-```
-{prompt}
-```
-
-Response from Model A:
----
-{response_openai}
----
-
-Response from Model B:
----
-{response_claude}
----
-
-Evaluate both responses (A and B) based *only* on the 'Original Instructions' and 'Original Prompt'. Provide *only* the single best response text (either A, B, or a synthesized improvement). Do not add any explanation, commentary, or markdown formatting. Your output should be the raw text of the final chosen/synthesized response."""
-
+        # --- If both succeeded, proceed to evaluation using Decision class ---
         try:
-            print("Attempting Gemini evaluation call...")
-            # Use the standard send_prompt_gemini for the evaluation
-            final_response = self.send_prompt_gemini(evaluation_instructions, evaluation_prompt)
-            print("Gemini evaluation successful.")
-            # Return the raw response from Gemini evaluation directly.
-            # The calling code will use AICodeParser to extract the content.
+            final_response = self.decision_maker.evaluate_and_select(
+                instructions=instructions,
+                prompt=prompt,
+                response_a=response_openai,
+                response_b=response_claude,
+                model_a_name="OpenAI",
+                model_b_name="Claude"
+            )
+            # Return the response selected/synthesized by the Decision maker
             return final_response
         except Exception as e:
-            # If evaluation fails, maybe fall back to one of the original responses? Or raise error?
-            # Let's raise an error for now, but could consider returning response_gemini as a fallback.
-            print(f"Error during Gemini evaluation: {e}. Raising error.")
-            raise RuntimeError(f"Gemini evaluation call failed in ensemble: {e}") from e
+            # The evaluate_and_select method already prints an error message.
+            # Re-raise the exception caught from the decision maker.
+            raise RuntimeError(f"Decision evaluation failed in ensemble: {e}") from e

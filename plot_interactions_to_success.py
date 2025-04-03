@@ -22,85 +22,68 @@ def parse_log_file(log_filepath, solution_name, max_loops):
 
     Returns:
         tuple[int, str | None]: A tuple containing:
-            - int: Number of iterations if success was found, -1 otherwise.
-            - str | None: An error message if failure occurred, None otherwise.
+            - int: Number of iterations if success was found (>=0), -1 otherwise.
+            - str | None: Error message "Completed with status: ERROR" if that specific
+                          status line is found and success wasn't, otherwise None or
+                          another error message (file not found, parse error, status unknown).
     """
     last_iteration = -1
     success_found = False
-    toml_error_details = [] # Store unique TOML error details
-    runtime_error_details = [] # Store unique Runtime error details
-    state = "searching" # State machine: searching, found_after, found_blank, found_output
+    error_status_found = False # Flag to check if the specific ERROR line exists
 
-    # Regex patterns
+    # Compile regex patterns
     loop_pattern = re.compile(r"--- Starting Correction Loop Iteration (\d+)/(\d+) ---")
     success_pattern = re.compile(rf"--- Solution '{re.escape(solution_name)}' completed successfully\. Stopping loop\. ---")
-    toml_error_pattern = re.compile(r"Failed to parse TOML file:(.*)") # Regex for TOML error
+    # Define the specific error status line pattern - used for checking after loop if no success
+    error_status_line = f"Solution '{solution_name}' completed with status: ERROR"
 
     try:
         with open(log_filepath, 'r', encoding='utf-8') as f:
-            for line in f:
+            lines = f.readlines() # Read all lines to easily check for error status later
+
+        for idx, line in enumerate(lines):
+            line_strip = line.strip() # Use stripped line for comparisons
+
+            # Check for success first
+            success_match = success_pattern.search(line) # Search raw line
+            if success_match:
+                success_found = True
+                # Find the last iteration number *before* the success message
+                # Iterate backwards from the success line index to find the last loop marker
+                for i in range(idx - 1, -1, -1):
+                    loop_match = loop_pattern.search(lines[i])
+                    if loop_match:
+                        last_iteration = int(loop_match.group(1))
+                        break
+                # If success happens before any loop marker (e.g., iteration 0), last_iteration remains -1
+                # Treat success before iteration 1 as 0 iterations for plotting.
+                return (max(0, last_iteration), None) # SUCCESS found
+
+            # Check for loop iteration number if success not yet found
+            if not success_found:
                 loop_match = loop_pattern.search(line)
                 if loop_match:
-                    last_iteration = int(loop_match.group(1)) # Capture the current iteration number
+                    last_iteration = int(loop_match.group(1)) # Keep track of the latest iteration
 
-                success_match = success_pattern.search(line)
-                if success_match:
-                    success_found = True
-                    # If success is found, the result is the last recorded iteration number
-                    # If success happens before the first loop log (unlikely), last_iteration remains -1,
-                    # which needs handling, but the logic implies success happens *after* a loop.
-                    # If success happens *during* iteration X, last_iteration will be X.
-                    return (last_iteration, None) # Success
-
-                # Check for TOML error
-                toml_match = toml_error_pattern.search(line)
-                if toml_match:
-                    current_detail = toml_match.group(1).strip()
-                    # Add the detail if it's not a placeholder and not already collected
-                    if current_detail and current_detail not in ('{e}")', '{e}') and current_detail not in toml_error_details:
-                        toml_error_details.append(current_detail)
-
-                # State machine for runtime errors
-                line_strip = line.strip()
-                if state == "searching" and line_strip == "After trying to run the solution, the results was:":
-                    state = "found_after"
-                elif state == "found_after" and line_strip == "":
-                    state = "found_blank" # Expecting blank line
-                elif state == "found_blank" and line_strip == "Output:":
-                    state = "found_output" # Expecting "Output:"
-                elif state == "found_output" and line.startswith("Error: "):
-                    runtime_error = line[len("Error: "):].strip()
-                    if runtime_error and runtime_error not in runtime_error_details:
-                        runtime_error_details.append(runtime_error)
-                    state = "searching" # Reset after finding the error line
-                elif state != "searching":
-                    # If the sequence breaks, reset the state
-                    state = "searching"
-
+            # Check if the line is the specific error status line
+            if line_strip == error_status_line:
+                error_status_found = True
+                # Don't break here, success might appear later in the file theoretically
 
     except FileNotFoundError:
-        # Return error message
-        return (-1, f"Log file not found: {log_filepath}") # Indicate file not found / error
+        return (-1, f"Log file not found: {log_filepath}")
     except Exception as e:
-        # Return error message instead of just printing warning here
-        return (-1, f"Error parsing log file {log_filepath}: {e}") # Indicate parsing error
+        return (-1, f"Error parsing log file {log_filepath}: {e}")
 
-    # After checking the whole file, determine the failure reason
-    if not success_found:
-        if runtime_error_details:
-            # Prioritize reporting runtime errors if found
-            error_summary = "; ".join(runtime_error_details)
-            return (-1, f"Runtime errors found: {error_summary}")
-        elif toml_error_details:
-            # Report TOML errors if no runtime errors were found
-            error_summary = "; ".join(toml_error_details)
-            return (-1, f"TOML parse errors found: {error_summary}")
-        else:
-            # Otherwise, report generic failure
-            return (-1, "Success message not found within max loops")
-
-    # Fallback in case logic is flawed (should not be reached if success_found is True)
-    return (-1, "Unknown parsing state")
+    # After checking the whole file:
+    # Success case is handled inside the loop with immediate return.
+    if error_status_found:
+        # If success was NOT found, but the error status line WAS found, it's a failure.
+        return (-1, "Completed with status: ERROR")
+    else:
+        # If neither success nor the specific error status line was found
+        # This could mean the log is incomplete or the run timed out before finishing.
+        return (-1, "Success or ERROR status not found")
 
 def main(trials, loops_value, solution_name):
     """

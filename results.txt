@@ -1,2 +1,42 @@
-Trial 1 (tester_run_20250402_172822_run1.log): Error creating job: 401 - {"errors":[{"detail":"session missing or expired, please login again"}]}
-Trial 2 (tester_run_20250402_173011_run2.log): Error creating job: 401 - {"errors":[{"detail":"session missing or expired, please login again"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 125): Token saved with validity until 2025-05-03T09:10:36
+Trial 1 (tester_run_20250403_091031_run1.log - Line 371): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:65: error: expected \"=\"; got: \"\\\":$(multiply)}\\\"\""}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 641): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 911): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 1181): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"stdout\""}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 1451): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [stdout], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 1721): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"debug\""}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 1991): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [bridge], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 2261): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 2539): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 2825): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 3111): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 3401): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (16, 8): was expecting token =, but got keys cannot contain { character instead"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 3693): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 3983): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log_bridge], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 4273): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log_bridge], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 4563): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log_bridge], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 4851): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log_bridge], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 5137): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log_bridge], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 5423): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log_bridge], exists []"}]}
+Trial 1 (tester_run_20250403_091031_run1.log - Line 5709): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log_bridge], exists []"}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 369): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 643): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 917): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:54: error: expected \"=\"; got: \"\\\":$(multiply)}\\\"\""}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 1191): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 1465): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [calculate], exists []"}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 1739): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 2013): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 2289): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 2563): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 2837): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"stdout\""}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 3111): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 3385): Job run failed with fatalErrors: ['contract: parameter is empty; data: parameter is empty; evmChainID: key jobSpec (segment 0 in keypath jobSpec.evmChainID): keypath not found']
+Trial 2 (tester_run_20250403_091212_run2.log - Line 3659): Job run failed with fatalErrors: ['contract: parameter is empty; data: parameter is empty; evmChainID: key jobSpec (segment 0 in keypath jobSpec.evmChainID): keypath not found']
+Trial 2 (tester_run_20250403_091212_run2.log - Line 3933): Job run failed with fatalErrors: ['contract: parameter is empty; data: parameter is empty; evmChainID: key jobSpec (segment 0 in keypath jobSpec.evmChainID): keypath not found']
+Trial 2 (tester_run_20250403_091212_run2.log - Line 4207): Job run failed with fatalErrors: ['contract: parameter is empty; data: parameter is empty; evmChainID: key jobSpec (segment 0 in keypath jobSpec.evmChainID): keypath not found']
+Trial 2 (tester_run_20250403_091212_run2.log - Line 4479): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (7, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 4747): Error creating job: 500 - {"errors":[{"detail":"CreateJobFailed: evm chain id must be defined"}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 5015): Error creating job: 500 - {"errors":[{"detail":"failed to create services for job: 328: chain id does not exist: 1"}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 5283): Error creating job: 500 - {"errors":[{"detail":"CreateJobFailed: evm chain id must be defined"}]}
+Trial 2 (tester_run_20250403_091212_run2.log - Line 5553): Error creating job: 500 - {"errors":[{"detail":"CreateJobFailed: failed to insert job: ERROR: duplicate key value violates unique constraint \"external_job_id_uniq\" (SQLSTATE 23505)"}]}
