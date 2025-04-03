@@ -171,18 +171,20 @@ class AIConnector:
 
         # --- Define potential API calls ---
         # Pass more specific names to the wrapper
-        if openai.api_key:
-            api_calls_to_make.append((self.send_prompt_openai, "OpenAI (gpt-4o)"))
-        else:
-            print(f"{' ' * 20}Skipping OpenAI (gpt-4o) call (no API key).")
+        # Temporarily commented out OpenAI calls
+        # if openai.api_key:
+        #     api_calls_to_make.append((self.send_prompt_openai, "OpenAI (gpt-4o)"))
+        # else:
+        #     print(f"{' ' * 20}Skipping OpenAI (gpt-4o) call (no API key).")
 
         # Add call to GPT-3.5 if API key is present
-        if openai.api_key:
-            api_calls_to_make.append((self._send_prompt_openai_gpt35, "OpenAI (gpt-3.5-turbo)"))
-        else:
-            # This condition might be redundant if the first check already skipped OpenAI entirely,
-            # but it's safe to leave for clarity or future changes.
-            print(f"{' ' * 20}Skipping OpenAI (gpt-3.5-turbo) call (no API key).")
+        # Temporarily commented out OpenAI calls
+        # if openai.api_key:
+        #     api_calls_to_make.append((self._send_prompt_openai_gpt35, "OpenAI (gpt-3.5-turbo)"))
+        # else:
+        #     # This condition might be redundant if the first check already skipped OpenAI entirely,
+        #     # but it's safe to leave for clarity or future changes.
+        #     print(f"{' ' * 20}Skipping OpenAI (gpt-3.5-turbo) call (no API key).")
 
         # Removed Claude call section
 

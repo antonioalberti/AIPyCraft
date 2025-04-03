@@ -100,8 +100,8 @@ Available Responses:
             print(f"{' ' * 20}{decision_model_name} evaluation successful.")
             # Return the raw response from Gemini evaluation directly.
 
-            print(f"{' ' * 20}Available responses provided to {decision_model_name}: {available_responses_text.strip()}")
-            print(f"{' ' * 20}Final response chosen/synthesized by {decision_model_name}: {final_response}")
+            #print(f"{' ' * 20}Available responses provided to {decision_model_name}: {available_responses_text.strip()}")
+            #print(f"{' ' * 20}Final response chosen/synthesized by {decision_model_name}: {final_response}")
 
             return final_response
         except Exception as e:
