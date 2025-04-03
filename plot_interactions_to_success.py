@@ -13,12 +13,14 @@ PLOT_DIR = "plots" # Define the output directory for plots
 
 def parse_log_file(log_filepath, solution_name, max_loops):
     """
-    Parses a single tester log file to find the number of iterations to success.
+    Parses a single tester log file to find the number of iterations to success,
+    based *only* on the last occurrence of "Solution completed with status: SUCCESS"
+    or "Solution completed with status: ERROR".
 
     Args:
         log_filepath (str): Path to the tester log file.
-        solution_name (str): The name of the solution being tested.
-        max_loops (int): The maximum number of loops configured for the test run.
+        solution_name (str): The name of the solution being tested (unused in this logic).
+        max_loops (int): The maximum number of loops configured for the test run (unused).
 
     Returns:
         tuple[int, str | None]: A tuple containing:
@@ -27,63 +29,55 @@ def parse_log_file(log_filepath, solution_name, max_loops):
                           status line is found and success wasn't, otherwise None or
                           another error message (file not found, parse error, status unknown).
     """
-    last_iteration = -1
-    success_found = False
-    error_status_found = False # Flag to check if the specific ERROR line exists
-
-    # Compile regex patterns
+    # Compile patterns
     loop_pattern = re.compile(r"--- Starting Correction Loop Iteration (\d+)/(\d+) ---")
-    success_pattern = re.compile(rf"--- Solution '{re.escape(solution_name)}' completed successfully\. Stopping loop\. ---")
-    # Define the specific error status line pattern - used for checking after loop if no success
-    error_status_line = f"Solution '{solution_name}' completed with status: ERROR"
+    success_pattern_string = "Solution completed with status: SUCCESS"
+    error_pattern_string = "Solution completed with status: ERROR"
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+
+    last_success_index = -1
+    last_error_index = -1
 
     try:
         with open(log_filepath, 'r', encoding='utf-8') as f:
-            lines = f.readlines() # Read all lines to easily check for error status later
+            lines = f.readlines()
 
+        # Find the index of the LAST relevant status line using endswith
         for idx, line in enumerate(lines):
-            line_strip = line.strip() # Use stripped line for comparisons
+            cleaned_line = ansi_escape.sub('', line).strip()
+            if cleaned_line.endswith(success_pattern_string):
+                last_success_index = idx
+            elif cleaned_line.endswith(error_pattern_string):
+                last_error_index = idx
 
-            # Check for success first
-            success_match = success_pattern.search(line) # Search raw line
-            if success_match:
-                success_found = True
-                # Find the last iteration number *before* the success message
-                # Iterate backwards from the success line index to find the last loop marker
-                for i in range(idx - 1, -1, -1):
-                    loop_match = loop_pattern.search(lines[i])
-                    if loop_match:
-                        last_iteration = int(loop_match.group(1))
-                        break
-                # If success happens before any loop marker (e.g., iteration 0), last_iteration remains -1
-                # Treat success before iteration 1 as 0 iterations for plotting.
-                return (max(0, last_iteration), None) # SUCCESS found
-
-            # Check for loop iteration number if success not yet found
-            if not success_found:
-                loop_match = loop_pattern.search(line)
+        # Determine outcome based on which status appeared last
+        if last_success_index > last_error_index:
+            # Success is the final status. Find the iteration number before this line.
+            final_success_iter = -1
+            # Search backwards starting strictly *before* the success line index
+            for i in range(last_success_index - 1, -1, -1):
+                # Match loop pattern on the raw line content
+                loop_match = loop_pattern.search(lines[i]) # Search raw line for loop marker
                 if loop_match:
-                    last_iteration = int(loop_match.group(1)) # Keep track of the latest iteration
+                    final_success_iter = int(loop_match.group(1))
+                    break
+            # If success happened before loop 1 (or no loop marker found before it), iteration is 0
+            return (max(0, final_success_iter), None)
 
-            # Check if the line is the specific error status line
-            if line_strip == error_status_line:
-                error_status_found = True
-                # Don't break here, success might appear later in the file theoretically
+        elif last_error_index > last_success_index:
+            # Error is the final status
+            return (-1, "Completed with status: ERROR")
+        elif last_error_index != -1:
+             # Only error was found, and it wasn't preceded by a later success
+             return (-1, "Completed with status: ERROR")
+        else:
+            # Neither SUCCESS nor ERROR status found in the log
+            return (-1, "SUCCESS/ERROR status not found")
 
     except FileNotFoundError:
         return (-1, f"Log file not found: {log_filepath}")
     except Exception as e:
         return (-1, f"Error parsing log file {log_filepath}: {e}")
-
-    # After checking the whole file:
-    # Success case is handled inside the loop with immediate return.
-    if error_status_found:
-        # If success was NOT found, but the error status line WAS found, it's a failure.
-        return (-1, "Completed with status: ERROR")
-    else:
-        # If neither success nor the specific error status line was found
-        # This could mean the log is incomplete or the run timed out before finishing.
-        return (-1, "Success or ERROR status not found")
 
 def main(trials, loops_value, solution_name):
     """
@@ -120,7 +114,8 @@ def main(trials, loops_value, solution_name):
             print(f"Processing Trial {i}: {log_filepath}")
             # --- Modified to handle tuple return ---
             iterations, error_msg = parse_log_file(log_filepath, solution_name, loops_value)
-            if iterations > 0:
+            # Treat iteration 0 as success as well
+            if iterations >= 0:
                 print(f"  -> Trial {i} Result: SUCCESS (Iterations: {iterations})")
             else:
                 # Print the specific error message returned by parse_log_file
@@ -136,9 +131,10 @@ def main(trials, loops_value, solution_name):
             parse_errors += 1 # Count missing files as errors
 
     # --- Statistics ---
-    successful_iterations_overall = [iters for iters in trial_results.values() if iters > 0]
-    # Failures are trials processed where result is <= 0
-    failed_trials = len([res for res in trial_results.values() if res <= 0])
+    # Success is now iterations >= 0
+    successful_iterations_overall = [iters for iters in trial_results.values() if iters >= 0]
+    # Failures are trials processed where result is < 0
+    failed_trials = len([res for res in trial_results.values() if res < 0])
     num_successful = len(successful_iterations_overall)
     num_processed = len(trial_results) # Number of trials where logs were found
 
@@ -162,61 +158,73 @@ def main(trials, loops_value, solution_name):
     current_successful_iterations = []
 
     for k in trial_numbers_processed: # Iterate through the processed trials in order
-        if trial_results[k] > 0: # Consider only successful trials for cumulative stats
+        # CORRECTED: Include trials succeeding at iteration 0 (>= 0)
+        if trial_results[k] >= 0: # Consider successful trials (including 0 iterations)
             current_successful_iterations.append(trial_results[k])
 
-        if len(current_successful_iterations) >= 2: # Need at least 2 successful points for CI
-            mean_k = np.mean(current_successful_iterations)
-            sem_k = stats.sem(current_successful_iterations)
-            df_k = len(current_successful_iterations) - 1
-            confidence_level = 0.95
-            # Calculate confidence interval using t-distribution
-            # Handle potential division by zero or invalid df if sem is 0
-            if sem_k > 0 and df_k > 0:
-                 ci_margin_k = sem_k * stats.t.ppf((1 + confidence_level) / 2., df_k)
-                 ci_lower_k = mean_k - ci_margin_k
-                 ci_upper_k = mean_k + ci_margin_k
-            else: # If SEM is 0 (all values identical), CI is just the mean
-                 ci_lower_k = mean_k
-                 ci_upper_k = mean_k
-
-            cumulative_trial_numbers_for_plot.append(k)
-            cumulative_means.append(mean_k)
-            cumulative_ci_lowers.append(ci_lower_k)
-            cumulative_ci_uppers.append(ci_upper_k)
-        elif len(current_successful_iterations) == 1: # Can plot mean but not CI yet
-             mean_k = current_successful_iterations[0]
-             cumulative_trial_numbers_for_plot.append(k)
+        # Calculate stats if we have successful iterations
+        if current_successful_iterations:
+             mean_k = np.mean(current_successful_iterations)
+             cumulative_trial_numbers_for_plot.append(k) # Add trial number regardless of CI calc
              cumulative_means.append(mean_k)
-             # Append NaN for CI bounds when not calculable
-             cumulative_ci_lowers.append(np.nan)
-             cumulative_ci_uppers.append(np.nan)
+
+             # Calculate CI only if we have at least 2 points
+             if len(current_successful_iterations) >= 2:
+                 sem_k = stats.sem(current_successful_iterations)
+                 df_k = len(current_successful_iterations) - 1
+                 confidence_level = 0.95
+                 # Calculate confidence interval using t-distribution
+                 # Handle potential division by zero or invalid df if sem is 0
+                 if sem_k > 0 and df_k > 0:
+                      ci_margin_k = sem_k * stats.t.ppf((1 + confidence_level) / 2., df_k)
+                      ci_lower_k = mean_k - ci_margin_k
+                      ci_upper_k = mean_k + ci_margin_k
+                 else: # If SEM is 0 (all values identical), CI is just the mean
+                      ci_lower_k = mean_k
+                      ci_upper_k = mean_k
+                 cumulative_ci_lowers.append(ci_lower_k)
+                 cumulative_ci_uppers.append(ci_upper_k)
+             else: # Only 1 point, append NaN for CI
+                 cumulative_ci_lowers.append(np.nan)
+                 cumulative_ci_uppers.append(np.nan)
+        # If trial_results[k] was < 0, we don't add to cumulative stats for this k,
+        # but the loop continues to the next trial number k.
 
     # --- Plotting ---
     plt.figure(figsize=(max(10, len(trial_numbers_processed) * 0.5), 6)) # Adjust width based on number of trials
 
-    # Plot individual successful points
-    successful_trial_numbers = [t for t in trial_numbers_processed if trial_results[t] > 0]
+    # Plot individual successful points (iters >= 0)
+    successful_trial_numbers = [t for t in trial_numbers_processed if trial_results[t] >= 0]
     successful_iteration_values = [trial_results[t] for t in successful_trial_numbers]
     if successful_trial_numbers:
         plt.scatter(successful_trial_numbers, successful_iteration_values, color='skyblue', label='Successful Trial Iterations', zorder=5, alpha=0.7) # Use scatter
 
     # Plot cumulative mean line
     if cumulative_trial_numbers_for_plot:
-        plt.plot(cumulative_trial_numbers_for_plot, cumulative_means, marker='.', linestyle='-', color='orange', label='Cumulative Mean', zorder=10)
+        plt.plot(cumulative_trial_numbers_for_plot, cumulative_means, marker='.', linestyle='-', color='orange', label='Cumulative Mean (Successful Trials)', zorder=10) # Updated label
 
         # Shade the cumulative confidence interval band
         # Ensure CI bounds are numpy arrays for potential NaN handling if needed by fill_between
         ci_lowers_np = np.array(cumulative_ci_lowers)
         ci_uppers_np = np.array(cumulative_ci_uppers)
-        plt.fill_between(cumulative_trial_numbers_for_plot, ci_lowers_np, ci_uppers_np, color='palegreen', alpha=0.4, label='Cumulative 95% CI', zorder=0)
+        # Filter out NaN values before plotting CI band to avoid warnings/errors
+        valid_ci_indices = ~np.isnan(ci_lowers_np) & ~np.isnan(ci_uppers_np)
+        if np.any(valid_ci_indices):
+             plt.fill_between(np.array(cumulative_trial_numbers_for_plot)[valid_ci_indices],
+                              ci_lowers_np[valid_ci_indices],
+                              ci_uppers_np[valid_ci_indices],
+                              color='palegreen', alpha=0.4, label='Cumulative 95% CI (Successful Trials)', zorder=0) # Updated label
 
     plt.xlabel("Trial Number")
-    plt.ylabel("Number of Correction Iterations")
-    #plt.title(f"Cumulative Mean Iterations to Success for Solution '{solution_name}'\n({num_successful} Successful, {failed_trials} Failed out of {num_processed} Processed)")
+    plt.ylabel("Number of Correction Iterations to Success") # Updated label
+    plt.title(f"Cumulative Mean Iterations to Success for Solution '{solution_name}'\n({num_successful} Successful, {failed_trials} Failed out of {num_processed} Processed)")
     plt.xticks(trial_numbers_processed) # Ensure a tick for each processed trial
     plt.grid(axis='y', alpha=0.75)
-    plt.ylim(bottom=0) # Ensure y-axis starts at 0
+    # Ensure y-axis starts at 0 or slightly below if CI dips below
+    # Corrected calculation of min_y based on potentially empty or all-NaN CI arrays
+    min_ci_lower_val = np.nanmin(cumulative_ci_lowers) if cumulative_ci_lowers and not all(np.isnan(x) for x in cumulative_ci_lowers) else 0
+    min_y = min(0, min_ci_lower_val)
+    plt.ylim(bottom=min_y)
     plt.legend() # Show legend
 
     # Add text for failure count

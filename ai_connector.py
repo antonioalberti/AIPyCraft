@@ -4,6 +4,8 @@ import google.generativeai as genai
 import anthropic
 from dotenv import load_dotenv
 from decision import Decision # Import the new Decision class
+import concurrent.futures # For parallel API calls
+from typing import Callable, Tuple, Optional, Dict # For type hinting
 
 class AIConnector:
     def __init__(self):
@@ -130,8 +132,9 @@ class AIConnector:
 
         try:
             # Claude uses a 'system' prompt and a list of 'messages'
+            # Using the Haiku model as requested
             message = self.anthropic_client.messages.create(
-                model="claude-3-5-sonnet-20240620",
+                model="claude-3-haiku-20240307",
                 max_tokens=4096,  # Adjust as needed
                 temperature=1.0, # Adjust as needed
                 system=instructions,
@@ -155,73 +158,76 @@ class AIConnector:
             # Catch other potential exceptions
             raise RuntimeError(f"Error during Claude call: {e}") from e
 
+    def _call_api_wrapper(self, api_func: Callable[[str, str], str], model_name: str, instructions: str, prompt: str) -> Tuple[str, Optional[str]]:
+        """
+        Wrapper function to call an API, handle errors, and return result tuple.
+        Needed for use with ThreadPoolExecutor.
+        """
+        try:
+            print(f"{' ' * 20}Attempting {model_name} call...")
+            response = api_func(instructions, prompt)
+            print(f"{' ' * 20}{model_name} call successful.")
+            return model_name, response
+        except Exception as e:
+            print(f"{' ' * 20}Warning: {model_name} call failed in ensemble: {e}")
+            return model_name, None # Return None on failure
+
     def send_prompt_ensemble(self, instructions: str, prompt: str) -> str:
         """
-        Sends the prompt to OpenAI and Claude, then uses the Decision class
-        to evaluate and select/synthesize the best response using Gemini.
+        Sends the prompt to configured models (OpenAI, Claude) in parallel,
+        then uses the Decision class (Gemini) to evaluate available responses
+        or generate one if all others fail.
         """
-        response_openai = None
-        response_claude = None
-        openai_error = None
-        claude_error = None # Renamed from gemini_error
+        api_calls_to_make = []
 
-        # --- Call OpenAI ---
+        # --- Define potential API calls ---
         if openai.api_key:
-            try:
-                print(f"{' ' * 20}Attempting OpenAI call...")
-                response_openai = self.send_prompt_openai(instructions, prompt)
-                print(f"{' ' * 20}OpenAI call successful.")
-            except Exception as e:
-                openai_error = e
-                print(f"{' ' * 20}Warning: OpenAI call failed in ensemble: {e}")
+            api_calls_to_make.append((self.send_prompt_openai, "OpenAI"))
         else:
-            print(f"{' ' * 20}Warning: OpenAI API key not configured, skipping OpenAI call in ensemble.")
-            openai_error = RuntimeError("OpenAI API key not configured.")
+            print(f"{' ' * 20}Skipping OpenAI call (no API key).")
 
-        # --- Call Claude --- Changed from Gemini
         if self.anthropic_client:
-            try:
-                print(f"{' ' * 20}Attempting Claude call...")
-                response_claude = self._send_prompt_claude(instructions, prompt) # Use internal method
-                print(f"{' ' * 20}Claude call successful.")
-            except Exception as e:
-                claude_error = e
-                print(f"{' ' * 20}Warning: Claude call failed in ensemble: {e}")
+            api_calls_to_make.append((self._send_prompt_claude, "Claude (Haiku)"))
         else:
-            print(f"{' ' * 20}Warning: Anthropic client not configured, skipping Claude call in ensemble.")
-            claude_error = RuntimeError("Anthropic client not configured.")
+            print(f"{' ' * 20}Skipping Claude call (client not configured).")
 
-        # --- Handle API call failures --- Updated variable names
-        if response_openai is None and response_claude is None:
-            raise RuntimeError(f"Both OpenAI and Claude calls failed or were skipped. OpenAI Error: {openai_error}, Claude Error: {claude_error}")
-        elif response_openai is None:
-            print(f"{' ' * 20}Warning: OpenAI failed or skipped, returning Claude response directly.")
-            # Ensure response_claude is not None before returning
-            if response_claude is None:
-                 raise RuntimeError(f"OpenAI failed/skipped, and Claude also failed. Claude Error: {claude_error}")
-            # Return the raw Claude response directly
-            return response_claude
-        elif response_claude is None:
-            print(f"{' ' * 20}Warning: Claude failed or skipped, returning OpenAI response directly.")
-             # Ensure response_openai is not None before returning
-            if response_openai is None:
-                 raise RuntimeError(f"Claude failed/skipped, and OpenAI also failed. OpenAI Error: {openai_error}")
-            # Return the raw OpenAI response directly
-            return response_openai
+        # --- Execute calls in parallel ---
+        results_dict: Dict[str, Optional[str]] = {}
+        if not api_calls_to_make:
+             print(f"{' ' * 20}Warning: No APIs configured or available to call in ensemble.")
+             # Proceed directly to decision maker which will use Gemini as generator
+        else:
+            # Use max_workers=len(api_calls_to_make) to run all in parallel
+            with concurrent.futures.ThreadPoolExecutor(max_workers=len(api_calls_to_make)) as executor:
+                # Prepare futures
+                futures = [
+                    executor.submit(self._call_api_wrapper, api_func, model_name, instructions, prompt)
+                    for api_func, model_name in api_calls_to_make
+                ]
+                # Collect results as they complete
+                for future in concurrent.futures.as_completed(futures):
+                    try:
+                        model_name, response = future.result()
+                        results_dict[model_name] = response
+                    except Exception as exc:
+                        # This shouldn't happen often as _call_api_wrapper catches errors,
+                        # but good practice to handle future exceptions.
+                        print(f"{' ' * 20}Error retrieving result from future: {exc}")
+                        # We don't know which model failed here easily without more complex tracking,
+                        # but results_dict will simply lack an entry or have None.
 
-        # --- If both succeeded, proceed to evaluation using Decision class ---
+        # --- Proceed to evaluation using Decision class (Gemini) ---
+        # The decision maker now expects a dictionary and handles None values or empty dict.
+        print(f"{' ' * 20}Proceeding to Gemini evaluation/generation with results: { {k: ('<response>' if v else None) for k, v in results_dict.items()} }") # Avoid printing full responses
         try:
             final_response = self.decision_maker.evaluate_and_select(
                 instructions=instructions,
                 prompt=prompt,
-                response_a=response_openai,
-                response_b=response_claude,
-                model_a_name="OpenAI",
-                model_b_name="Claude"
+                responses=results_dict # Pass the dictionary
             )
-            # Return the response selected/synthesized by the Decision maker
+            # Return the response selected/synthesized/generated by the Decision maker (Gemini)
             return final_response
         except Exception as e:
-            # The evaluate_and_select method already prints an error message.
+            # The evaluate_and_select method already prints its specific error.
             # Re-raise the exception caught from the decision maker.
-            raise RuntimeError(f"Decision evaluation failed in ensemble: {e}") from e
+            raise RuntimeError(f"Decision evaluation/generation failed in ensemble: {e}") from e

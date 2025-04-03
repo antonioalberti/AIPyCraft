@@ -5,6 +5,7 @@ import time
 import os
 import argparse # Import argparse
 import datetime # Import datetime
+import re # Import re for cleaning ANSI codes
 from colorama import init, Fore, Style # Import colorama
 init(autoreset=True) # Initialize colorama
 
@@ -223,26 +224,39 @@ def main(loop_count, run_id, solution_name_arg): # Add solution_name_arg paramet
             child.sendline(inputs[16])
             print(Fore.MAGENTA + f"WAIT: Waiting {EXECUTION_WAIT_TIME}s for execution (Run Loop {loop_num})...")
 
-            # --- Check for Success or Next Prompt ---
-            # Use the solution name passed as an argument for the success check
-            success_pattern = rf"Solution '{solution_name_arg}' completed with status: SUCCESS"
-            print(Fore.CYAN + f"\nEXPECT: Success Message ('{success_pattern}') OR Main Menu Choice (after Run Loop {loop_num})")
+            # --- Check for Success by expecting the menu prompt and then checking the buffer ---
+            # CORRECTED: Match the exact string printed by solution_runner.py to stdout
+            success_pattern_string = "Solution completed with status: SUCCESS"
+            print(Fore.CYAN + f"\nEXPECT: Main Menu Choice (after Run Loop {loop_num})")
 
             try:
-                # Expect either the success message or the main menu prompt
-                index = child.expect([success_pattern, PROMPT_CHOICE], timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
+                # Expect the main menu prompt to ensure the run cycle finished
+                child.expect(PROMPT_CHOICE, timeout=EXECUTION_WAIT_TIME + TIMEOUT_SECONDS)
 
-                if index == 0: # Success pattern matched
-                    print(Fore.GREEN + f"\nSUCCESS: Solution '{solution_name_arg}' completed successfully. Stopping loop.")
-                    log_file.write(f"\n--- Solution '{solution_name_arg}' completed successfully. Stopping loop. ---\n") # Log success and stop
+                # Get the buffer content before the prompt
+                buffer_content = child.before
+
+                # Clean ANSI escape codes from the buffer
+                ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+                cleaned_buffer = ansi_escape.sub('', buffer_content)
+
+                # Check if the exact success message exists in the cleaned buffer, ignoring leading/trailing whitespace
+                if success_pattern_string in cleaned_buffer.strip():
+                    print(Fore.GREEN + f"\nSUCCESS: Detected '{success_pattern_string}' in cleaned output. Stopping loop.")
+                    # Log the specific solution name for clarity
+                    log_file.write(f"\n--- Solution '{solution_name_arg}' completed successfully (Detected: '{success_pattern_string}' in cleaned buffer). Stopping loop. ---\n")
                     break # Exit the loop
-                elif index == 1: # Main menu prompt matched
-                    print(Fore.CYAN + f"INFO: Solution run finished (not SUCCESS for '{solution_name_arg}'). Continuing loop.")
+                else:
+                    # Success message not found before the menu prompt
+                    print(Fore.CYAN + f"INFO: Solution run finished (Exact SUCCESS message not detected in cleaned buffer for '{solution_name_arg}'). Continuing loop.")
+                    # Optional: Log the cleaned buffer for debugging if needed
+                    # log_file.write(f"\n--- DEBUG: Cleaned buffer did not contain success message ---\n{cleaned_buffer.strip()}\n---------------------------------------------------\n")
                     # No action needed, loop continues
+
             except pexpect.TIMEOUT:
-                 print(Fore.YELLOW + f"\nTIMEOUT: Waiting for success message or main menu after run in loop {loop_num}. Continuing loop.")
+                 print(Fore.YELLOW + f"\nTIMEOUT: Waiting for main menu after run in loop {loop_num}. Continuing loop.")
                  # Log timeout but continue loop as per requirement (stop only on SUCCESS)
-                 log_file.write(f"\n--- TIMEOUT waiting for run result in loop {loop_num}. Continuing loop. ---\n")
+                 log_file.write(f"\n--- TIMEOUT waiting for main menu after run in loop {loop_num}. Continuing loop. ---\n")
             except pexpect.EOF:
                  print(Fore.RED + f"\nEOF: Process ended unexpectedly after run in loop {loop_num}.")
                  raise # Re-raise EOF to be caught by the main handler
