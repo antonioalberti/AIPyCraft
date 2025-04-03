@@ -39,11 +39,13 @@ class AIConnector:
         self.decision_maker = Decision(self)
 
     def send_prompt_openai(self, instructions: str, prompt: str) -> str:
+        model_name = "gpt-4o" # Define model name
         if not openai.api_key:
              raise RuntimeError("OpenAI API key is not configured.")
         try:
+            print(f"{' ' * 20}Calling OpenAI model: {model_name}") # Log model name
             response = openai.ChatCompletion.create(
-                model="gpt-4o",            # The underlying model
+                model=model_name,            # Use variable
                 messages=[
                     {"role": "system", "content": instructions},
                     {"role": "user", "content": prompt}
@@ -72,7 +74,9 @@ class AIConnector:
             # Select the Gemini model
             # Use 'gemini-1.5-pro-latest' or a specific version like 'gemini-1.5-pro-001'
             # Updated model name as requested:
-            model = genai.GenerativeModel('gemini-2.5-pro-exp-03-25')
+            model_identifier = 'gemini-2.5-pro-exp-03-25'
+            model = genai.GenerativeModel(model_identifier)
+            print(f"{' ' * 20}Calling Gemini model: {model_identifier}") # Log model name
 
             # Generation configuration (optional, adjust as needed)
             generation_config = genai.types.GenerationConfig(
@@ -118,11 +122,13 @@ class AIConnector:
 
     def _send_prompt_openai_gpt35(self, instructions: str, prompt: str) -> str:
         """Internal method to send a prompt to OpenAI GPT-3.5 Turbo."""
+        model_name = "gpt-3.5-turbo" # Define model name
         if not openai.api_key:
              raise RuntimeError("OpenAI API key is not configured.")
         try:
+            print(f"{' ' * 20}Calling OpenAI model: {model_name}") # Log model name
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo", # Using GPT-3.5 Turbo
+                model=model_name, # Use variable
                 messages=[
                     {"role": "system", "content": instructions},
                     {"role": "user", "content": prompt}
@@ -144,13 +150,15 @@ class AIConnector:
         Wrapper function to call an API, handle errors, and return result tuple.
         Needed for use with ThreadPoolExecutor.
         """
+        # Model name is already passed in, use it in prints
         try:
-            print(f"{' ' * 20}Attempting {model_name} call...")
+            # The actual call inside api_func will print the specific model now
+            print(f"{' ' * 20}Attempting call via wrapper for: {model_name}")
             response = api_func(instructions, prompt)
-            print(f"{' ' * 20}{model_name} call successful.")
+            print(f"{' ' * 20}Call successful via wrapper for: {model_name}")
             return model_name, response
         except Exception as e:
-            print(f"{' ' * 20}Warning: {model_name} call failed in ensemble: {e}")
+            print(f"{' ' * 20}Warning: Call failed via wrapper for {model_name}: {e}")
             return model_name, None # Return None on failure
 
     def send_prompt_ensemble(self, instructions: str, prompt: str) -> str:
@@ -162,18 +170,19 @@ class AIConnector:
         api_calls_to_make = []
 
         # --- Define potential API calls ---
+        # Pass more specific names to the wrapper
         if openai.api_key:
-            api_calls_to_make.append((self.send_prompt_openai, "OpenAI"))
+            api_calls_to_make.append((self.send_prompt_openai, "OpenAI (gpt-4o)"))
         else:
-            print(f"{' ' * 20}Skipping OpenAI call (no API key).")
+            print(f"{' ' * 20}Skipping OpenAI (gpt-4o) call (no API key).")
 
         # Add call to GPT-3.5 if API key is present
         if openai.api_key:
-            api_calls_to_make.append((self._send_prompt_openai_gpt35, "OpenAI (GPT-3.5)"))
+            api_calls_to_make.append((self._send_prompt_openai_gpt35, "OpenAI (gpt-3.5-turbo)"))
         else:
             # This condition might be redundant if the first check already skipped OpenAI entirely,
             # but it's safe to leave for clarity or future changes.
-            print(f"{' ' * 20}Skipping OpenAI GPT-3.5 call (no API key).")
+            print(f"{' ' * 20}Skipping OpenAI (gpt-3.5-turbo) call (no API key).")
 
         # Removed Claude call section
 

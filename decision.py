@@ -41,20 +41,25 @@ class Decision:
         num_valid_responses = len(valid_responses)
         models_involved = list(valid_responses.keys())
 
+        # Define the Gemini model used for decision making/generation
+        decision_model_name = "Gemini (gemini-2.5-pro-exp-03-25)" # Match the one in ai_connector.py
+
         # --- Case 1: No valid responses, use Gemini as generator ---
         if num_valid_responses == 0:
-            print(f"{' ' * 20}No valid initial responses received. Using Gemini to generate directly.")
+            print(f"{' ' * 20}No valid initial responses received. Using {decision_model_name} to generate directly.")
             try:
                 # Call Gemini with original instructions and prompt
+                # The send_prompt_gemini function itself now logs the model being called
                 final_response = self.ai_connector.send_prompt_gemini(instructions, prompt)
-                print(f"{' ' * 20}Gemini direct generation successful.")
+                print(f"{' ' * 20}{decision_model_name} direct generation successful.")
                 return final_response
             except Exception as e:
-                print(f"{' ' * 20}Error during Gemini direct generation: {e}. Raising error.")
+                print(f"{' ' * 20}Error during {decision_model_name} direct generation: {e}. Raising error.")
                 raise RuntimeError(f"Gemini direct generation call failed: {e}") from e
 
         # --- Case 2: One or more valid responses, use Gemini as evaluator/synthesizer ---
-        print(f"{' ' * 20}Received {num_valid_responses} valid response(s) from: {', '.join(models_involved)}. Proceeding to Gemini evaluation.")
+        # decision_model_name is already defined above
+        print(f"{' ' * 20}Received {num_valid_responses} valid response(s) from: {', '.join(models_involved)}. Proceeding to {decision_model_name} evaluation.")
 
         available_responses_text = ""
         for name, text in valid_responses.items():
@@ -87,13 +92,20 @@ Available Responses:
 {evaluation_task}"""
 
         try:
-            print(f"{' ' * 20}Attempting Gemini evaluation call with {num_valid_responses} response(s)...")
+            # decision_model_name is already defined above
+            print(f"{' ' * 20}Attempting {decision_model_name} evaluation call with {num_valid_responses} response(s)...")
             # Use the AIConnector's send_prompt_gemini for the evaluation
+            # The send_prompt_gemini function itself now logs the model being called
             final_response = self.ai_connector.send_prompt_gemini(evaluation_instructions, evaluation_prompt)
-            print(f"{' ' * 20}Gemini evaluation successful.")
+            print(f"{' ' * 20}{decision_model_name} evaluation successful.")
             # Return the raw response from Gemini evaluation directly.
+
+            print(f"{' ' * 20}Available responses provided to {decision_model_name}: {available_responses_text.strip()}")
+            print(f"{' ' * 20}Final response chosen/synthesized by {decision_model_name}: {final_response}")
+
             return final_response
         except Exception as e:
             # If evaluation fails, raise an error.
-            print(f"{' ' * 20}Error during Gemini evaluation: {e}. Raising error.")
+            # decision_model_name is already defined above
+            print(f"{' ' * 20}Error during {decision_model_name} evaluation: {e}. Raising error.")
             raise RuntimeError(f"Gemini evaluation call failed in ensemble: {e}") from e
