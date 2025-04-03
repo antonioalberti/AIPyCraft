@@ -1,7 +1,7 @@
 import os
 import openai
 import google.generativeai as genai
-import anthropic
+# Removed: import anthropic
 from dotenv import load_dotenv
 from decision import Decision # Import the new Decision class
 import concurrent.futures # For parallel API calls
@@ -33,17 +33,7 @@ class AIConnector:
                  # Decide if you want to raise an error or just warn:
                  # raise RuntimeError(f"Failed to configure Gemini API: {e}") from e
 
-        # Configure Anthropic
-        self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
-        if not self.anthropic_api_key:
-            print(f"{' ' * 20}Warning: Anthropic API key not found in 'ANTHROPIC_API_KEY' environment variable. Claude calls will fail.")
-            self.anthropic_client = None
-        else:
-            try:
-                self.anthropic_client = anthropic.Anthropic(api_key=self.anthropic_api_key)
-            except Exception as e:
-                print(f"{' ' * 20}Warning: Failed to configure Anthropic API: {e}. Claude calls may fail.")
-                self.anthropic_client = None
+        # Removed Anthropic configuration
 
         # Instantiate the Decision maker
         self.decision_maker = Decision(self)
@@ -126,38 +116,28 @@ class AIConnector:
             # Catch specific Gemini exceptions if known, otherwise general Exception
             raise RuntimeError(f"Gemini API error: {e}") from e
 
-    def _send_prompt_claude(self, instructions: str, prompt: str) -> str:
-        """Internal method to send a prompt to the Anthropic Claude API."""
-        if not self.anthropic_client:
-             raise RuntimeError("Anthropic client is not configured.")
-
+    def _send_prompt_openai_gpt35(self, instructions: str, prompt: str) -> str:
+        """Internal method to send a prompt to OpenAI GPT-3.5 Turbo."""
+        if not openai.api_key:
+             raise RuntimeError("OpenAI API key is not configured.")
         try:
-            # Claude uses a 'system' prompt and a list of 'messages'
-            # Using the Haiku model as requested
-            message = self.anthropic_client.messages.create(
-                model="claude-3-haiku-20240307",
-                max_tokens=4096,  # Adjust as needed
-                temperature=1.0, # Adjust as needed
-                system=instructions,
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo", # Using GPT-3.5 Turbo
                 messages=[
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ]
+                    {"role": "system", "content": instructions},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=1,
+                max_tokens=4096, # Adjust if needed for GPT-3.5
+                n=1
             )
-            # Extract the text content from the response
-            if message.content and isinstance(message.content, list) and hasattr(message.content[0], 'text'):
-                 return message.content[0].text.strip()
-            else:
-                 # Handle cases where the response might be empty or structured differently
-                 raise RuntimeError("Claude response format unexpected or empty.")
-
-        except anthropic.APIError as e:
-            raise RuntimeError(f"Anthropic API error: {e}") from e
+            answer = response.choices[0].message["content"]
+            return answer.strip()
+        except openai.OpenAIError as e:
+            raise RuntimeError(f"OpenAI GPT-3.5 error: {e}") from e
         except Exception as e:
             # Catch other potential exceptions
-            raise RuntimeError(f"Error during Claude call: {e}") from e
+            raise RuntimeError(f"Error during OpenAI GPT-3.5 call: {e}") from e
 
     def _call_api_wrapper(self, api_func: Callable[[str, str], str], model_name: str, instructions: str, prompt: str) -> Tuple[str, Optional[str]]:
         """
@@ -187,10 +167,15 @@ class AIConnector:
         else:
             print(f"{' ' * 20}Skipping OpenAI call (no API key).")
 
-        if self.anthropic_client:
-            api_calls_to_make.append((self._send_prompt_claude, "Claude (Haiku)"))
+        # Add call to GPT-3.5 if API key is present
+        if openai.api_key:
+            api_calls_to_make.append((self._send_prompt_openai_gpt35, "OpenAI (GPT-3.5)"))
         else:
-            print(f"{' ' * 20}Skipping Claude call (client not configured).")
+            # This condition might be redundant if the first check already skipped OpenAI entirely,
+            # but it's safe to leave for clarity or future changes.
+            print(f"{' ' * 20}Skipping OpenAI GPT-3.5 call (no API key).")
+
+        # Removed Claude call section
 
         # --- Execute calls in parallel ---
         results_dict: Dict[str, Optional[str]] = {}

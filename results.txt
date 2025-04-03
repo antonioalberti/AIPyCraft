@@ -1,268 +1,301 @@
-Trial 1 (tester_run_20250403_121726_run1.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 375): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 655): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 935): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [example-bridge], exists []"}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 1215): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 1495): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 1775): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"encode_log\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 2055): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 2335): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 2615): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 2895): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 3175): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 3455): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethbytes32\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 3735): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 4015): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethbytes32\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 4295): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 4575): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 4855): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 5135): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethbytes32\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 5415): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 1 (tester_run_20250403_121726_run1.log - Line 5695): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethbytes32\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 649): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 925): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"console\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 1201): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 1477): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 1753): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 2029): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [store_bridge], exists []"}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 2305): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 2581): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 2857): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 3133): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 3411): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethbytes32store\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 3689): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 3965): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"terminal\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 4243): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethbytes32\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 4521): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 4797): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 5073): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 5349): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"stdlib\""}]}
-Trial 2 (tester_run_20250403_121959_run2.log - Line 5625): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"finenavelog\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 649): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 925): Job run failed with fatalErrors: ['task inputs: too many errors']
-Trial 3 (tester_run_20250403_122230_run3.log - Line 1201): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 1477): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"debug\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 1753): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [local_bridge], exists []"}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 2029): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"stdout\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 2305): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 2581): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"terminal\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 2857): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 3133): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 3409): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [test], exists []"}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 3685): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 3961): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 4237): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 4513): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 4789): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 5065): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 5341): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"terminal\""}]}
-Trial 3 (tester_run_20250403_122230_run3.log - Line 5617): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [printer], exists []"}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 649): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 925): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:60: error: expected id; got: \"{\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 1201): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 1477): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 1753): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 2029): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [debug], exists []"}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 2305): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 2581): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [test], exists []"}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 2857): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 3133): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 3409): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 3685): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [logger], exists []"}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 3961): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:25: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 4237): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 4513): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 4789): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 5065): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 5341): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 4 (tester_run_20250403_122503_run4.log - Line 5617): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 649): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 925): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 1201): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"debug\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 1477): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 1753): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 2029): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:50: error: expected id; got: \"{\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 2305): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 2581): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 2857): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"terminal\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 3133): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 3409): Job run failed with fatalErrors: ['data: expected array of bytes, got decimal.Decimal: bad input for task']
-Trial 5 (tester_run_20250403_122730_run5.log - Line 3685): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"dagparams\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 3961): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 4237): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 4513): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 4789): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 5065): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 5341): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 5 (tester_run_20250403_122730_run5.log - Line 5617): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 375): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 655): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 935): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 1215): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:46: error: expected id; got: \"{\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 1495): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:46: error: expected id; got: \"{\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 1775): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:46: error: expected id; got: \"{\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 2055): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:46: error: expected id; got: \"{\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 2335): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 2615): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [print], exists []"}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 2895): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 3175): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [stdout], exists []"}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 3455): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 3735): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 4015): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 4295): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 4575): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 4855): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 5135): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 5415): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 6 (tester_run_20250403_122953_run6.log - Line 5695): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 371): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 643): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 915): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 1187): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 1459): Job run failed with fatalErrors: ['data: VarExpr: input: VarExpr: data: index out of range: too many errors: too many errors', None]
-Trial 7 (tester_run_20250403_123222_run7.log - Line 1731): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 2003): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 2275): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:19: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \"/l\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 2545): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 2:74: error: expected \"=\"; got: \"\\\" method=GET url=\\\"\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 2815): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core/log\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 3087): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 3359): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core/printf\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 3631): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core/log\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 3903): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 4175): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 4447): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 4719): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 4991): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core/log\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 5263): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 7 (tester_run_20250403_123222_run7.log - Line 5535): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core/printf\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 649): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 925): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 1201): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [print], exists []"}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 1477): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 1753): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethbytes32\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 2029): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 2305): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 2581): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:30: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 2857): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:30: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 3133): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:30: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 3409): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:30: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 3685): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:30: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 3961): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:30: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 4237): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 4513): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 4789): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 5065): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 5343): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 8 (tester_run_20250403_123504_run8.log - Line 5623): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 649): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 925): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethlog\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 1201): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 1477): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 1753): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"stdlib\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 2029): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 2305): Job run failed with fatalErrors: ['task inputs: too many errors']
-Trial 9 (tester_run_20250403_123735_run9.log - Line 2583): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (9, 1): invalid escape sequence: \\{"}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 2863): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 3143): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 3423): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [printer], exists []"}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 3703): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 3983): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethbytes32\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 4261): Job run failed with fatalErrors: ['task inputs: too many errors']
-Trial 9 (tester_run_20250403_123735_run9.log - Line 4539): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 4819): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 5099): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 5379): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [local_log], exists []"}]}
-Trial 9 (tester_run_20250403_123735_run9.log - Line 5659): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 649): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 925): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:9: error: expected one of \"{\", \"}\", graphx, \";\", \"--\", \"-\u003e\", node, edge, \"[\", \"=\", subgraph, \":\", or id; got: unknown/invalid token \".l\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 1201): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \"/l\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 1477): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \"/l\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 1753): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:20: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \"/l\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 2031): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:19: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \"/l\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 2311): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:19: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \"/l\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 2591): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:19: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \"/l\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 2871): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:23: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \"/l\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 3151): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core/log\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 3431): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 3711): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethbytes32\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 3991): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 4271): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 4551): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 4831): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 5111): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 5391): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 10 (tester_run_20250403_124003_run10.log - Line 5671): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core/log\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 649): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethbytes32\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 925): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 1201): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"terminal\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 1477): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 1753): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 2029): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 2305): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 2581): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 2857): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:24: error: expected one of \";\", \"]\", \",\", or id; got: unknown/invalid token \".l\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 3133): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"debug\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 3409): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 3685): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 3961): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 4237): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 4513): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 4789): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"debug\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 5065): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"corelog\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 5343): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 11 (tester_run_20250403_124233_run11.log - Line 5623): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 649): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [debug], exists []"}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 925): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 1201): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 1477): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"terminal\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 1753): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 2029): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 2305): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 2581): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 2857): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 3133): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"coreadapter\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 3409): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"stdlib\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 3689): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 6:33: error: expected \"=\"; got: \"name\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 3969): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"core\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 4245): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 4521): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"print\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 4797): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 5073): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 5349): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 12 (tester_run_20250403_124457_run12.log - Line 5625): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 387): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: pipeline spec not specified"}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 697): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: pipeline spec not specified"}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 991): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 1263): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:32: error: expected id; got: \"[\""}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 1535): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 1807): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 2079): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 2351): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [local_test_bridge], exists []"}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 2623): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 2895): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 3167): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 3439): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 3711): Job run failed with fatalErrors: ['evmChainID: key jobSpec (segment 0 in keypath jobSpec.evmChainID): keypath not found', 'data: index out of range', "input: can't convert json_parse to decimal: exponent is not numeric: bad input for task", None]
-Trial 13 (tester_run_20250403_124726_run13.log - Line 3983): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
-Trial 13 (tester_run_20250403_124726_run13.log - Line 4255): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 1 (tester_run_20250403_130337_run1.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 1 (tester_run_20250403_130337_run1.log - Line 375): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 1 (tester_run_20250403_130337_run1.log - Line 655): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 375): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 653): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 2 (tester_run_20250403_130438_run2.log - Line 929): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 2 (tester_run_20250403_130438_run2.log - Line 1207): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 1485): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 2 (tester_run_20250403_130438_run2.log - Line 1761): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 2 (tester_run_20250403_130438_run2.log - Line 2037): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 2 (tester_run_20250403_130438_run2.log - Line 2315): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (9, 1): invalid escape sequence: \\$"}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 2595): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"cache\""}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 2875): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 3155): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 3435): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 3715): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 3995): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 4275): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 4555): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"monitor\""}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 4833): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 2 (tester_run_20250403_130438_run2.log - Line 5111): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 2 (tester_run_20250403_130438_run2.log - Line 5389): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 2 (tester_run_20250403_130438_run2.log - Line 5667): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 3 (tester_run_20250403_131242_run3.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 3 (tester_run_20250403_131242_run3.log - Line 369): Job run failed with fatalErrors: ['input: VarExpr: data: index out of range: too many errors', None]
+Trial 3 (tester_run_20250403_131242_run3.log - Line 639): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 3 (tester_run_20250403_131242_run3.log - Line 909): Job run failed with fatalErrors: ['input: VarExpr: data: index out of range: too many errors', None]
+Trial 3 (tester_run_20250403_131242_run3.log - Line 1177): Job run failed with fatalErrors: ['input: VarExpr: data: index out of range: too many errors', None]
+Trial 3 (tester_run_20250403_131242_run3.log - Line 1447): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"plog\""}]}
+Trial 3 (tester_run_20250403_131242_run3.log - Line 1719): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 3 (tester_run_20250403_131242_run3.log - Line 1991): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 3 (tester_run_20250403_131242_run3.log - Line 2261): Job run failed with fatalErrors: ['input: VarExpr: data: index out of range: too many errors', None]
+Trial 3 (tester_run_20250403_131242_run3.log - Line 2529): Job run failed with fatalErrors: ['input: index out of range', 'data: index out of range', None]
+Trial 3 (tester_run_20250403_131242_run3.log - Line 2799): Job run failed with fatalErrors: ['data: index out of range', 'data: error is not allowed: input: index out of range: bad input for task', None]
+Trial 3 (tester_run_20250403_131242_run3.log - Line 3073): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 3 (tester_run_20250403_131242_run3.log - Line 3349): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 3 (tester_run_20250403_131242_run3.log - Line 3625): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 3 (tester_run_20250403_131242_run3.log - Line 3903): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 3 (tester_run_20250403_131242_run3.log - Line 4181): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 3 (tester_run_20250403_131242_run3.log - Line 4459): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:34: error: expected id; got: \"{\""}]}
+Trial 3 (tester_run_20250403_131242_run3.log - Line 4739): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
+Trial 3 (tester_run_20250403_131242_run3.log - Line 5019): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 3 (tester_run_20250403_131242_run3.log - Line 5299): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 3 (tester_run_20250403_131242_run3.log - Line 5579): Job run failed with fatalErrors: ['Number of faulty inputs 1 to median task > number allowed faults 0: too many errors']
+Trial 4 (tester_run_20250403_132135_run4.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"debug\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 649): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 923): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 4 (tester_run_20250403_132135_run4.log - Line 1197): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 1473): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 1749): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 2025): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 2301): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 2575): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 4 (tester_run_20250403_132135_run4.log - Line 2849): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"store\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 3123): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 4 (tester_run_20250403_132135_run4.log - Line 3397): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 3673): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 3949): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 4223): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 4 (tester_run_20250403_132135_run4.log - Line 4497): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 4773): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 5045): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 4 (tester_run_20250403_132135_run4.log - Line 5319): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 4 (tester_run_20250403_132135_run4.log - Line 5591): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 5 (tester_run_20250403_132919_run5.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 5 (tester_run_20250403_132919_run5.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 5 (tester_run_20250403_132919_run5.log - Line 649): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 5 (tester_run_20250403_132919_run5.log - Line 925): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 5 (tester_run_20250403_132919_run5.log - Line 1201): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 371): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"store\""}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 643): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 913): Job run failed with fatalErrors: ['input: index out of range', 'data: index out of range', None]
+Trial 6 (tester_run_20250403_133105_run6.log - Line 1183): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"stdout\""}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 1455): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 1729): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 6 (tester_run_20250403_133105_run6.log - Line 2007): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 2287): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 2567): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 2847): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"console\""}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 3127): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 3405): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 6 (tester_run_20250403_133105_run6.log - Line 3683): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 3961): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 6 (tester_run_20250403_133105_run6.log - Line 4237): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 6 (tester_run_20250403_133105_run6.log - Line 4515): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"result\""}]}
+Trial 6 (tester_run_20250403_133105_run6.log - Line 4793): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 7 (tester_run_20250403_133802_run7.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 7 (tester_run_20250403_133802_run7.log - Line 369): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (9, 10): was expecting token =, but got \"[\" instead"}]}
+Trial 7 (tester_run_20250403_133802_run7.log - Line 641): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (7, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 7 (tester_run_20250403_133802_run7.log - Line 917): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (7, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"eth\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 649): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 931): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 8 (tester_run_20250403_133934_run8.log - Line 1215): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 5:86: error: expected id; got: \"[\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 1493): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 8 (tester_run_20250403_133934_run8.log - Line 1771): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 2049): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 8 (tester_run_20250403_133934_run8.log - Line 2327): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 2607): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 2887): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 3165): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 8 (tester_run_20250403_133934_run8.log - Line 3443): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [noop], exists []"}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 3723): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"answer\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 4003): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 4281): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 8 (tester_run_20250403_133934_run8.log - Line 4559): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 4837): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 8 (tester_run_20250403_133934_run8.log - Line 5115): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 5395): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 8 (tester_run_20250403_133934_run8.log - Line 5675): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 375): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 655): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 935): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 1213): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 9 (tester_run_20250403_134708_run9.log - Line 1491): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 1771): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethuint256\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 2049): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 9 (tester_run_20250403_134708_run9.log - Line 2327): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 2607): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"copy\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 2885): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 9 (tester_run_20250403_134708_run9.log - Line 3163): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 3443): Job run failed with fatalErrors: ['task value missing: too many errors']
+Trial 9 (tester_run_20250403_134708_run9.log - Line 3723): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 4003): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"debug\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 4283): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [noop], exists []"}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 4563): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 4841): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 9 (tester_run_20250403_134708_run9.log - Line 5119): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 5399): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 9 (tester_run_20250403_134708_run9.log - Line 5679): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"stdout\""}]}
+Trial 10 (tester_run_20250403_135427_run10.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 10 (tester_run_20250403_135427_run10.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"result\""}]}
+Trial 11 (tester_run_20250403_135518_run11.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 11 (tester_run_20250403_135518_run11.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 11 (tester_run_20250403_135518_run11.log - Line 647): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 11 (tester_run_20250403_135518_run11.log - Line 923): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 11 (tester_run_20250403_135518_run11.log - Line 1203): Job run failed with fatalErrors: ['Number of faulty inputs 1 to median task > number allowed faults 0: too many errors']
+Trial 11 (tester_run_20250403_135518_run11.log - Line 1483): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 11 (tester_run_20250403_135518_run11.log - Line 1761): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 11 (tester_run_20250403_135518_run11.log - Line 2039): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 11 (tester_run_20250403_135518_run11.log - Line 2317): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 11 (tester_run_20250403_135518_run11.log - Line 2595): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"debug\""}]}
+Trial 11 (tester_run_20250403_135518_run11.log - Line 2875): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 11 (tester_run_20250403_135518_run11.log - Line 3153): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 11 (tester_run_20250403_135518_run11.log - Line 3431): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 11 (tester_run_20250403_135518_run11.log - Line 3709): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 11 (tester_run_20250403_135518_run11.log - Line 3985): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 11 (tester_run_20250403_135518_run11.log - Line 4259): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 11 (tester_run_20250403_135518_run11.log - Line 4537): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 11 (tester_run_20250403_135518_run11.log - Line 4817): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 11 (tester_run_20250403_135518_run11.log - Line 5095): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 11 (tester_run_20250403_135518_run11.log - Line 5377): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (10, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 12 (tester_run_20250403_140344_run12.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 12 (tester_run_20250403_140344_run12.log - Line 375): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 12 (tester_run_20250403_140344_run12.log - Line 655): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 12 (tester_run_20250403_140344_run12.log - Line 935): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 12 (tester_run_20250403_140344_run12.log - Line 1215): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 12 (tester_run_20250403_140344_run12.log - Line 1495): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 12 (tester_run_20250403_140344_run12.log - Line 1775): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 649): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 13 (tester_run_20250403_140604_run13.log - Line 927): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 1207): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 1485): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 13 (tester_run_20250403_140604_run13.log - Line 1763): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 2043): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"nop\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 2323): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 2601): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 13 (tester_run_20250403_140604_run13.log - Line 2879): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 3159): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"stdout\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 3439): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 3719): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 3999): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 4277): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 13 (tester_run_20250403_140604_run13.log - Line 4553): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 13 (tester_run_20250403_140604_run13.log - Line 4831): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 5111): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 5391): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 13 (tester_run_20250403_140604_run13.log - Line 5669): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 14 (tester_run_20250403_141301_run14.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 647): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 14 (tester_run_20250403_141301_run14.log - Line 921): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 1197): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 1471): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 14 (tester_run_20250403_141301_run14.log - Line 1745): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 2021): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 2295): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 14 (tester_run_20250403_141301_run14.log - Line 2569): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 2843): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 14 (tester_run_20250403_141301_run14.log - Line 3117): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 3393): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"stdout\""}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 3669): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 3945): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 4221): Job run failed with fatalErrors: ['Number of faulty inputs 1 to median task > number allowed faults 0: too many errors']
+Trial 14 (tester_run_20250403_141301_run14.log - Line 4497): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [log], exists []"}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 4773): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 5049): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 14 (tester_run_20250403_141301_run14.log - Line 5323): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 14 (tester_run_20250403_141301_run14.log - Line 5597): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 649): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 925): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: could not unmarshal DOT into a pipeline.Graph: 4:44: error: expected id; got: unknown/invalid token \"$\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 1203): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 1483): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 1763): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 2041): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 15 (tester_run_20250403_142005_run15.log - Line 2319): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 2597): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 15 (tester_run_20250403_142005_run15.log - Line 2875): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 3155): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 3433): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 15 (tester_run_20250403_142005_run15.log - Line 3711): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 15 (tester_run_20250403_142005_run15.log - Line 3991): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 4271): Job run failed with fatalErrors: ['values: VarExpr: task inputs: too many errors: too many errors']
+Trial 15 (tester_run_20250403_142005_run15.log - Line 4551): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 4831): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"jsonencode\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 5111): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 15 (tester_run_20250403_142005_run15.log - Line 5389): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 15 (tester_run_20250403_142005_run15.log - Line 5667): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"store\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 649): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 16 (tester_run_20250403_142718_run16.log - Line 927): Job run failed with fatalErrors: ['Number of faulty inputs 1 to median task > number allowed faults 0: too many errors']
+Trial 16 (tester_run_20250403_142718_run16.log - Line 1207): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"cache\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 1487): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 1767): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 2047): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"value\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 2325): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 16 (tester_run_20250403_142718_run16.log - Line 2603): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"store\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 2883): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 3159): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 3439): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 3719): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 3997): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 16 (tester_run_20250403_142718_run16.log - Line 4275): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 4553): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 16 (tester_run_20250403_142718_run16.log - Line 4829): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 16 (tester_run_20250403_142718_run16.log - Line 5107): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"abiencode\""}]}
+Trial 16 (tester_run_20250403_142718_run16.log - Line 5385): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 16 (tester_run_20250403_142718_run16.log - Line 5661): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 17 (tester_run_20250403_143515_run17.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 17 (tester_run_20250403_143515_run17.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 17 (tester_run_20250403_143515_run17.log - Line 649): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 18 (tester_run_20250403_143619_run18.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 18 (tester_run_20250403_143619_run18.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 18 (tester_run_20250403_143619_run18.log - Line 647): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 18 (tester_run_20250403_143619_run18.log - Line 921): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 18 (tester_run_20250403_143619_run18.log - Line 1195): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 18 (tester_run_20250403_143619_run18.log - Line 1467): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 18 (tester_run_20250403_143619_run18.log - Line 1739): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 18 (tester_run_20250403_143619_run18.log - Line 2013): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 18 (tester_run_20250403_143619_run18.log - Line 2289): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 18 (tester_run_20250403_143619_run18.log - Line 2563): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 18 (tester_run_20250403_143619_run18.log - Line 2837): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 18 (tester_run_20250403_143619_run18.log - Line 3113): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 18 (tester_run_20250403_143619_run18.log - Line 3391): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 18 (tester_run_20250403_143619_run18.log - Line 3671): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"ethuint256\""}]}
+Trial 18 (tester_run_20250403_143619_run18.log - Line 3951): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 18 (tester_run_20250403_143619_run18.log - Line 4231): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 18 (tester_run_20250403_143619_run18.log - Line 4511): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"copy\""}]}
+Trial 18 (tester_run_20250403_143619_run18.log - Line 4789): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 18 (tester_run_20250403_143619_run18.log - Line 5067): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 18 (tester_run_20250403_143619_run18.log - Line 5345): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 18 (tester_run_20250403_143619_run18.log - Line 5623): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 373): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 649): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 19 (tester_run_20250403_144341_run19.log - Line 925): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 19 (tester_run_20250403_144341_run19.log - Line 1203): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"vrflogger\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 1483): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 1763): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 2043): Error creating job: 500 - {"errors":[{"detail":"not all bridges exist, asked for [stdout], exists []"}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 2323): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"save\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 2601): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 19 (tester_run_20250403_144341_run19.log - Line 2879): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 3157): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 19 (tester_run_20250403_144341_run19.log - Line 3435): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 3715): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 3995): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 4275): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 4553): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 19 (tester_run_20250403_144341_run19.log - Line 4829): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 19 (tester_run_20250403_144341_run19.log - Line 5107): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"debug\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 5387): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"logger\""}]}
+Trial 19 (tester_run_20250403_144341_run19.log - Line 5667): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 20 (tester_run_20250403_145042_run20.log - Line 125): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: invalid job type"}]}
+Trial 20 (tester_run_20250403_145042_run20.log - Line 375): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 20 (tester_run_20250403_145042_run20.log - Line 653): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 20 (tester_run_20250403_145042_run20.log - Line 931): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 20 (tester_run_20250403_145042_run20.log - Line 1211): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"noop\""}]}
+Trial 20 (tester_run_20250403_145042_run20.log - Line 1491): Error creating job: 422 - {"errors":[{"detail":"failed to parse TOML: (8, 1): unmarshal text: UnmarshalTaskFromMap: unknown task type: \"log\""}]}
+Trial 20 (tester_run_20250403_145042_run20.log - Line 1769): Job run failed with fatalErrors: ['task inputs: too many errors']
+Trial 20 (tester_run_20250403_145042_run20.log - Line 2045): Job run failed with fatalErrors: ['task inputs: too many errors']

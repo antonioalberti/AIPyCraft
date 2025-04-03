@@ -12,36 +12,78 @@ LOG_DIR = "logs"
 PLOT_DIR = "plots" # Define the output directory for plots
 TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S,%f" # Format including milliseconds
 
-# --- Helper function copied and adapted from plot_interactions_to_success.py ---
-def check_trial_success(tester_log_filepath, solution_name, max_loops):
+# --- Removed old check_trial_success function ---
+
+# --- Added parse_log_file function from plot_interactions_to_success.py ---
+def parse_log_file(log_filepath, solution_name, max_loops):
     """
-    Checks if a trial was successful based on its tester log file.
+    Parses a single tester log file to find the number of iterations to success,
+    based *only* on the last occurrence of "Solution completed with status: SUCCESS"
+    or "Solution completed with status: ERROR".
 
     Args:
-        tester_log_filepath (str): Path to the tester log file.
-        solution_name (str): The name of the solution being tested.
-        max_loops (int): The maximum number of loops configured for the test run.
+        log_filepath (str): Path to the tester log file.
+        solution_name (str): The name of the solution being tested (unused in this logic).
+        max_loops (int): The maximum number of loops configured for the test run (unused).
 
     Returns:
-        bool: True if success message was found, False otherwise.
+        tuple[int, str | None]: A tuple containing:
+            - int: Number of iterations if success was found (>=0), -1 otherwise.
+            - str | None: Error message "Completed with status: ERROR" if that specific
+                          status line is found and success wasn't, otherwise None or
+                          another error message (file not found, parse error, status unknown).
     """
-    success_found = False
-    # Regex to find the success line
-    success_pattern = re.compile(rf"--- Solution '{re.escape(solution_name)}' completed successfully\. Stopping loop\. ---")
+    # Compile patterns
+    loop_pattern = re.compile(r"--- Starting Correction Loop Iteration (\d+)/(\d+) ---")
+    success_pattern_string = "Solution completed with status: SUCCESS"
+    error_pattern_string = "Solution completed with status: ERROR"
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+
+    last_success_index = -1
+    last_error_index = -1
 
     try:
-        with open(tester_log_filepath, 'r', encoding='utf-8') as f:
-            for line in f:
-                if success_pattern.search(line):
-                    success_found = True
-                    break # Found success, no need to read further
-        return success_found
+        with open(log_filepath, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+
+        # Find the index of the LAST relevant status line using endswith
+        for idx, line in enumerate(lines):
+            cleaned_line = ansi_escape.sub('', line).strip()
+            if cleaned_line.endswith(success_pattern_string):
+                last_success_index = idx
+            elif cleaned_line.endswith(error_pattern_string):
+                last_error_index = idx
+
+        # Determine outcome based on which status appeared last
+        if last_success_index > last_error_index:
+            # Success is the final status. Find the iteration number before this line.
+            final_success_iter = -1
+            # Search backwards starting strictly *before* the success line index
+            for i in range(last_success_index - 1, -1, -1):
+                # Match loop pattern on the raw line content
+                loop_match = loop_pattern.search(lines[i]) # Search raw line for loop marker
+                if loop_match:
+                    final_success_iter = int(loop_match.group(1))
+                    break
+            # If success happened before loop 1 (or no loop marker found before it), iteration is 0
+            return (max(0, final_success_iter), None)
+
+        elif last_error_index > last_success_index:
+            # Error is the final status
+            return (-1, "Completed with status: ERROR")
+        elif last_error_index != -1:
+             # Only error was found, and it wasn't preceded by a later success
+             return (-1, "Completed with status: ERROR")
+        else:
+            # Neither SUCCESS nor ERROR status found in the log
+            return (-1, "SUCCESS/ERROR status not found")
+
     except FileNotFoundError:
-        print(f"Warning: Tester log file not found for success check: {tester_log_filepath}")
-        return False # Treat missing tester log as failure for duration calculation
+        return (-1, f"Log file not found: {log_filepath}")
     except Exception as e:
-        print(f"Warning: Error reading tester log file {tester_log_filepath} for success check: {e}")
-        return False # Treat errors as failure
+        return (-1, f"Error parsing log file {log_filepath}: {e}")
+# --- End of added parse_log_file function ---
+
 
 def parse_log_for_duration(log_filepath):
     """
@@ -165,15 +207,17 @@ def main(trials, loops_value, solution_name):
             skipped_failed_trials += 1 # Count as skipped/failed
             continue # Skip this trial
 
-        # Check if the trial was successful using the tester log
-        is_success = check_trial_success(tester_log_filepath, solution_name, loops_value)
+        # Check if the trial was successful using the tester log (using parse_log_file now)
+        iterations, error_msg = parse_log_file(tester_log_filepath, solution_name, loops_value)
 
-        if not is_success:
-            print(f"Info: Trial {i} failed (based on tester log). Skipping duration calculation.")
+        # Determine success based on iterations >= 0
+        if iterations < 0:
+            error_reason = f" ({error_msg})" if error_msg else ""
+            print(f"Info: Trial {i} failed or error{error_reason} (based on tester log). Skipping duration calculation.")
             skipped_failed_trials += 1
             continue # Skip this trial
 
-        # If successful, proceed to calculate duration from the main log
+        # If successful (iterations >= 0), proceed to calculate duration from the main log
         processed_trials_count += 1 # Count only trials checked for duration
         if main_log_filepath:
             print(f"Processing Successful Trial {i} for duration: {main_log_filepath}")
@@ -246,7 +290,8 @@ def main(trials, loops_value, solution_name):
         print("\nNo valid trial durations to plot.")
         return # Exit if no valid data points
 
-    plt.figure(figsize=(max(10, len(valid_trial_numbers_plot) * 0.5), 6)) # Adjust size based on valid trials
+    # Halved figure size
+    plt.figure(figsize=(max(5, len(valid_trial_numbers_plot) * 0.25), 3)) # Adjust size based on valid trials, halved dimensions
 
     # Plot individual valid trial durations
     plt.scatter(valid_trial_numbers_plot, valid_duration_values_plot, color='skyblue', label='Successful Trial Duration (s)', zorder=5, alpha=0.7)
@@ -260,13 +305,24 @@ def main(trials, loops_value, solution_name):
         ci_uppers_np = np.array(cumulative_ci_uppers)
         plt.fill_between(cumulative_trial_numbers_for_plot, ci_lowers_np, ci_uppers_np, color='palegreen', alpha=0.4, label='Cumulative 95% CI', zorder=0)
 
-    plt.xlabel("Successful Trial Number") # Updated label
-    plt.ylabel("Total Test Duration (seconds)")
-    plt.title(f"Test Duration for Successful Trials - Solution '{solution_name}'") # Updated title
+    # Reduced font sizes, removed title
+    plt.xlabel("Successful Trial Number", fontsize=8) # Reduced font size
+    plt.ylabel("Total Test Duration (seconds)", fontsize=8) # Reduced font size
+    # plt.title(...) # Removed title
     plt.xticks(valid_trial_numbers_plot) # Set x-ticks to only successful, valid trial numbers
+    plt.tick_params(axis='x', labelsize=7) # Reduced tick label size
+    plt.tick_params(axis='y', labelsize=7) # Reduced tick label size
     plt.grid(axis='y', alpha=0.75)
     plt.ylim(bottom=0) # Ensure y-axis starts at 0
-    plt.legend()
+    plt.legend(fontsize=7) # Reduced legend font size
+
+    # Add text for skipped/failed trial count (top-left)
+    plt.text(0.05, 0.95, f'Skipped/Failed Trials: {skipped_failed_trials}',
+             horizontalalignment='left', verticalalignment='top',
+             transform=plt.gca().transAxes, fontsize=7, color='red')
+
+    # Adjust layout
+    plt.tight_layout(pad=1.5)
 
     # Ensure the plot directory exists
     os.makedirs(PLOT_DIR, exist_ok=True)

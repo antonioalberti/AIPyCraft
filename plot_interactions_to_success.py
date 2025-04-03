@@ -191,7 +191,8 @@ def main(trials, loops_value, solution_name):
         # but the loop continues to the next trial number k.
 
     # --- Plotting ---
-    plt.figure(figsize=(max(10, len(trial_numbers_processed) * 0.5), 6)) # Adjust width based on number of trials
+    # Halved the figure size dimensions as requested
+    plt.figure(figsize=(max(5, len(trial_numbers_processed) * 0.25), 3)) # Adjust width based on number of trials, halved dimensions
 
     # Plot individual successful points (iters >= 0)
     successful_trial_numbers = [t for t in trial_numbers_processed if trial_results[t] >= 0]
@@ -215,22 +216,32 @@ def main(trials, loops_value, solution_name):
                               ci_uppers_np[valid_ci_indices],
                               color='palegreen', alpha=0.4, label='Cumulative 95% CI (Successful Trials)', zorder=0) # Updated label
 
-    plt.xlabel("Trial Number")
-    plt.ylabel("Number of Correction Iterations to Success") # Updated label
-    plt.title(f"Cumulative Mean Iterations to Success for Solution '{solution_name}'\n({num_successful} Successful, {failed_trials} Failed out of {num_processed} Processed)")
+    # Reduced font sizes by ~30% and removed title
+    plt.xlabel("Trial Number", fontsize=8) # Reduced font size
+    plt.ylabel("Number of Correction Iterations to Success", fontsize=8) # Reduced font size
+    # plt.title(...) # Removed title
     plt.xticks(trial_numbers_processed) # Ensure a tick for each processed trial
+    plt.tick_params(axis='x', labelsize=7) # Reduced tick label size
+    plt.tick_params(axis='y', labelsize=7) # Reduced tick label size
     plt.grid(axis='y', alpha=0.75)
     # Ensure y-axis starts at 0 or slightly below if CI dips below
     # Corrected calculation of min_y based on potentially empty or all-NaN CI arrays
-    min_ci_lower_val = np.nanmin(cumulative_ci_lowers) if cumulative_ci_lowers and not all(np.isnan(x) for x in cumulative_ci_lowers) else 0
-    min_y = min(0, min_ci_lower_val)
-    plt.ylim(bottom=min_y)
-    plt.legend() # Show legend
+    # min_ci_lower_val = np.nanmin(cumulative_ci_lowers) if cumulative_ci_lowers and not all(np.isnan(x) for x in cumulative_ci_lowers) else 0
+    # min_y = min(0, min_ci_lower_val)
+    # Set y-axis bottom limit to 0 as requested
+    plt.ylim(bottom=0)
+    plt.legend(fontsize=7) # Reduced legend font size
 
-    # Add text for failure count
-    plt.text(0.95, 0.95, f'Failed Trials: {failed_trials}',
-             horizontalalignment='right', verticalalignment='top',
-             transform=plt.gca().transAxes, fontsize=10, color='red')
+    # Add text for failure count (moved to top-left)
+    plt.text(0.05, 0.95, f'Failed Trials: {failed_trials}',
+             horizontalalignment='left', verticalalignment='top',
+             transform=plt.gca().transAxes, fontsize=7, color='red') # Moved to left
+
+    # Removed text for processed trial count (top-left)
+    # plt.text(0.05, 0.95, f'Trials Processed: {num_processed}', ...)
+
+    # Adjust layout to prevent excessive whitespace after title removal
+    plt.tight_layout(pad=1.5) # Added tight_layout with some padding
 
     # Ensure the plot directory exists
     os.makedirs(PLOT_DIR, exist_ok=True)
