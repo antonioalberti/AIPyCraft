@@ -244,7 +244,7 @@ def main(trials, loops_value, solution_name):
 
     if num_valid_duration_trials == 0:
          print("\nNo successful trials with valid durations found. Cannot generate plot.")
-         return # Exit if no data
+         return # Exit if no data # Corrected indentation
 
     # --- Calculate Cumulative Statistics (based on successful trials with valid durations) ---
     valid_trial_numbers_sorted = sorted(valid_durations.keys())
@@ -257,8 +257,13 @@ def main(trials, loops_value, solution_name):
     for k in valid_trial_numbers_sorted: # Iterate through the successful trials with valid durations
         current_successful_valid_durations.append(valid_durations[k])
 
-        if len(current_successful_valid_durations) >= 2: # Need at least 2 points for CI
-            mean_k = np.mean(current_successful_valid_durations)
+        # Calculate mean regardless of CI calculation
+        mean_k = np.mean(current_successful_valid_durations)
+        cumulative_trial_numbers_for_plot.append(k)
+        cumulative_means.append(mean_k)
+
+        # Calculate CI only if we have at least 2 points
+        if len(current_successful_valid_durations) >= 2:
             sem_k = stats.sem(current_successful_valid_durations)
             df_k = len(current_successful_valid_durations) - 1
             confidence_level = 0.95
@@ -269,64 +274,69 @@ def main(trials, loops_value, solution_name):
             else: # If SEM is 0 (all values identical), CI is just the mean
                  ci_lower_k = mean_k
                  ci_upper_k = mean_k
-
-            cumulative_trial_numbers_for_plot.append(k)
-            cumulative_means.append(mean_k)
             cumulative_ci_lowers.append(ci_lower_k)
             cumulative_ci_uppers.append(ci_upper_k)
-        elif len(current_successful_valid_durations) == 1: # Can plot mean but not CI yet
-             mean_k = current_successful_valid_durations[0]
-             cumulative_trial_numbers_for_plot.append(k)
-             cumulative_means.append(mean_k)
-             cumulative_ci_lowers.append(np.nan) # Append NaN for CI bounds
+        else: # Only 1 point, append NaN for CI
+             cumulative_ci_lowers.append(np.nan)
              cumulative_ci_uppers.append(np.nan)
 
     # --- Plotting ---
-    # Use the already filtered valid_durations dictionary
-    valid_trial_numbers_plot = list(valid_durations.keys())
-    valid_duration_values_plot = list(valid_durations.values())
+    # Make figure square
+    plt.figure(figsize=(5, 5)) # Square figure
 
-    if not valid_trial_numbers_plot:
-        print("\nNo valid trial durations to plot.")
-        return # Exit if no valid data points
-
-    # Halved figure size
-    plt.figure(figsize=(max(5, len(valid_trial_numbers_plot) * 0.25), 3)) # Adjust size based on valid trials, halved dimensions
-
-    # Plot individual valid trial durations
-    plt.scatter(valid_trial_numbers_plot, valid_duration_values_plot, color='skyblue', label='Successful Trial Duration (s)', zorder=5, alpha=0.7)
-
-    # Plot cumulative mean line (using data derived from valid trials only)
+    # Prepare data for error bar plot
     if cumulative_trial_numbers_for_plot:
-        plt.plot(cumulative_trial_numbers_for_plot, cumulative_means, marker='.', linestyle='-', color='orange', label='Cumulative Mean Duration (Successful Trials, s)', zorder=10)
-
-        # Shade the cumulative confidence interval band
+        x_values = np.array(cumulative_trial_numbers_for_plot)
+        means_np = np.array(cumulative_means)
         ci_lowers_np = np.array(cumulative_ci_lowers)
         ci_uppers_np = np.array(cumulative_ci_uppers)
-        plt.fill_between(cumulative_trial_numbers_for_plot, ci_lowers_np, ci_uppers_np, color='palegreen', alpha=0.4, label='Cumulative 95% CI', zorder=0)
 
-    # Reduced font sizes, removed title
-    plt.xlabel("Successful Trial Number", fontsize=8) # Reduced font size
-    plt.ylabel("Total Test Duration (seconds)", fontsize=8) # Reduced font size
-    # plt.title(...) # Removed title
-    plt.xticks(valid_trial_numbers_plot) # Set x-ticks to only successful, valid trial numbers
-    plt.tick_params(axis='x', labelsize=7) # Reduced tick label size
-    plt.tick_params(axis='y', labelsize=7) # Reduced tick label size
-    plt.grid(axis='y', alpha=0.75)
-    plt.ylim(bottom=0) # Ensure y-axis starts at 0
-    plt.legend(fontsize=7) # Reduced legend font size
+        # Calculate asymmetric error bars
+        lower_error = np.where(np.isnan(ci_lowers_np), np.nan, means_np - ci_lowers_np)
+        upper_error = np.where(np.isnan(ci_uppers_np), np.nan, ci_uppers_np - means_np)
+        lower_error = np.maximum(0, lower_error)
+        upper_error = np.maximum(0, upper_error)
+        y_err = np.array([lower_error, upper_error])
 
-    # Add text for skipped/failed trial count (top-left)
-    plt.text(0.05, 0.95, f'Skipped/Failed Trials: {skipped_failed_trials}',
+        # Filter out entries where mean or error is NaN
+        valid_indices = ~np.isnan(means_np) & ~np.isnan(y_err[0,:]) & ~np.isnan(y_err[1,:])
+        x_values_valid = x_values[valid_indices]
+        means_valid = means_np[valid_indices]
+        y_err_valid = y_err[:, valid_indices]
+
+        if len(x_values_valid) > 0:
+            # Use plt.errorbar to plot mean markers and error bars (no connecting line)
+            plt.errorbar(x_values_valid, means_valid, yerr=y_err_valid,
+                         fmt='o', color='dodgerblue', # Circle markers only, blue color
+                         ecolor='black', capsize=5, # Black error bars with caps
+                         markersize=4, # Reduced marker size
+                         label='Cumulative Mean Duration (95% CI, s)')
+        else:
+             print("No valid data points with confidence intervals to plot.")
+
+    # Configure plot appearance
+    plt.xlabel("Successful Trial Number", fontsize=12) # Reduced font size
+    plt.ylabel("Cumulative Mean Total Test Duration (seconds)", fontsize=12) # Reduced font size, Adjusted label
+    # Set x-ticks to only successful, valid trial numbers used in the cumulative plot
+    plt.xticks(cumulative_trial_numbers_for_plot)
+    plt.tick_params(axis='x', labelsize=11, rotation=45) # Reduced font size
+    plt.tick_params(axis='y', labelsize=11) # Reduced font size
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.ylim(bottom=0)
+    if cumulative_trial_numbers_for_plot and len(x_values_valid) > 0:
+        plt.legend(fontsize=11) # Reduced font size
+
+    # Add text for skipped/failed trial count
+    plt.text(0.15, 0.85, f'Failed Trials: {skipped_failed_trials}',
              horizontalalignment='left', verticalalignment='top',
-             transform=plt.gca().transAxes, fontsize=7, color='red')
+              transform=plt.gca().transAxes, fontsize=11, color='red')
 
     # Adjust layout
     plt.tight_layout(pad=1.5)
 
     # Ensure the plot directory exists
     os.makedirs(PLOT_DIR, exist_ok=True)
-    plot_filename = f"cumulative_total_time_plot_{solution_name}.pdf" # Changed extension to PDF
+    plot_filename = f"time-{solution_name}.pdf" # Changed filename format (already done in previous step, confirming)
     plot_filepath = os.path.join(PLOT_DIR, plot_filename)
 
     plt.savefig(plot_filepath, format='pdf') # Save as PDF

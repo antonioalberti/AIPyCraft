@@ -191,61 +191,62 @@ def main(trials, loops_value, solution_name):
         # but the loop continues to the next trial number k.
 
     # --- Plotting ---
-    # Halved the figure size dimensions as requested
-    plt.figure(figsize=(max(5, len(trial_numbers_processed) * 0.25), 3)) # Adjust width based on number of trials, halved dimensions
+    # Make figure square
+    plt.figure(figsize=(5, 5)) # Square figure
 
-    # Plot individual successful points (iters >= 0)
-    successful_trial_numbers = [t for t in trial_numbers_processed if trial_results[t] >= 0]
-    successful_iteration_values = [trial_results[t] for t in successful_trial_numbers]
-    if successful_trial_numbers:
-        plt.scatter(successful_trial_numbers, successful_iteration_values, color='skyblue', label='Successful Trial Iterations', zorder=5, alpha=0.7) # Use scatter
-
-    # Plot cumulative mean line
+    # Prepare data for error bar plot
     if cumulative_trial_numbers_for_plot:
-        plt.plot(cumulative_trial_numbers_for_plot, cumulative_means, marker='.', linestyle='-', color='orange', label='Cumulative Mean (Successful Trials)', zorder=10) # Updated label
-
-        # Shade the cumulative confidence interval band
-        # Ensure CI bounds are numpy arrays for potential NaN handling if needed by fill_between
+        x_values = np.array(cumulative_trial_numbers_for_plot)
+        means_np = np.array(cumulative_means)
         ci_lowers_np = np.array(cumulative_ci_lowers)
         ci_uppers_np = np.array(cumulative_ci_uppers)
-        # Filter out NaN values before plotting CI band to avoid warnings/errors
-        valid_ci_indices = ~np.isnan(ci_lowers_np) & ~np.isnan(ci_uppers_np)
-        if np.any(valid_ci_indices):
-             plt.fill_between(np.array(cumulative_trial_numbers_for_plot)[valid_ci_indices],
-                              ci_lowers_np[valid_ci_indices],
-                              ci_uppers_np[valid_ci_indices],
-                              color='palegreen', alpha=0.4, label='Cumulative 95% CI (Successful Trials)', zorder=0) # Updated label
 
-    # Reduced font sizes by ~30% and removed title
-    plt.xlabel("Trial Number", fontsize=8) # Reduced font size
-    plt.ylabel("Number of Correction Iterations to Success", fontsize=8) # Reduced font size
-    # plt.title(...) # Removed title
-    plt.xticks(trial_numbers_processed) # Ensure a tick for each processed trial
-    plt.tick_params(axis='x', labelsize=7) # Reduced tick label size
-    plt.tick_params(axis='y', labelsize=7) # Reduced tick label size
-    plt.grid(axis='y', alpha=0.75)
-    # Ensure y-axis starts at 0 or slightly below if CI dips below
-    # Corrected calculation of min_y based on potentially empty or all-NaN CI arrays
-    # min_ci_lower_val = np.nanmin(cumulative_ci_lowers) if cumulative_ci_lowers and not all(np.isnan(x) for x in cumulative_ci_lowers) else 0
-    # min_y = min(0, min_ci_lower_val)
-    # Set y-axis bottom limit to 0 as requested
+        # Calculate asymmetric error bars
+        lower_error = np.where(np.isnan(ci_lowers_np), np.nan, means_np - ci_lowers_np)
+        upper_error = np.where(np.isnan(ci_uppers_np), np.nan, ci_uppers_np - means_np)
+        lower_error = np.maximum(0, lower_error)
+        upper_error = np.maximum(0, upper_error)
+        y_err = np.array([lower_error, upper_error])
+
+        # Filter out entries where mean or error is NaN
+        valid_indices = ~np.isnan(means_np) & ~np.isnan(y_err[0,:]) & ~np.isnan(y_err[1,:])
+        x_values_valid = x_values[valid_indices]
+        means_valid = means_np[valid_indices]
+        y_err_valid = y_err[:, valid_indices]
+
+        if len(x_values_valid) > 0:
+            # Use plt.errorbar to plot mean markers and error bars (no connecting line)
+            plt.errorbar(x_values_valid, means_valid, yerr=y_err_valid,
+                         fmt='o', color='dodgerblue', # Circle markers only, blue color
+                         ecolor='black', capsize=5, # Black error bars with caps
+                         markersize=4, # Reduced marker size
+                         label='Cumulative Mean Iterations (95% CI)') # Adjusted label for this script
+        else:
+             print("No valid data points with confidence intervals to plot.")
+
+    # Configure plot appearance (Applying settings from plot_total_test_time.py)
+    plt.xlabel("Trial Number", fontsize=12) # Font size from plot_total_test_time.py
+    plt.ylabel("Cumulative Mean Correction Iterations to Success", fontsize=12) # Font size from plot_total_test_time.py
+    # Set x-ticks to only successful, valid trial numbers used in the cumulative plot
+    plt.xticks(cumulative_trial_numbers_for_plot)
+    plt.tick_params(axis='x', labelsize=11, rotation=45) # Font size from plot_total_test_time.py
+    plt.tick_params(axis='y', labelsize=11) # Font size from plot_total_test_time.py
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.ylim(bottom=0)
-    plt.legend(fontsize=7) # Reduced legend font size
+    if cumulative_trial_numbers_for_plot and len(x_values_valid) > 0:
+        plt.legend(fontsize=11) # Font size from plot_total_test_time.py
 
-    # Add text for failure count (moved down slightly)
-    plt.text(0.05, 0.85, f'Failed Trials: {failed_trials}', # Changed y from 0.95 to 0.85
+    # Add text for failure count
+    plt.text(0.05, 0.85, f'Failed Trials: {failed_trials}', # Using correct variable for this script & standard top-left coordinates
              horizontalalignment='left', verticalalignment='top',
-             transform=plt.gca().transAxes, fontsize=7, color='red')
+             transform=plt.gca().transAxes, fontsize=11, color='red') # Font size from plot_total_test_time.py & removed leading space before transform
 
-    # Removed text for processed trial count (top-left)
-    # plt.text(0.05, 0.95, f'Trials Processed: {num_processed}', ...)
-
-    # Adjust layout to prevent excessive whitespace after title removal
-    plt.tight_layout(pad=1.5) # Added tight_layout with some padding
+    # Adjust layout
+    plt.tight_layout(pad=1.5)
 
     # Ensure the plot directory exists
     os.makedirs(PLOT_DIR, exist_ok=True)
-    plot_filename = f"cumulative_iterations_plot_{solution_name}.pdf" # Changed extension to PDF
+    plot_filename = f"cumulativeinteractions-{solution_name}.pdf" # Changed filename format
     plot_filepath = os.path.join(PLOT_DIR, plot_filename) # Construct full path
 
     plt.savefig(plot_filepath, format='pdf') # Save as PDF
