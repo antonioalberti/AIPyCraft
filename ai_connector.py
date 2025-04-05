@@ -109,12 +109,29 @@ class AIConnector:
                  # Check safety ratings if available
                  safety_feedback = getattr(response, 'prompt_feedback', None)
                  block_reason = getattr(safety_feedback, 'block_reason', 'Unknown')
-                 raise RuntimeError(f"Gemini response blocked or empty. Reason: {block_reason}")
+                 # Even if not blocked, check safety ratings if available
+                 safety_ratings = getattr(response.candidates[0], 'safety_ratings', 'N/A')
+                 finish_reason = getattr(response.candidates[0], 'finish_reason', 'N/A')
+                 raise RuntimeError(f"Gemini response blocked or empty. Reason: {block_reason}, Finish Reason: {finish_reason}, Safety Ratings: {safety_ratings}")
 
-            # Accessing the text content
-            # Gemini API might return multiple candidates, usually the first is the primary one.
-            answer = response.text # Accessing .text directly is common for non-streaming
-            return answer.strip()
+            # More robust check for text content
+            try:
+                # Check if the first candidate has content and parts
+                if response.candidates[0].content and response.candidates[0].content.parts:
+                    answer = response.candidates[0].content.parts[0].text
+                    return answer.strip()
+                else:
+                    # If no parts, check finish reason and safety ratings for clues
+                    finish_reason = getattr(response.candidates[0], 'finish_reason', 'N/A')
+                    safety_ratings = getattr(response.candidates[0], 'safety_ratings', 'N/A')
+                    raise RuntimeError(f"Gemini response candidate lacks text content. Finish Reason: {finish_reason}, Safety Ratings: {safety_ratings}")
+            except AttributeError:
+                 # Handle cases where the expected structure isn't present (e.g., response.text might work in some scenarios but parts[0].text is safer)
+                 # Fallback or raise a more specific error if needed
+                 finish_reason = getattr(response.candidates[0], 'finish_reason', 'N/A')
+                 safety_ratings = getattr(response.candidates[0], 'safety_ratings', 'N/A')
+                 raise RuntimeError(f"Error accessing Gemini response text. Structure might be unexpected. Finish Reason: {finish_reason}, Safety Ratings: {safety_ratings}")
+
 
         except Exception as e:
             # Catch specific Gemini exceptions if known, otherwise general Exception

@@ -237,7 +237,7 @@ def main(trials, loops_value, solution_name):
         plt.legend(fontsize=11) # Font size from plot_total_test_time.py
 
     # Add text for failure count
-    plt.text(0.05, 0.85, f'Failed Trials: {failed_trials}', # Using correct variable for this script & standard top-left coordinates
+    plt.text(0.05, 0.95, f'Failed Trials: {failed_trials}', # Using correct variable for this script & standard top-left coordinates
              horizontalalignment='left', verticalalignment='top',
              transform=plt.gca().transAxes, fontsize=11, color='red') # Font size from plot_total_test_time.py & removed leading space before transform
 
