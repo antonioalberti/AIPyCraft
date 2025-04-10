@@ -282,7 +282,7 @@ def main(trials, loops_value, solution_name):
 
     # --- Plotting ---
     # Make figure square
-    plt.figure(figsize=(5, 5)) # Square figure
+    plt.figure(figsize=(5, 3)) # Square figure
 
     # Prepare data for error bar plot
     if cumulative_trial_numbers_for_plot:
@@ -310,13 +310,13 @@ def main(trials, loops_value, solution_name):
                          fmt='o', color='dodgerblue', # Circle markers only, blue color
                          ecolor='black', capsize=5, # Black error bars with caps
                          markersize=4, # Reduced marker size
-                         label='Cumulative Mean Duration (95% CI, s)')
+                         label='Mean Duration (95% CI)')
         else:
              print("No valid data points with confidence intervals to plot.")
 
     # Configure plot appearance
-    plt.xlabel("Successful Trial Number", fontsize=12) # Reduced font size
-    plt.ylabel("Cumulative Mean Total Test Duration (seconds)", fontsize=12) # Reduced font size, Adjusted label
+    plt.xlabel("Trial Number", fontsize=12) # Reduced font size
+    plt.ylabel("Total Test Duration (s)", fontsize=12) # Reduced font size, Adjusted label
     # Set x-ticks to only successful, valid trial numbers used in the cumulative plot
     plt.xticks(cumulative_trial_numbers_for_plot)
     plt.tick_params(axis='x', labelsize=11, rotation=45) # Reduced font size

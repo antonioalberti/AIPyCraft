@@ -3,6 +3,7 @@ import re
 import argparse
 import statistics
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker # Import ticker
 import glob
 from collections import Counter
 import numpy as np # Import numpy
@@ -192,7 +193,7 @@ def main(trials, loops_value, solution_name):
 
     # --- Plotting ---
     # Make figure square
-    plt.figure(figsize=(5, 5)) # Square figure
+    plt.figure(figsize=(5, 3)) # Square figure
 
     # Prepare data for error bar plot
     if cumulative_trial_numbers_for_plot:
@@ -220,24 +221,25 @@ def main(trials, loops_value, solution_name):
                          fmt='o', color='dodgerblue', # Circle markers only, blue color
                          ecolor='black', capsize=5, # Black error bars with caps
                          markersize=4, # Reduced marker size
-                         label='Cumulative Mean Iterations (95% CI)') # Adjusted label for this script
+                         label='Mean Iterations (95% CI)') # Adjusted label for this script
         else:
              print("No valid data points with confidence intervals to plot.")
 
     # Configure plot appearance (Applying settings from plot_total_test_time.py)
     plt.xlabel("Trial Number", fontsize=12) # Font size from plot_total_test_time.py
-    plt.ylabel("Cumulative Mean Correction Iterations to Success", fontsize=12) # Font size from plot_total_test_time.py
+    plt.ylabel("Iterations to Success", fontsize=12) # Font size from plot_total_test_time.py
     # Set x-ticks to only successful, valid trial numbers used in the cumulative plot
     plt.xticks(cumulative_trial_numbers_for_plot)
     plt.tick_params(axis='x', labelsize=11, rotation=45) # Font size from plot_total_test_time.py
     plt.tick_params(axis='y', labelsize=11) # Font size from plot_total_test_time.py
+    plt.gca().yaxis.set_major_formatter(ticker.FormatStrFormatter('%.1f')) # Format Y-axis to 1 decimal place
     plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.ylim(bottom=0)
     if cumulative_trial_numbers_for_plot and len(x_values_valid) > 0:
         plt.legend(fontsize=11) # Font size from plot_total_test_time.py
 
     # Add text for failure count
-    plt.text(0.05, 0.95, f'Failed Trials: {failed_trials}', # Using correct variable for this script & standard top-left coordinates
+    plt.text(0.05, 0.9, f'Failed Trials: {failed_trials}', # Using correct variable for this script & standard top-left coordinates
              horizontalalignment='left', verticalalignment='top',
              transform=plt.gca().transAxes, fontsize=11, color='red') # Font size from plot_total_test_time.py & removed leading space before transform
 
