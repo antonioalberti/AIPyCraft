@@ -4,6 +4,8 @@ This project is an AI-powered solution creator that assists users in generating,
 
 The program was cocreated with GitHub Copilot using Claude 3.5 Sonnet.
 
+Please, check this link for a scientific paper about AIPyCraft: https://eprints.whiterose.ac.uk/id/eprint/228027/1/LLM4SE___AI_Pycraft.pdf
+
 ## Features
 
 - **Solution Management:**
